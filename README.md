@@ -1,50 +1,60 @@
-# outft·
+# OUTFT.
 
-**fit check. everyday. no excuses.**
+**the fits you choose**
 
-a minimalist, identity-forward social platform where getting dressed is the point. outft· is an app that turns getting dressed into a daily ritual with your friends. post your fit, track your style, and build your streak.
+The editorial marketing site for OUTFT, a daily ritual for getting dressed.
+Post your fit to open the feed, trace your style into fashion DNA, and find the
+people you actually dress like.
 
-## Project Structure
+Built with **Next.js (App Router) + React 19 + Motion + Tailwind v4**.
 
-- `public/` - Static assets for the frontend landing page.
-  - `index.html` - Main landing page with signup form.
-  - `styles.css` - Custom design system implementing the outft· brand guidelines.
-  - `script.js` - Frontend logic for animations, API calls, and smooth scrolling.
-  - `images/` - High-quality mockups and lifestyle imagery used in the site.
-- `server.js` - Lightweight Express backend to handle email signups.
-- `data/` - Database storage.
-  - `subscribers.json` - JSON file where collected waitlist emails are saved.
+## Run it
 
-## Quick Start
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm run build && npm start   # production
+```
 
-2. Start the server:
-   ```bash
-   npm start
-   ```
-   (Alternatively, use `node server.js`)
+## Pages
 
-3. View the app at `http://localhost:3000`
+| Route   | What it is |
+|---------|------------|
+| `/`     | **Tracing Art** hero (logged fits form a wave with a trace line that draws on scroll), the auto-cycling app demo (Daily ft -> camera ticket -> feed -> fashion DNA -> ft. twin), the four features, and the closing call to action. |
+| `/why`  | The manifesto: post to see, narrow doors, a record not a stream. |
+| `/faq`  | The short answers, as an accordion. |
+| `/join` | Multiple signups: waitlist or creator application, plus Apple / Google quick options. Submissions confirm as a brand "fit of record" ticket. |
 
-## Brand Guidelines
+## The signup API
 
-- **Palette**: Dark mode (`#0A0A0A`), Lime Green Accent (`#C8FF00`), White (`#ffffff`), Dust (`#ff4444`)
-- **Typography**: Inter (Clean sans-serif)
-- **Voice**: Lowercase, confident, minimalist. "never explain. never exclaim."
+`POST /api/subscribe` with `{ email, handle?, kind: "waitlist" | "creator", source? }`.
+Emails are validated, de-duplicated per list, and appended to
+`data/subscribers.json` (gitignored). Returns the waitlist position.
 
-## Features Showcased on Landing Page
+## Design system
 
-1. **The Ritual**: One random moment a day, everyone posts what they're wearing.
-2. **Friends & Streaks**: Your real friends, real accountability, and fit reactions.
-3. **Style DNA**: Monthly breakdown of your aesthetic evolution.
-4. **Cost Per Wear**: Tag items to see which pieces in your closet actually earn their keep.
-5. **Fit Vote**: Post two options, let friends decide before you leave.
+- **Type:** Playfair Display italic (the `OUTFT.` / `ft.` marks), Cormorant
+  Garamond (editorial headlines), Jost (UI text). Loaded via `next/font`.
+- **Palette:** warm bone + ink `#16140F`, with drifting muted auras
+  (mauve, sage, sky, blush, butter, lilac). Light theme, locked.
+- **Motion:** scroll-linked trace draw, `whileInView` reveals, the cycling
+  phone demo. Everything degrades under `prefers-reduced-motion`.
 
-## Endpoints
+## Imagery: swapping in real photos
 
-- `POST /api/subscribe`: Accepts `{ email: "user@example.com" }` to add to the waitlist.
-- `GET /api/subscribers`: Admin endpoint to view the current waitlist.
+Outfits currently render as art-directed **fit plates** (muted gradient + film
+grain), matching the OUTFT app's own treatment. Every plate accepts a real
+photograph with zero layout change:
+
+1. Drop editorial JPGs into `public/fits/`.
+2. Add a `src` to the relevant entries in `lib/fits.ts`
+   (e.g. `src: "/fits/maren-oat-linen.jpg"`). The tracing wave, demo, and
+   feature plates pick them up automatically.
+
+## Legacy
+
+The previous dark/lime Express landing page is preserved under `legacy/` for
+reference. It is not part of the build.

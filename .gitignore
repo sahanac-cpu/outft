@@ -1,4 +1,33 @@
-node_modules/
-data/subscribers.json
-.env
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# data (collected emails)
+/data/subscribers.json
+
+# misc
 .DS_Store
+*.pem
+.env*
+!.env.example
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# legacy preserved but not built
+legacy/public/node_modules
+
+# local Claude skills (personal installs, not project code)
+.claude/skills/
+**/__pycache__/
