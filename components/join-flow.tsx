@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { Logo } from "./logo";
 
 type Kind = "waitlist" | "creator";
@@ -20,7 +21,7 @@ export function JoinFlow() {
   const [position, setPosition] = useState<number | null>(null);
   const [source, setSource] = useState("join");
   const emailRef = useRef<HTMLInputElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -186,8 +187,8 @@ export function JoinFlow() {
                   className="w-full rounded-xl border border-line2 bg-white px-4 py-3.5 text-[15px] text-ink outline-none transition-colors placeholder:text-grey-soft focus:border-ink"
                 />
                 <p className="text-[12px] leading-relaxed text-grey">
-                  Creators get an early room and a seat in other people&rsquo;s
-                  seven. We review every application by hand.
+                  Creators get an early room and a place in the feeds that
+                  follow them. We review every application by hand.
                 </p>
               </div>
             </motion.div>

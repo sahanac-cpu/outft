@@ -76,8 +76,8 @@ export default function WhyPage() {
           <div className="grid gap-12 md:grid-cols-3 md:gap-8">
             {[
               {
-                t: "Narrow doors",
-                b: "You follow seven. A feed worth opening is a small one, curated like a wardrobe, not a warehouse.",
+                t: "Follow freely",
+                b: "Follow as many people as you like. The gate is posting, not following, so the feed stays honest without staying small.",
               },
               {
                 t: "A record, not a stream",
