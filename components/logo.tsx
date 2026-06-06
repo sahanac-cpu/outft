@@ -11,10 +11,10 @@ export function Logo({
 }) {
   const mark = (
     <span
-      className={`font-display italic font-black tracking-[-0.01em] leading-none text-ink ${className}`}
+      className={`font-display font-black tracking-[-0.015em] leading-none text-ink ${className}`}
       style={{ fontSize: size }}
     >
-      OUTFT<span className="not-italic">.</span>
+      OUTFT.
     </span>
   );
   if (href === null) return mark;

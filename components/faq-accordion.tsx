@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 export interface QA {
   q: string;
@@ -10,7 +11,7 @@ export interface QA {
 
 export function FaqAccordion({ items }: { items: QA[] }) {
   const [open, setOpen] = useState<number | null>(0);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   return (
     <div className="border-t border-line">

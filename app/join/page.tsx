@@ -30,14 +30,14 @@ export default function JoinPage() {
           </h1>
           <p className="mt-7 max-w-[40ch] text-[15px] leading-relaxed text-ink2">
             outft opens a few people at a time so the first feeds stay good. Take
-            the waitlist, or apply as a creator and claim a seat in other
-            people&rsquo;s seven.
+            the waitlist, or apply as a creator and earn a place in the feeds
+            you want to be in.
           </p>
 
           <dl className="mt-10 flex flex-col divide-y divide-line border-y border-line">
             {[
               ["Waitlist", "An invite when your room opens. Bring your friends."],
-              ["Creator", "Reviewed by hand. Early access, a public profile, a seat in the seven."],
+              ["Creator", "Reviewed by hand. Early access, a public profile, a place in people's feeds."],
             ].map(([k, v]) => (
               <div key={k} className="flex gap-6 py-5">
                 <dt className="w-24 shrink-0 text-[11px] uppercase tracking-[0.16em] text-ink">

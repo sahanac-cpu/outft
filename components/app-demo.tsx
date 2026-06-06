@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { Logo, FtMark } from "./logo";
 
 const STEPS = [
@@ -40,7 +37,7 @@ const ROTATE = 3600;
 
 export function AppDemo() {
   const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
   const [inView, setInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 

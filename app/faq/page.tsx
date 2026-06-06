@@ -5,7 +5,7 @@ import { FaqAccordion, type QA } from "@/components/faq-accordion";
 export const metadata: Metadata = {
   title: "FAQ. OUTFT.",
   description:
-    "How the daily ft. works, why you follow seven, what fashion DNA reads, and how ft. twin matches you.",
+    "How the daily ft. works, how following works, what fashion DNA reads, and how ft. twin matches you.",
 };
 
 const ITEMS: QA[] = [
@@ -14,8 +14,8 @@ const ITEMS: QA[] = [
     a: "Three times a day outft opens a window: morning, afternoon, evening. Post your fit in any one of them. You do not have to hit all three, and you cannot post outside them. The window is what keeps it a ritual instead of a habit you forget.",
   },
   {
-    q: "Why can I only follow seven people?",
-    a: "A feed worth opening is a narrow one. Seven is enough for your closest friends and a creator or two, and small enough that every fit gets looked at. When the eighth person matters more, you trade someone out. Following becomes a choice again.",
+    q: "How many people can I follow?",
+    a: "As many as you like. There is no follow cap. The only gate is reciprocity: your feed opens once you have posted your own fit, so a longer following list never turns into a noisier, lurking feed.",
   },
   {
     q: "What does 'post to see' actually mean?",
@@ -35,7 +35,7 @@ const ITEMS: QA[] = [
   },
   {
     q: "Is anything public?",
-    a: "No public like counts, no follower leaderboard, no open profiles to strangers. Your record is yours and your seven. A creator profile is the one exception, and it is opt-in by application.",
+    a: "No public like counts, no follower leaderboard, no open profiles to strangers. Your record is yours and the people you follow. A creator profile is the one exception, and it is opt-in by application.",
   },
   {
     q: "When does it open?",
