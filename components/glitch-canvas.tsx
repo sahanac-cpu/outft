@@ -47,33 +47,35 @@ function mul(c: RGB, f: number): RGB {
   return [c[0] * f, c[1] * f, c[2] * f];
 }
 
-// 5x7 bitmap font for the scattered glyphs
+// 5x7 bitmap font — the scattered glyphs spell TRACING / FASHION
 const FONT: Record<string, number[]> = {
-  K: [0x11, 0x12, 0x14, 0x18, 0x14, 0x12, 0x11],
-  E: [0x1f, 0x10, 0x10, 0x1e, 0x10, 0x10, 0x1f],
-  L: [0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x1f],
+  T: [0x1f, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04],
   R: [0x1e, 0x11, 0x11, 0x1e, 0x14, 0x12, 0x11],
-  Y: [0x11, 0x11, 0x0a, 0x04, 0x04, 0x04, 0x04],
-  j: [0x02, 0x00, 0x06, 0x02, 0x02, 0x12, 0x0c],
-  r: [0x00, 0x00, 0x16, 0x18, 0x10, 0x10, 0x10],
-  ";": [0x00, 0x04, 0x00, 0x00, 0x04, 0x04, 0x08],
-  "!": [0x04, 0x04, 0x04, 0x04, 0x00, 0x00, 0x04],
-  ".": [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04],
+  A: [0x0e, 0x11, 0x11, 0x1f, 0x11, 0x11, 0x11],
+  C: [0x0f, 0x10, 0x10, 0x10, 0x10, 0x10, 0x0f],
+  I: [0x1f, 0x04, 0x04, 0x04, 0x04, 0x04, 0x1f],
+  N: [0x11, 0x19, 0x15, 0x13, 0x11, 0x11, 0x11],
+  G: [0x0f, 0x10, 0x10, 0x17, 0x11, 0x11, 0x0f],
+  F: [0x1f, 0x10, 0x10, 0x1e, 0x10, 0x10, 0x10],
+  S: [0x0f, 0x10, 0x10, 0x0e, 0x01, 0x01, 0x1e],
+  H: [0x11, 0x11, 0x11, 0x1f, 0x11, 0x11, 0x11],
+  O: [0x0e, 0x11, 0x11, 0x11, 0x11, 0x11, 0x0e],
 };
-const GLYPHS = [
-  { ch: "j", x: 30, y: 22, s: 4 },
-  { ch: "Y", x: 46, y: 44, s: 3 },
-  { ch: "K", x: 14, y: 64, s: 4 },
-  { ch: "K", x: 44, y: 96, s: 4 },
-  { ch: "E", x: 16, y: 120, s: 3 },
-  { ch: "L", x: 44, y: 132, s: 3 },
-  { ch: "r", x: 18, y: 150, s: 3 },
-  { ch: "!", x: 50, y: 158, s: 3 },
-  { ch: "j", x: 12, y: 200, s: 4 },
-  { ch: ";", x: 44, y: 206, s: 3 },
-  { ch: "r", x: 22, y: 240, s: 3 },
-  { ch: ".", x: 40, y: 250, s: 3 },
-];
+
+const GLYPHS = (() => {
+  const cols = [
+    { word: "TRACING", x: 9, y0: 30, s: 3, step: 27 },
+    { word: "FASHION", x: 40, y0: 44, s: 3, step: 27 },
+  ];
+  const out: { ch: string; x: number; y: number; s: number }[] = [];
+  for (const col of cols) {
+    col.word.split("").forEach((ch, i) => {
+      const jx = ((i * 5) % 3) - 1; // tiny broken-font jitter
+      out.push({ ch, x: col.x + jx, y: col.y0 + i * col.step, s: col.s });
+    });
+  }
+  return out;
+})();
 
 const CX = 0.52;
 
@@ -244,7 +246,7 @@ export function GlitchCanvas({ className = "" }: { className?: string }) {
         amount = Math.max(amount, (1 - r) * 0.65);
       }
       const look = LOOKS[idx];
-      const effPres = presence - 0.02;
+      const effPres = presence - 0.08;
 
       colTop.fill(-1);
       colBot.fill(-1);
@@ -274,20 +276,23 @@ export function GlitchCanvas({ className = "" }: { className?: string }) {
           if (reg >= 3 && hash(x, y, 9) > 0.95) c = MAGENTA;
           const g = (hash(x, y, 3) - 0.5) * 18;
           c = [c[0] + g, c[1] + g, c[2] + g];
+          // translucent: let the hallway show through so it is not opaque
+          c = mix(c, hallway(x, y), 0.34);
           if (colTop[x] < 0) colTop[x] = y;
           colBot[x] = y;
           set(i, c);
         }
       }
 
-      // 2) pixel-sort streaks + glitch (strong during transitions)
-      if (amount > 0.08) {
+      // 2) pixel-sort streaks (always flowing) + glitch (transitions only)
+      {
         const seed = Math.floor(now / 80);
+        const flow = 0.34 + amount; // streaks flow continuously, not just on morph
         for (let x = 0; x < W; x++) {
           if (colTop[x] < 0) continue;
-          const drip = Math.floor(hash(x, 1, seed) * amount * 70);
+          const drip = Math.floor(hash(x, 1, seed) * flow * 62);
           const end = Math.min(H - 1, colBot[x] + drip);
-          const resetBias = 0.16 + (1 - amount) * 0.6;
+          const resetBias = 0.1 + (1 - flow) * 0.32;
           let carry: RGB | null = null;
           for (let y = colTop[x]; y <= end; y++) {
             const i = (y * W + x) * 4;
@@ -299,7 +304,7 @@ export function GlitchCanvas({ className = "" }: { className?: string }) {
             }
           }
         }
-        const splits = Math.floor(amount * 7);
+        const splits = amount > 0.3 ? Math.floor(amount * 7) : 0;
         for (let s = 0; s < splits; s++) {
           const by = Math.floor(hash(s, 9, seed) * H);
           const bh = 2 + Math.floor(hash(s, 11, seed) * 9);
@@ -314,7 +319,7 @@ export function GlitchCanvas({ className = "" }: { className?: string }) {
             }
           }
         }
-        const blocks = Math.floor(amount * 4);
+        const blocks = amount > 0.3 ? Math.floor(amount * 4) : 0;
         for (let b = 0; b < blocks; b++) {
           if (hash(b, 17, seed) > 0.6) {
             const by = Math.floor(hash(b, 19, seed) * H);
@@ -335,13 +340,11 @@ export function GlitchCanvas({ className = "" }: { className?: string }) {
         }
       }
 
-      // 3) scattered bitmap glyphs (left), flicker + jitter
+      // 3) bitmap glyphs spelling tracing / fashion — always on, subtle jitter
       const tick = Math.floor(now / 90);
       for (let gi = 0; gi < GLYPHS.length; gi++) {
-        if (hash(gi, 31, Math.floor(tick / 5)) > 0.26) {
-          const jit = amount > 0.25 && hash(gi, 37, tick) > 0.6 ? 1 : 0;
-          drawGlyph(GLYPHS[gi], jit);
-        }
+        const jit = amount > 0.25 && hash(gi, 37, tick) > 0.7 ? 1 : 0;
+        drawGlyph(GLYPHS[gi], jit);
       }
 
       // 4) light edge feather (top/bottom only; keep hallway sides)
