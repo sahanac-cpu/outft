@@ -1,45 +1,57 @@
 import Link from "next/link";
-import { Logo } from "./logo";
 
 export function Footer() {
+  const cols: { head: string; links: { label: string; href: string }[] }[] = [
+    {
+      head: "Product",
+      links: [
+        { label: "The demo", href: "/#demo" },
+        { label: "Request a demo", href: "/request-demo" },
+      ],
+    },
+    {
+      head: "Company",
+      links: [
+        { label: "Talk to the founders", href: "/founders" },
+        { label: "FAQ", href: "/faq" },
+      ],
+    },
+  ];
+
   return (
-    <footer className="border-t border-line bg-bone">
-      <div className="mx-auto max-w-[1400px] px-6 py-16 md:px-10 md:py-20">
-        <div className="flex flex-col gap-12 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-md">
-            <Logo size="2rem" href={null} />
-            <p className="mt-5 font-serif text-[22px] italic leading-[1.3] text-ink2">
-              The fits you choose, kept like records. One a day, with the people
-              who dress like you.
+    <footer className="relative border-t border-line">
+      <div className="mx-auto max-w-[1500px] px-6 py-16 md:px-10 md:py-20">
+        <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr]">
+          <div>
+            <span className="font-display text-[24px] font-semibold tracking-[-0.01em] text-ink">
+              OUTFT.
+            </span>
+            <p className="mt-4 max-w-[34ch] font-serif text-[20px] font-light italic leading-snug text-ink2">
+              Log what you wore. Read your aesthetic in numbers. The fits you
+              chose, kept like records.
             </p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-x-14 gap-y-3 text-[13px] text-ink2">
-            <Link href="/" className="transition-colors hover:text-ink">
-              Tracing
-            </Link>
-            <Link href="/why" className="transition-colors hover:text-ink">
-              Why outft
-            </Link>
-            <Link href="/#demo" className="transition-colors hover:text-ink">
-              The app
-            </Link>
-            <Link href="/faq" className="transition-colors hover:text-ink">
-              FAQ
-            </Link>
-            <Link href="/#dna" className="transition-colors hover:text-ink">
-              Fashion DNA
-            </Link>
-            <Link href="/join" className="transition-colors hover:text-ink">
-              Request access
-            </Link>
-          </nav>
+          {cols.map((c) => (
+            <nav key={c.head}>
+              <span className="lbl">{c.head}</span>
+              <ul className="mt-4 space-y-2.5">
+                {c.links.map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} className="lbl lbl-ink hover:opacity-60">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-line2 pt-6 text-[11px] uppercase tracking-[0.18em] text-grey md:flex-row md:items-center md:justify-between">
-          <span>OUTFT · fit of record</span>
-          <span>Curate. Keep. Revisit.</span>
-          <span>{new Date().getFullYear()}</span>
+        <div className="mt-16 flex flex-col gap-2 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+          <span className="lbl">OUTFT © 2026 · Style Journal Nº01</span>
+          <span className="lbl">Log · Read · Share</span>
+          <span className="lbl">The fits you chose</span>
         </div>
       </div>
     </footer>
