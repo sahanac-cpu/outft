@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaqAccordion, type QA } from "@/components/faq-accordion";
+import { Reveal, MaskReveal, RuleDraw } from "@/components/reveal";
 
 export const metadata: Metadata = {
   title: "FAQ. OUTFT.",
@@ -23,7 +24,7 @@ const ITEMS: QA[] = [
   },
   {
     q: "How does fashion DNA work?",
-    a: "Every fit you log is read for palette, silhouette and register. Over time that becomes a composition: quiet luxury, old money, scandi, coastal, and the wildcard slice that makes you you. It is a mirror, not a grade. Nothing is ranked against anyone else.",
+    a: "Every fit you log is read for palette, silhouette and register. Over time that becomes a composition: quiet luxury, old money, scandi, coastal, and the wildcard slice that makes you you. It is a mirror, not a grade.",
   },
   {
     q: "What is a ft. twin?",
@@ -35,7 +36,7 @@ const ITEMS: QA[] = [
   },
   {
     q: "Is anything public?",
-    a: "No public like counts, no follower leaderboard, no open profiles to strangers. Your record is yours and the people you follow. A creator profile is the one exception, and it is opt-in by application.",
+    a: "No public like counts, no follower leaderboard, no open profiles to strangers. Your record is yours and the people you follow.",
   },
   {
     q: "When does it open?",
@@ -45,36 +46,42 @@ const ITEMS: QA[] = [
 
 export default function FaqPage() {
   return (
-    <section className="bg-bg pt-[68px]">
+    <section className="bg-white pt-[60px]">
       <div className="mx-auto max-w-[1000px] px-6 py-16 md:px-10 md:py-24">
-        <span className="lbl">Questions</span>
-        <h1 className="mt-6 max-w-[16ch] font-serif text-[clamp(2.6rem,6vw,5rem)] font-medium leading-[1.0] tracking-[-0.02em]">
-          The short answers.
+
+        <Reveal>
+          <span className="lbl">Questions</span>
+        </Reveal>
+
+        <h1 className="mt-7 font-display text-[clamp(2.8rem,7vw,6rem)] font-bold leading-[0.9] tracking-[-0.022em] text-[#000000]">
+          <MaskReveal delay={0.1}>The short answers.</MaskReveal>
         </h1>
-        <p className="mt-7 max-w-[52ch] text-[15.5px] leading-relaxed text-ink2">
-          Everything people ask before their room opens. If something is missing,
-          it is probably on the{" "}
-          <Link href="/why" className="text-ink underline underline-offset-4">
-            why
-          </Link>{" "}
-          page.
-        </p>
+
+        <RuleDraw delay={0.3} className="mt-7 w-full" />
+
+        <Reveal delay={0.18}>
+          <p className="mt-7 max-w-[52ch] font-sans text-[15px] font-light leading-relaxed text-[#555555]">
+            Everything people ask before their room opens. If something is
+            missing, it is probably on the{" "}
+            <Link href="/why" className="border-b border-[#333333] text-[#000000]">
+              why
+            </Link>{" "}
+            page.
+          </p>
+        </Reveal>
 
         <div className="mt-14">
           <FaqAccordion items={ITEMS} />
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center gap-4 border-t border-line pt-10">
-          <span className="font-serif text-[20px] italic text-ink2">
+        <Reveal className="mt-16 flex flex-wrap items-center gap-5 border-t border-[#333333] pt-10">
+          <span className="font-serif text-[20px] italic text-[#555555]">
             Still deciding?
           </span>
-          <Link
-            href="/join"
-            className="rounded-full bg-ink px-7 py-3.5 text-[11px] uppercase tracking-[0.18em] text-white transition-transform duration-300 hover:-translate-y-px active:scale-[0.97]"
-          >
+          <Link href="/join" className="btn-ghost">
             Request access
           </Link>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,41 +1,36 @@
 import Link from "next/link";
-import { Reveal } from "./reveal";
+import { Reveal, MaskReveal, RuleDraw } from "./reveal";
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden bg-ink text-white">
-      {/* faint warm wash so the dark block still reads OUTFT, not generic */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.16]"
-        style={{
-          background:
-            "radial-gradient(60% 80% at 20% 0%, var(--color-mauve), transparent 60%), radial-gradient(50% 70% at 90% 100%, var(--color-sky), transparent 60%)",
-        }}
-        aria-hidden
-      />
-      <div className="relative mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
+    <section className="bg-[#000000] text-white">
+      <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10 md:py-40">
+
         <Reveal>
-          <h2 className="max-w-[16ch] font-serif text-[clamp(2.8rem,7vw,6rem)] font-medium leading-[0.98] tracking-[-0.02em]">
-            Start your record. One fit at a time.
-          </h2>
+          <span className="font-sans text-[10px] font-light uppercase tracking-[0.34em] text-[#808080]">
+            Join the waitlist
+          </span>
         </Reveal>
-        <Reveal delay={0.12}>
-          <p className="mt-7 max-w-[42ch] text-[15px] leading-relaxed text-white/70">
+
+        <h2 className="mt-6 font-display text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.9] tracking-[-0.022em] text-white">
+          <MaskReveal delay={0.1}>Start your record.</MaskReveal>
+          <MaskReveal delay={0.22}>One fit at a time.</MaskReveal>
+        </h2>
+
+        <RuleDraw delay={0.4} className="mt-8 w-full" color="#333333" />
+
+        <Reveal delay={0.18}>
+          <p className="mt-8 max-w-[44ch] font-sans text-[15px] font-light leading-relaxed text-[#808080]">
             outft is opening in small rooms. Request access and we will save your
             handle before the door does.
           </p>
         </Reveal>
-        <Reveal delay={0.2} className="mt-10 flex flex-wrap items-center gap-3">
-          <Link
-            href="/join"
-            className="rounded-full bg-white px-8 py-4 text-[11px] uppercase tracking-[0.18em] text-ink transition-transform duration-300 hover:-translate-y-px active:scale-[0.97]"
-          >
+
+        <Reveal delay={0.26} className="mt-10 flex flex-wrap items-center gap-4">
+          <Link href="/join" className="btn-ghost-inv">
             Request access
           </Link>
-          <Link
-            href="/why"
-            className="rounded-full border border-white/25 px-8 py-4 text-[11px] uppercase tracking-[0.18em] text-white transition-colors hover:border-white/70"
-          >
+          <Link href="/why" className="btn-ghost-inv">
             Read why
           </Link>
         </Reveal>

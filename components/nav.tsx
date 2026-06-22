@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { Logo } from "./logo";
 
 const LINKS = [
   { label: "Tracing", href: "/" },
@@ -23,41 +22,38 @@ export function Nav() {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-50"
-      initial={false}
-      animate={{
-        backgroundColor: solid ? "rgba(255,255,255,0.72)" : "rgba(255,255,255,0)",
-        borderColor: solid ? "rgba(236,234,229,1)" : "rgba(236,234,229,0)",
-      }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        backdropFilter: solid ? "blur(16px) saturate(120%)" : "none",
-        WebkitBackdropFilter: solid ? "blur(16px) saturate(120%)" : "none",
-        borderBottomWidth: 1,
-        borderBottomStyle: "solid",
-      }}
+      className="fixed inset-x-0 top-0 z-50 bg-white/75 backdrop-blur-md"
+      animate={{ borderColor: solid ? "#333333" : "transparent" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      style={{ borderBottomWidth: 1, borderBottomStyle: "solid" }}
     >
-      <nav className="mx-auto flex h-[68px] max-w-[1400px] items-center justify-between px-6 md:px-10">
-        <Logo size="1.4rem" />
+      <nav className="mx-auto flex h-[60px] max-w-[1400px] items-center justify-between px-6 md:px-10">
+        {/* wordmark */}
+        <Link
+          href="/"
+          aria-label="OUTFT home"
+          className="font-display text-[15px] font-bold tracking-[-0.01em] text-[#000000]"
+        >
+          OUTFT.
+        </Link>
 
-        <div className="hidden items-center gap-9 md:flex">
+        {/* desktop links */}
+        <div className="hidden items-center gap-8 md:flex">
           {LINKS.map((l) => (
             <Link
               key={l.label}
               href={l.href}
-              className="text-[12.5px] tracking-[0.04em] text-ink2 transition-colors hover:text-ink"
+              className="font-sans text-[12px] font-light tracking-[0.06em] text-[#555555] transition-colors duration-150 hover:text-[#000000]"
             >
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/join"
-            className="rounded-full bg-ink px-5 py-2.5 text-[11px] uppercase tracking-[0.18em] text-white transition-transform duration-300 hover:-translate-y-px active:scale-[0.97]"
-          >
+          <Link href="/join" className="btn-ghost text-[10px]">
             Request access
           </Link>
         </div>
 
+        {/* mobile hamburger */}
         <button
           className="flex h-9 w-9 items-center justify-center md:hidden"
           aria-label="Menu"
@@ -66,15 +62,15 @@ export function Nav() {
         >
           <div className="flex flex-col gap-[5px]">
             <span
-              className="h-px w-5 bg-ink transition-transform"
+              className="h-px w-5 bg-[#000000] transition-transform"
               style={{ transform: open ? "translateY(3px) rotate(45deg)" : "none" }}
             />
             <span
-              className="h-px w-5 bg-ink transition-opacity"
+              className="h-px w-5 bg-[#000000] transition-opacity"
               style={{ opacity: open ? 0 : 1 }}
             />
             <span
-              className="h-px w-5 bg-ink transition-transform"
+              className="h-px w-5 bg-[#000000] transition-transform"
               style={{ transform: open ? "translateY(-3px) rotate(-45deg)" : "none" }}
             />
           </div>
@@ -85,16 +81,16 @@ export function Nav() {
       <motion.div
         initial={false}
         animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden border-t border-line bg-white/95 backdrop-blur-md md:hidden"
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden border-t border-[#333333] bg-white md:hidden"
       >
-        <div className="flex flex-col gap-1 px-6 py-4">
+        <div className="flex flex-col px-6 py-5">
           {LINKS.map((l) => (
             <Link
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="py-2 font-serif text-[22px] text-ink"
+              className="border-b border-[#333333] py-4 font-serif text-[22px] font-light text-[#000000]"
             >
               {l.label}
             </Link>
@@ -102,7 +98,7 @@ export function Nav() {
           <Link
             href="/join"
             onClick={() => setOpen(false)}
-            className="mt-3 rounded-full bg-ink px-5 py-3 text-center text-[11px] uppercase tracking-[0.18em] text-white"
+            className="btn-ghost mt-5 justify-center"
           >
             Request access
           </Link>

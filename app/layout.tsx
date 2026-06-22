@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer";
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["italic", "normal"],
-  weight: ["700", "800", "900"],
+  weight: ["400", "700", "800"],
   variable: "--font-playfair",
   display: "swap",
 });
@@ -15,7 +15,7 @@ const playfair = Playfair_Display({
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   style: ["italic", "normal"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500"],
   variable: "--font-cormorant",
   display: "swap",
 });
@@ -49,7 +49,6 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${cormorant.variable} ${jost.variable} antialiased`}
       >
-        <div className="grain-fixed" aria-hidden />
         <Nav />
         <main>{children}</main>
         <Footer />

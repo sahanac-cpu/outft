@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
-import { Logo, FtMark } from "./logo";
+import { Reveal, RuleDraw } from "./reveal";
 
 const STEPS = [
   {
@@ -14,12 +14,12 @@ const STEPS = [
   {
     key: "post",
     title: "Post to see",
-    body: "Snap your fit and it prints a ticket, your fit of record. Until you post, the feed stays closed.",
+    body: "Snap your fit and it prints a ticket — your fit of record. Until you post, the feed stays closed.",
   },
   {
     key: "feed",
     title: "Then the feed opens",
-    body: "Only after you post do your friends and the creators you follow appear. Everyone's honest at once.",
+    body: "Only after you post do your friends and creators appear. Everyone's honest at once.",
   },
   {
     key: "dna",
@@ -54,45 +54,53 @@ export function AppDemo() {
 
   useEffect(() => {
     if (reduce || !inView) return;
-    const t = setInterval(
-      () => setActive((a) => (a + 1) % STEPS.length),
-      ROTATE
-    );
+    const t = setInterval(() => setActive((a) => (a + 1) % STEPS.length), ROTATE);
     return () => clearInterval(t);
   }, [reduce, inView]);
 
   return (
-    <section id="demo" ref={sectionRef} className="relative bg-white">
+    <section id="demo" ref={sectionRef} className="bg-transparent">
+      {/* top rule */}
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+        <div className="h-px w-full bg-[#333333]" />
+      </div>
+
       <div className="mx-auto max-w-[1400px] px-6 py-24 md:px-10 md:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
+        <div className="grid items-start gap-16 lg:grid-cols-[1fr_320px] lg:gap-24">
+
           {/* narrative */}
           <div className="order-2 lg:order-1">
-            <span className="lbl">The app, in motion</span>
-            <h2 className="mt-5 max-w-[14ch] font-serif text-[clamp(2.4rem,5vw,4rem)] font-medium leading-[1.02] tracking-[-0.01em]">
-              A whole ritual, from the window to the wardrobe.
-            </h2>
+            <Reveal>
+              <span className="lbl">The app, in motion</span>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h2 className="mt-5 max-w-[16ch] font-display text-[clamp(2rem,4vw,3.2rem)] font-bold leading-[1.0] tracking-[-0.02em] text-[#000000]">
+                A whole ritual, from the window to the wardrobe.
+              </h2>
+            </Reveal>
+            <RuleDraw delay={0.18} className="mt-8 w-full" />
 
-            <ol className="mt-10 flex flex-col">
+            <ol className="mt-0">
               {STEPS.map((s, i) => {
                 const on = i === active;
                 return (
                   <li key={s.key}>
                     <button
                       onClick={() => setActive(i)}
-                      className="group flex w-full gap-5 border-t border-line py-5 text-left last:border-b"
+                      className="group flex w-full gap-6 border-b border-[#333333] py-6 text-left"
                       aria-current={on}
                     >
                       <span
-                        className={`mt-1 font-serif text-[15px] tabular-nums transition-colors ${
-                          on ? "text-ink" : "text-grey-soft"
+                        className={`mt-0.5 font-sans text-[12px] font-light tabular-nums transition-colors ${
+                          on ? "text-[#000000]" : "text-[#808080]"
                         }`}
                       >
                         0{i + 1}
                       </span>
                       <span className="flex-1">
                         <span
-                          className={`block font-serif text-[22px] leading-tight transition-colors ${
-                            on ? "text-ink" : "text-grey"
+                          className={`block font-serif text-[20px] leading-tight transition-colors md:text-[24px] ${
+                            on ? "text-[#000000]" : "text-[#808080]"
                           }`}
                         >
                           {s.title}
@@ -103,22 +111,23 @@ export function AppDemo() {
                               initial={reduce ? false : { height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={reduce ? undefined : { height: 0, opacity: 0 }}
-                              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                               className="block overflow-hidden"
                             >
-                              <span className="mt-2 block max-w-[44ch] text-[14px] leading-relaxed text-ink2">
+                              <span className="mt-2 block max-w-[44ch] font-sans text-[13px] font-light leading-relaxed text-[#555555]">
                                 {s.body}
                               </span>
                             </motion.span>
                           )}
                         </AnimatePresence>
                       </span>
-                      {/* progress hairline */}
-                      <span className="relative mt-2 hidden h-px w-10 self-start overflow-hidden bg-line sm:block">
+
+                      {/* progress bar */}
+                      <span className="relative mt-2 hidden h-px w-8 self-start overflow-hidden bg-[#e0e0e0] sm:block">
                         {on && !reduce && (
                           <motion.span
                             key={active}
-                            className="absolute inset-0 bg-ink"
+                            className="absolute inset-0 bg-[#000000]"
                             initial={{ scaleX: 0 }}
                             animate={{ scaleX: 1 }}
                             transition={{ duration: ROTATE / 1000, ease: "linear" }}
@@ -133,8 +142,8 @@ export function AppDemo() {
             </ol>
           </div>
 
-          {/* phone */}
-          <div className="order-1 flex justify-center lg:order-2">
+          {/* phone mockup */}
+          <div className="order-1 flex justify-center lg:order-2 lg:justify-end lg:pt-12">
             <Phone activeKey={STEPS[active].key} reduce={!!reduce} />
           </div>
         </div>
@@ -146,34 +155,31 @@ export function AppDemo() {
 function Phone({ activeKey, reduce }: { activeKey: string; reduce: boolean }) {
   return (
     <div
-      className="relative flex h-[600px] w-[300px] flex-col overflow-hidden bg-white"
-      style={{
-        borderRadius: 44,
-        boxShadow:
-          "0 1px 0 1.5px rgba(255,255,255,.5) inset, 0 44px 90px -26px rgba(40,36,30,.5), 0 12px 30px -12px rgba(40,36,30,.3)",
-      }}
+      className="relative flex h-[580px] w-[280px] flex-col overflow-hidden border border-[#000000] bg-white"
     >
-      <div className="flex items-center justify-between px-7 pt-4 text-[11px] tracking-wide text-ink">
-        <span>9:41</span>
+      {/* status bar */}
+      <div className="flex items-center justify-between border-b border-[#333333] px-5 py-2.5">
+        <span className="font-sans text-[10px] font-light text-[#000000]">9:41</span>
+        <span className="font-display text-[11px] font-bold tracking-[-0.01em] text-[#000000]">OUTFT.</span>
         <span className="flex gap-1">
-          <i className="h-1 w-1 rounded-full bg-ink/50" />
-          <i className="h-1 w-1 rounded-full bg-ink/50" />
-          <i className="h-1 w-1 rounded-full bg-ink/50" />
+          {[0, 1, 2].map((i) => (
+            <i key={i} className="h-1 w-1 bg-[#000000]/40" style={{ display: "block" }} />
+          ))}
         </span>
       </div>
 
-      <div className="relative flex-1">
+      <div className="relative flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeKey}
             className="absolute inset-0"
-            initial={reduce ? false : { opacity: 0, y: 10 }}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             {activeKey === "daily" && <ScreenDaily />}
-            {activeKey === "post" && <ScreenTicket />}
+            {activeKey === "post" && <ScreenPost />}
             {activeKey === "feed" && <ScreenFeed />}
             {activeKey === "dna" && <ScreenDNA />}
             {activeKey === "twin" && <ScreenTwin />}
@@ -184,83 +190,90 @@ function Phone({ activeKey, reduce }: { activeKey: string; reduce: boolean }) {
   );
 }
 
-/* ---------- screens ---------- */
-
 function ScreenDaily() {
   return (
-    <div className="relative flex h-full flex-col items-center justify-center overflow-hidden bg-[#f3f1ed] px-8 text-center">
-      <span className="absolute left-[-20%] top-[8%] h-44 w-44 rounded-full bg-mauve/70 blur-3xl" />
-      <span className="absolute right-[-16%] top-[40%] h-40 w-40 rounded-full bg-sage/70 blur-3xl" />
-      <span className="absolute bottom-[10%] left-[20%] h-36 w-36 rounded-full bg-sky/60 blur-3xl" />
-      <div className="relative">
-        <span className="text-[9px] uppercase tracking-[0.4em] text-ink2">
-          14 : 32 · your window is open
-        </span>
-        <div className="mt-5">
-          <Logo size="2.6rem" href={null} />
-        </div>
-        <span className="mt-4 block text-[11px] uppercase tracking-[0.35em] text-ink2">
-          post today&rsquo;s fit
-        </span>
-        <div className="mx-auto mt-7 flex h-14 w-14 items-center justify-center rounded-full bg-ink">
-          <svg viewBox="0 0 24 24" className="h-5 w-5 stroke-white" fill="none" strokeWidth={1.4}>
-            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-          </svg>
-        </div>
+    <div className="flex h-full flex-col items-center justify-center px-8 text-center">
+      <span className="font-sans text-[9px] font-light uppercase tracking-[0.4em] text-[#555555]">
+        14 : 32 · your window is open
+      </span>
+      <div className="mt-6 font-display text-[32px] font-bold tracking-[-0.02em] text-[#000000]">
+        OUTFT.
+      </div>
+      <span className="mt-3 block font-sans text-[10px] font-light uppercase tracking-[0.35em] text-[#555555]">
+        post today's fit
+      </span>
+      <div className="mx-auto mt-8 flex h-12 w-12 items-center justify-center border border-[#000000]">
+        <svg viewBox="0 0 24 24" className="h-4 w-4 stroke-[#000000]" fill="none" strokeWidth={1.5}>
+          <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+        </svg>
+      </div>
+      <div className="mt-8 w-full border-t border-[#333333]" />
+      <div className="mt-4 grid w-full grid-cols-3 gap-px border border-[#333333]">
+        {["Morning", "Afternoon", "Evening"].map((w, i) => (
+          <div
+            key={w}
+            className={`px-2 py-3 text-center ${
+              i === 1 ? "bg-[#000000]" : "bg-white"
+            }`}
+          >
+            <div className={`font-sans text-[8px] uppercase tracking-[0.15em] ${i === 1 ? "text-white/70" : "text-[#808080]"}`}>
+              {w}
+            </div>
+            <div className={`mt-1 font-sans text-[10px] ${i === 1 ? "text-white" : "text-[#555555]"}`}>
+              {["07–11", "11–17", "17–23"][i]}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-const BARS = Array.from({ length: 52 }, (_, i) => {
-  const w = ((i * 73) % 5) * 0.5 + 0.8;
-  const h = (((i * 37) % 10) / 10) * 0.45 + 0.55;
-  const faint = (i * 17) % 9 === 0;
-  return { w, h, faint };
-});
+const BARS = Array.from({ length: 48 }, (_, i) => ({
+  w: ((i * 73) % 5) * 0.4 + 0.7,
+  h: (((i * 37) % 10) / 10) * 0.5 + 0.5,
+  faint: (i * 17) % 9 === 0,
+}));
 
-function ScreenTicket() {
+function ScreenPost() {
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-bone px-7">
-      <div
-        className="w-full max-w-[230px] bg-white px-5 pb-4 pt-5"
-        style={{ borderRadius: 8, boxShadow: "0 30px 60px -30px rgba(40,36,30,.5)" }}
-      >
-        <div className="text-center">
-          <Logo size="1.25rem" href={null} />
-          <div className="mt-1 text-[7.5px] uppercase tracking-[0.32em] text-grey">
+    <div className="flex h-full flex-col items-center justify-center px-6">
+      <div className="w-full border border-[#000000] bg-white">
+        <div className="flex items-center justify-between border-b border-[#333333] px-4 py-3">
+          <span className="font-display text-[11px] font-bold text-[#000000]">OUTFT.</span>
+          <span className="font-sans text-[7.5px] uppercase tracking-[0.3em] text-[#808080]">
             fit of record
+          </span>
+        </div>
+        <div
+          className="relative mx-4 mt-3"
+          style={{ aspectRatio: "1/1", background: "#f5f5f5", border: "1px solid #333333" }}
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-sans text-[8px] uppercase tracking-[0.25em] text-[#999999]">
+              today's fit
+            </span>
           </div>
         </div>
-        <div className="relative my-3 overflow-hidden sw4" style={{ aspectRatio: "1/1", borderRadius: 4 }}>
-          <span className="grain-local" />
-        </div>
-        {[
-          ["Date", "04 · 06 · 2026"],
-          ["Time", "14:32"],
-          ["Occasion", "Solo date"],
-          ["Look no.", "0097"],
-        ].map(([k, v], i) => (
+        {[["Date", "04 · 06 · 2026"], ["Window", "Afternoon"], ["Occasion", "Solo date"], ["Look no.", "0097"]].map(([k, v], i) => (
           <div
             key={k}
-            className={`flex items-baseline justify-between py-[7px] text-[11px] ${
-              i === 0 ? "" : "border-t border-dashed border-line2"
-            }`}
+            className={`mx-4 flex items-baseline justify-between py-2 text-[10px] ${i > 0 ? "border-t border-dashed border-[#e0e0e0]" : ""}`}
           >
-            <span className="tracking-wide text-grey">{k}</span>
-            <span className="tracking-wide text-ink">{v}</span>
+            <span className="font-sans font-light tracking-wide text-[#808080]">{k}</span>
+            <span className="font-sans font-light text-[#000000]">{v}</span>
           </div>
         ))}
-        <div className="mt-3 flex h-9 items-end justify-center gap-px">
+        <div className="mx-4 mb-3 mt-2 flex h-8 items-end justify-center gap-px border-t border-[#333333] pt-2">
           {BARS.map((b, i) => (
             <i
               key={i}
-              className="block bg-ink"
+              className="block bg-[#000000]"
               style={{ width: `${b.w}px`, height: `${b.h * 100}%`, opacity: b.faint ? 0.2 : 1 }}
             />
           ))}
         </div>
-        <div className="mt-2 text-center text-[8px] tracking-[0.26em] text-ink2">
+        <div className="pb-3 text-center font-sans text-[7px] tracking-[0.26em] text-[#555555]">
           OUTFT · 1716 3357 9486 7750
         </div>
       </div>
@@ -270,35 +283,37 @@ function ScreenTicket() {
 
 function ScreenFeed() {
   return (
-    <div className="h-full overflow-hidden bg-white px-5 pt-3">
-      <div className="flex items-center justify-between pb-3">
-        <Logo size="1.15rem" href={null} />
-        <span className="h-6 w-6 rounded-full sw4" />
+    <div className="h-full overflow-hidden bg-white px-5 pt-4">
+      <div className="flex items-center justify-between border-b border-[#333333] pb-3">
+        <span className="font-display text-[13px] font-bold text-[#000000]">OUTFT.</span>
+        <span className="font-sans text-[9px] font-light uppercase tracking-[0.24em] text-[#808080]">Feed</span>
       </div>
-      <div className="flex items-center gap-2.5 pb-3">
-        <span className="grid h-7 w-7 place-items-center rounded-full sw3 font-serif text-[12px] text-white">
+      <div className="mt-3 flex items-center gap-2.5 border-b border-[#e0e0e0] pb-3">
+        <div className="flex h-7 w-7 items-center justify-center border border-[#333333] font-serif text-[12px] text-[#000000]">
           M
-        </span>
+        </div>
         <div className="leading-tight">
-          <div className="text-[12px] text-ink">maren</div>
-          <div className="text-[8.5px] uppercase tracking-[0.16em] text-grey">
+          <div className="font-sans text-[11px] font-light text-[#000000]">maren</div>
+          <div className="font-sans text-[8.5px] uppercase tracking-[0.16em] text-[#808080]">
             Solo date · 14:10
           </div>
         </div>
-        <span className="ml-auto text-[10px] text-grey-soft">2h</span>
+        <span className="ml-auto font-sans text-[10px] font-light text-[#808080]">2h</span>
       </div>
-      <div className="relative overflow-hidden sw3" style={{ aspectRatio: "4/5", borderRadius: 14 }}>
-        <span className="grain-local" />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-3 pb-3 pt-9">
-          <span className="font-serif text-[18px] font-medium text-white">
+      <div
+        className="relative mt-3 border border-[#333333] bg-[#f5f5f5]"
+        style={{ aspectRatio: "4/5" }}
+      >
+        <div className="absolute inset-0 flex items-end p-3">
+          <span className="bg-[#000000] px-2 py-1 font-serif text-[14px] text-white">
             Oat linen, no rush
           </span>
         </div>
       </div>
-      <p className="mt-3 font-serif text-[13px] italic text-ink2">
-        &ldquo;Reading-in-a-caf&eacute; kind of fit.&rdquo;
+      <p className="mt-3 font-serif text-[12px] italic text-[#555555]">
+        &ldquo;Reading-in-a-café kind of fit.&rdquo;
       </p>
-      <div className="mt-2 flex gap-2 text-[10px] text-grey">
+      <div className="mt-2 flex gap-2 font-sans text-[9px] font-light text-[#808080]">
         <span>#quietluxury</span>
         <span>#neutrals</span>
         <span>#linen</span>
@@ -308,27 +323,25 @@ function ScreenFeed() {
 }
 
 const FACETS = [
-  { p: 41, label: "Quiet luxury", sw: "sw3", size: 78, x: 50, y: 16 },
-  { p: 23, label: "Old money", sw: "sw5", size: 64, x: 84, y: 52 },
-  { p: 18, label: "Scandi", sw: "sw2", size: 58, x: 66, y: 86 },
-  { p: 11, label: "Coastal", sw: "sw6", size: 52, x: 24, y: 84 },
-  { p: 7, label: "Eclectic", sw: "sw4", size: 48, x: 12, y: 48 },
+  { p: 41, label: "Quiet luxury", x: 50, y: 16, size: 68 },
+  { p: 23, label: "Old money", x: 84, y: 52, size: 56 },
+  { p: 18, label: "Scandi", x: 64, y: 86, size: 50 },
+  { p: 11, label: "Coastal", x: 22, y: 82, size: 46 },
+  { p: 7, label: "Eclectic", x: 10, y: 46, size: 42 },
 ];
 
 function ScreenDNA() {
   return (
-    <div className="flex h-full flex-col bg-white px-5 pt-3">
-      <div className="flex items-baseline gap-2">
-        <FtMark size="1.6rem" />
-        <span className="font-serif text-[18px] text-ink">
-          your fashion <span className="italic text-grey">DNA</span>
+    <div className="flex h-full flex-col bg-white px-5 pt-4">
+      <div className="flex items-baseline gap-2 border-b border-[#333333] pb-3">
+        <span className="font-display text-[11px] font-bold text-[#000000]">ft.</span>
+        <span className="font-serif text-[16px] text-[#000000]">
+          your fashion DNA
         </span>
       </div>
-      <div className="relative mx-auto mt-2 h-[300px] w-[260px]">
-        <div className="absolute left-1/2 top-1/2 grid h-[72px] w-[72px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-ink">
-          <span className="font-display text-[15px] italic font-extrabold text-white">
-            you
-          </span>
+      <div className="relative mx-auto mt-3 h-[280px] w-[240px]">
+        <div className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-[#000000] bg-[#000000]">
+          <span className="font-sans text-[11px] font-light uppercase tracking-[0.14em] text-white">you</span>
         </div>
         {FACETS.map((f) => (
           <div
@@ -337,17 +350,11 @@ function ScreenDNA() {
             style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.size, height: f.size }}
           >
             <div
-              className="relative grid h-full w-full place-items-center rounded-full"
-              style={{
-                background: `conic-gradient(var(--color-ink) ${f.p * 3.6}deg, var(--color-line2) 0)`,
-              }}
+              className="flex h-full w-full items-center justify-center border border-[#333333] bg-white text-center"
             >
-              <div className={`relative grid place-items-center overflow-hidden rounded-full ${f.sw}`} style={{ inset: 5, position: "absolute" }}>
-                <span className="grain-local" />
-                <div className="relative text-center leading-none">
-                  <div className="font-serif text-[14px] font-semibold text-ink">{f.p}%</div>
-                  <div className="mt-0.5 text-[7.5px] text-ink">{f.label}</div>
-                </div>
+              <div>
+                <div className="font-sans text-[12px] font-light text-[#000000]">{f.p}%</div>
+                <div className="font-sans text-[7px] font-light uppercase tracking-[0.12em] text-[#808080]">{f.label}</div>
               </div>
             </div>
           </div>
@@ -359,49 +366,45 @@ function ScreenDNA() {
 
 function ScreenTwin() {
   const recs = [
-    { i: "J", h: "@jude", m: "88%", sw: "sw1" },
-    { i: "M", h: "@maren", m: "85%", sw: "sw3" },
-    { i: "A", h: "@ari", m: "81%", sw: "sw5" },
-    { i: "S", h: "@soraya", m: "79%", sw: "sw4" },
+    { i: "J", h: "@jude", m: "88%" },
+    { i: "M", h: "@maren", m: "85%" },
+    { i: "A", h: "@ari", m: "81%" },
+    { i: "S", h: "@soraya", m: "79%" },
   ];
   return (
     <div className="h-full bg-white px-5 pt-4">
-      <div className="rounded-2xl border border-line bg-panel p-5">
-        <div className="text-[8.5px] uppercase tracking-[0.24em] text-grey">
+      <div className="border border-[#000000] p-4">
+        <div className="font-sans text-[8px] uppercase tracking-[0.24em] text-[#808080]">
           Your closest fashion twin
         </div>
         <div className="mt-3 flex items-center gap-3">
-          <span className="grid h-12 w-12 place-items-center rounded-full sw2 font-serif text-[18px] text-white">
+          <div className="flex h-11 w-11 items-center justify-center border border-[#333333] font-serif text-[16px] text-[#000000]">
             L
-          </span>
+          </div>
           <div className="leading-tight">
-            <div className="text-[14px] text-ink">Lena Voss</div>
-            <div className="text-[10px] text-grey">@lenav</div>
+            <div className="font-sans text-[13px] font-light text-[#000000]">Lena Voss</div>
+            <div className="font-sans text-[10px] font-light text-[#808080]">@lenav</div>
           </div>
           <div className="ml-auto text-right">
-            <div className="font-serif text-[24px] font-semibold leading-none text-ink">
-              92%
-            </div>
-            <div className="text-[7.5px] uppercase tracking-[0.2em] text-grey">
-              match
-            </div>
+            <div className="font-serif text-[22px] text-[#000000]">92%</div>
+            <div className="font-sans text-[7px] uppercase tracking-[0.2em] text-[#808080]">match</div>
           </div>
         </div>
-        <div className="mt-4 rounded-full bg-ink py-2.5 text-center text-[10px] uppercase tracking-[0.18em] text-white">
+        <button className="mt-4 w-full border border-[#000000] bg-[#000000] py-2.5 font-sans text-[9px] uppercase tracking-[0.2em] text-white">
           Follow
-        </div>
+        </button>
       </div>
-      <div className="mt-5 text-[8.5px] uppercase tracking-[0.24em] text-grey">
+      <div className="mt-5 font-sans text-[8px] uppercase tracking-[0.24em] text-[#808080]">
         More to follow
       </div>
       <div className="mt-3 flex justify-between">
         {recs.map((r) => (
           <div key={r.h} className="text-center">
-            <span className={`mx-auto grid h-12 w-12 place-items-center rounded-full ${r.sw} font-serif text-[16px] text-white`}>
+            <div className="mx-auto flex h-11 w-11 items-center justify-center border border-[#333333] font-serif text-[14px] text-[#000000]">
               {r.i}
-            </span>
-            <div className="mt-1.5 text-[9px] text-ink2">{r.h}</div>
-            <div className="text-[8px] text-grey">{r.m}</div>
+            </div>
+            <div className="mt-1.5 font-sans text-[9px] font-light text-[#555555]">{r.h}</div>
+            <div className="font-sans text-[8px] font-light text-[#808080]">{r.m}</div>
           </div>
         ))}
       </div>

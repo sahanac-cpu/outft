@@ -11,7 +11,7 @@ export function Logo({
 }) {
   const mark = (
     <span
-      className={`font-display font-black tracking-[-0.015em] leading-none text-ink ${className}`}
+      className={`font-display font-bold tracking-[-0.015em] leading-none text-[#000000] ${className}`}
       style={{ fontSize: size }}
     >
       OUTFT.

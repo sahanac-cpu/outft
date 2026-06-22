@@ -39,18 +39,16 @@ export function WaitlistInline() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[440px]">
+    <div className="w-full max-w-[440px]">
       <AnimatePresence mode="wait" initial={false}>
         {status === "success" ? (
           <motion.p
             key="ok"
             initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center gap-2 py-3 font-serif text-[18px] italic text-ink"
+            className="border border-[#333333] px-5 py-4 font-sans text-[12px] font-light uppercase tracking-[0.22em] text-[#000000]"
           >
-            <CheckDot />
-            You&rsquo;re on the list
-            {position ? `. No. ${String(position).padStart(4, "0")}` : "."}
+            Handle saved — we&apos;ll write when your room is ready.
           </motion.p>
         ) : (
           <motion.form
@@ -59,40 +57,31 @@ export function WaitlistInline() {
             initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? undefined : { opacity: 0, y: -8 }}
-            className="flex items-center gap-1.5 rounded-full border border-line2 bg-white/75 p-1.5 pl-5 backdrop-blur-md shadow-[0_14px_34px_-22px_rgba(40,36,30,0.5)]"
+            className="flex items-stretch"
           >
             <input
               name="email"
               type="email"
               required
               autoComplete="email"
-              placeholder="you@studio.com"
+              placeholder="your@email.com"
               aria-label="Email for the waitlist"
-              className="min-w-0 flex-1 bg-transparent py-2.5 text-[14.5px] text-ink outline-none placeholder:text-grey-soft"
+              className="min-w-0 flex-1 border border-r-0 border-[#333333] bg-[#f3f1ec]/80 px-4 py-3 font-sans text-[13px] font-light text-[#000000] outline-none placeholder:text-[#888888]"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="flex shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[11px] uppercase tracking-[0.16em] text-white transition-transform duration-300 hover:-translate-y-px active:scale-[0.97] disabled:opacity-70"
+              className="shrink-0 border border-[#000000] bg-[#000000] px-5 py-3 font-sans text-[10px] font-light uppercase tracking-[0.22em] text-white transition-colors duration-200 hover:bg-[#333333] disabled:opacity-60"
             >
-              {status === "loading" ? (
-                <Spinner />
-              ) : (
-                <>
-                  Join
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 stroke-current" fill="none" strokeWidth={1.6}>
-                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </>
-              )}
+              {status === "loading" ? "…" : "Join"}
             </button>
           </motion.form>
         )}
       </AnimatePresence>
 
-      <p className="mt-3 text-center text-[11px] uppercase tracking-[0.2em] text-grey">
+      <p className="mt-3 font-sans text-[10px] font-light uppercase tracking-[0.24em] text-[#808080]">
         {status === "error" ? (
-          <span className="text-[#9a5b5b] normal-case tracking-normal">{message}</span>
+          <span className="normal-case tracking-normal text-[#888]">{message}</span>
         ) : (
           "Opening in small rooms"
         )}
@@ -101,22 +90,3 @@ export function WaitlistInline() {
   );
 }
 
-function Spinner() {
-  return (
-    <motion.span
-      className="block h-3.5 w-3.5 rounded-full border-[1.5px] border-white/40 border-t-white"
-      animate={{ rotate: 360 }}
-      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-    />
-  );
-}
-
-function CheckDot() {
-  return (
-    <span className="grid h-5 w-5 place-items-center rounded-full bg-ink">
-      <svg viewBox="0 0 24 24" className="h-3 w-3 stroke-white" fill="none" strokeWidth={2}>
-        <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  );
-}
