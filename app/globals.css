@@ -1,59 +1,53 @@
 @import "tailwindcss";
 
 /* ============================================================
-   OUTFT. editorial luxury design system
-   Light theme, locked. Bone + ink + drifting muted auras.
+   OUTFT. — editorial minimal (white, airy, Zara-like)
+   White canvas + drifting muted aura. Serif display, light sans
+   labels, hairlines. More white than beige. No clutter.
    ============================================================ */
 
 @theme {
-  --color-bg: #ffffff;
-  --color-bone: #f6f5f3;
-  --color-panel: #fbfaf9;
-  --color-ink: #16140f;
-  --color-ink2: #5e5a53;
-  --color-grey: #928e87;
+  --color-bg:        #ffffff;   /* white canvas */
+  --color-bone:      #f7f6f4;   /* faintest warm panel, used sparingly */
+  --color-mist:      #e7e6e3;   /* soft grey — non-hero/non-demo sections */
+  --color-panel:     #fbfaf9;   /* lifted panel (main demo) */
+  --color-ink:       #16140f;
+  --color-ink2:      #5e5a53;
+  --color-grey:      #928e87;
   --color-grey-soft: #bebab4;
-  --color-line: #eceae5;
-  --color-line2: #e2dfd9;
+  --color-line:      #eceae5;   /* hairline */
+  --color-line2:     #ddd9d2;
+  --color-accent:    #16140f;
 
-  /* aura palette */
-  --color-mauve: #ddb9c8;
-  --color-blush: #efd2da;
-  --color-sage: #cad3be;
-  --color-sky: #c4d0d8;
+  /* aura palette (from git main) */
+  --color-mauve:  #ddb9c8;
+  --color-blush:  #efd2da;
+  --color-sage:   #cad3be;
+  --color-sky:    #c4d0d8;
   --color-butter: #efe6c9;
-  --color-lilac: #d3c4dd;
+  --color-lilac:  #d3c4dd;
 
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-serif: var(--font-cormorant), Georgia, serif;
-  --font-sans: var(--font-jost), system-ui, sans-serif;
-
-  --radius-plate: 18px;
-  --radius-soft: 24px;
-
-  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-:root {
-  /* fit-plate gradient stops (muted, art-directed) */
+  /* fit-plate gradient stops */
   --s1: #c9c3b8; --s1b: #b3ac9f;
   --s2: #c8b6a6; --s2b: #b19a86;
   --s3: #b9c0b2; --s3b: #a1aa98;
   --s4: #c7b8be; --s4b: #b19ca4;
   --s5: #b6bec4; --s5b: #9ca7ae;
   --s6: #d2c7b0; --s6b: #beb094;
+
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-serif:   var(--font-cormorant), Georgia, serif;
+  --font-sans:    var(--font-jost), system-ui, sans-serif;
+
+  --radius-plate: 0px;
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+* { -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; background: var(--color-bg); }
 
 body {
-  background: var(--color-bg);
+  background: transparent;   /* let the fixed aura layer show through */
   color: var(--color-ink);
   font-family: var(--font-jost), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -61,48 +55,27 @@ body {
   overflow-x: hidden;
 }
 
-/* Bind the type families explicitly to the next/font variables.
-   Unlayered rules so they reliably win regardless of Tailwind's
-   font-utility generation. */
-.font-display {
-  font-family: var(--font-playfair), Georgia, serif;
-}
-.font-serif {
-  font-family: var(--font-cormorant), Georgia, serif;
-}
-.font-sans {
+.font-display { font-family: var(--font-playfair), Georgia, serif; }
+.font-serif   { font-family: var(--font-cormorant), Georgia, serif; }
+.font-sans    { font-family: var(--font-jost), system-ui, sans-serif; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ── Zara-style tiny tracked label (light sans, not mono) ─────── */
+.lbl {
   font-family: var(--font-jost), system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-grey);
 }
+.lbl-ink { color: var(--color-ink); }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-}
-
-/* utility: ink hairline */
+/* ── Hairline ─────────────────────────────────────────────────── */
 .hairline { height: 1px; background: var(--color-line); }
 
-/* film grain — fixed, pointer-events-none, never on scroll containers */
-.grain-fixed {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
-}
-
-/* local grain texture for plates */
-.grain-local {
-  position: absolute;
-  inset: 0;
-  opacity: 0.4;
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-}
-
-/* fit-plate surfaces */
+/* ── Fit-plate surfaces ───────────────────────────────────────── */
 .sw1 { background: linear-gradient(150deg, var(--s1), var(--s1b)); }
 .sw2 { background: linear-gradient(150deg, var(--s2), var(--s2b)); }
 .sw3 { background: linear-gradient(150deg, var(--s3), var(--s3b)); }
@@ -110,14 +83,11 @@ body {
 .sw5 { background: linear-gradient(150deg, var(--s5), var(--s5b)); }
 .sw6 { background: linear-gradient(150deg, var(--s6), var(--s6b)); }
 
-/* eyebrow / label (rationed by skill: <= 1 per 3 sections) */
-.lbl {
-  font-size: 10px;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--color-grey);
+.grain-local {
+  position: absolute; inset: 0; opacity: 0.35; mix-blend-mode: soft-light;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
 }
 
 ::selection { background: var(--color-ink); color: #fff; }
-
 ::-webkit-scrollbar { width: 0; height: 0; }

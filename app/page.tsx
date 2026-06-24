@@ -1,15 +1,14 @@
-import { TracingHero } from "@/components/tracing-hero";
+import { HeroImage } from "@/components/hero-image";
 import { AppDemo } from "@/components/app-demo";
-import { Features } from "@/components/features";
-import { CTA } from "@/components/cta";
 
 export default function Home() {
   return (
     <>
-      <TracingHero />
+      {/* full-bleed image hero with the tracing cycle */}
+      <HeroImage />
+
+      {/* the demo — main's app, in motion */}
       <AppDemo />
-      <Features />
-      <CTA />
     </>
   );
 }
