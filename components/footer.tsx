@@ -1,45 +1,60 @@
+"use client";
+
 import Link from "next/link";
-import { Logo } from "./logo";
+import { usePathname } from "next/navigation";
+import { CrumpledBg } from "@/components/crumpled-bg";
+import {
+  ComesInGoesOutUnderline,
+  GoesOutComesInUnderline,
+} from "@/components/ui/underline-animation";
 
 export function Footer() {
+  const pathname = usePathname();
+  // /why is a single, self-contained screen — no footer below it.
+  if (pathname === "/why") return null;
+
   return (
-    <footer className="border-t border-line bg-bone">
-      <div className="mx-auto max-w-[1400px] px-6 py-16 md:px-10 md:py-20">
-        <div className="flex flex-col gap-12 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-md">
-            <Logo size="2rem" href={null} />
-            <p className="mt-5 font-serif text-[22px] italic leading-[1.3] text-ink2">
-              The fits you choose, kept like records. One a day, with the people
-              who dress like you.
+    <footer className="relative overflow-hidden border-t border-line2 text-ink">
+      <CrumpledBg overlay={0.64} />
+      <div className="relative z-10 mx-auto max-w-[1500px] px-6 py-16 md:px-10 md:py-20">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:items-start">
+          <div>
+            <span className="font-display text-[24px] font-semibold tracking-[-0.01em] text-ink">
+              OUTFT.
+            </span>
+            <p className="mt-4 max-w-[34ch] font-serif text-[20px] font-light italic leading-snug text-ink2">
+              Log what you wore. Read your aesthetic in numbers. The fits you
+              chose, kept like records.
             </p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-x-14 gap-y-3 text-[13px] text-ink2">
-            <Link href="/" className="transition-colors hover:text-ink">
-              Tracing
-            </Link>
-            <Link href="/why" className="transition-colors hover:text-ink">
-              Why outft
-            </Link>
-            <Link href="/#demo" className="transition-colors hover:text-ink">
-              The app
-            </Link>
-            <Link href="/faq" className="transition-colors hover:text-ink">
-              FAQ
-            </Link>
-            <Link href="/#dna" className="transition-colors hover:text-ink">
-              Fashion DNA
-            </Link>
-            <Link href="/join" className="transition-colors hover:text-ink">
-              Request access
-            </Link>
-          </nav>
+          {/* contact — same edits as the founders page */}
+          <div className="flex flex-row items-start gap-8 font-sans text-[clamp(0.95rem,1.6vw,1.25rem)] uppercase tracking-tight text-ink md:justify-end">
+            <div className="text-[#808080]">Contact</div>
+            <ul className="flex flex-col space-y-1.5">
+              <li>
+                <Link href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
+                  <ComesInGoesOutUnderline label="Instagram — outft.co" direction="right" />
+                </Link>
+              </li>
+              <li className="pt-8">
+                <Link href="mailto:sahana@outft.app">
+                  <GoesOutComesInUnderline label="sahana@outft.app" direction="left" />
+                </Link>
+              </li>
+              <li>
+                <Link href="mailto:victoria@outft.app">
+                  <GoesOutComesInUnderline label="victoria@outft.app" direction="right" />
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-line2 pt-6 text-[11px] uppercase tracking-[0.18em] text-grey md:flex-row md:items-center md:justify-between">
-          <span>OUTFT · fit of record</span>
-          <span>Curate. Keep. Revisit.</span>
-          <span>{new Date().getFullYear()}</span>
+        <div className="mt-16 flex flex-col gap-2 border-t border-[#bdb8af] pt-6 md:flex-row md:items-center md:justify-between">
+          <span className="lbl">OUTFT © 2026 · Style Journal Nº01</span>
+          <span className="lbl">Log · Read · Share</span>
+          <span className="lbl">The fits you chose</span>
         </div>
       </div>
     </footer>

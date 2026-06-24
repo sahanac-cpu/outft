@@ -9,7 +9,7 @@ import { Footer } from "@/components/footer";
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["italic", "normal"],
-  weight: ["700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-playfair",
   display: "swap",
 });
@@ -17,7 +17,7 @@ const playfair = Playfair_Display({
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   style: ["italic", "normal"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500"],
   variable: "--font-cormorant",
   display: "swap",
 });
@@ -30,13 +30,13 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "OUTFT. the fits you choose",
+  title: "OUTFT. — your style, in numbers",
   description:
-    "A daily ritual for getting dressed. Post your fit to see your friends'. Trace your style, read your fashion DNA, find the people you dress like.",
+    "An editorial style journal. Log the fits you wore, read your aesthetic in percentages, share the card and follow friends' style stats.",
   openGraph: {
-    title: "OUTFT. the fits you choose",
+    title: "OUTFT. — your style, in numbers",
     description:
-      "A daily ritual for getting dressed. Post to see. Trace your style. Read your fashion DNA.",
+      "Log what you wore. Read your aesthetic in percentages. Share the card. Follow friends.",
     type: "website",
   },
 };
@@ -51,7 +51,6 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${cormorant.variable} ${jost.variable} antialiased`}
       >
-        <div className="grain-fixed" aria-hidden />
         <Nav />
         <main>{children}</main>
         <Footer />
