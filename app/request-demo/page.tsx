@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function RequestDemoPage() {
   return (
-    <main className="relative min-h-[100svh] pt-[64px]">
+    <main className="relative min-h-[100svh] bg-mist pt-[64px]">
       <div className="mx-auto grid max-w-[1500px] gap-16 px-6 py-20 md:grid-cols-[1fr_1fr] md:gap-24 md:px-10 md:py-28">
         {/* left — editorial statement */}
         <div className="md:sticky md:top-28 md:self-start">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 
 const LINKS = [
+  { label: "Why", href: "/why" },
   { label: "The demo", href: "/#demo" },
   { label: "Request a demo", href: "/request-demo" },
   { label: "Founders", href: "/founders" },

@@ -9,6 +9,7 @@
 @theme {
   --color-bg:        #ffffff;   /* white canvas */
   --color-bone:      #f7f6f4;   /* faintest warm panel, used sparingly */
+  --color-mist:      #e7e6e3;   /* soft grey — non-hero/non-demo sections */
   --color-panel:     #fbfaf9;   /* lifted panel (main demo) */
   --color-ink:       #16140f;
   --color-ink2:      #5e5a53;

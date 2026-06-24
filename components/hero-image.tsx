@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import { AnimatedHeadline } from "./animated-headline";
+import AnimatedTextCycle from "./ui/animated-text-cycle";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
+
+const TRACING = ["fashion", "wardrobes", "days", "you"];
 
 /**
  * Full-bleed hero. The blurred figure is the background; the headline performs
@@ -37,7 +39,7 @@ export function HeroImage() {
       </motion.div>
 
       {/* content */}
-      <div className="mx-auto flex h-full max-w-[1500px] flex-col justify-center px-6 md:px-10">
+      <div className="mx-auto flex h-full max-w-[1500px] flex-col items-center justify-center px-6 text-center md:px-10">
         <motion.span
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -47,27 +49,23 @@ export function HeroImage() {
           OUTFT — Style Journal · Nº01
         </motion.span>
 
-        <AnimatedHeadline
-          className="mt-6 font-display text-[clamp(3.4rem,12vw,11rem)] font-normal leading-[0.92] tracking-[-0.03em] text-ink"
-          lines={[{ text: "Your style," }, { text: "in numbers.", italic: true }]}
-        />
-
-        <motion.p
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 max-w-[42ch] font-serif text-[clamp(1.15rem,2vw,1.6rem)] font-light leading-snug text-ink2"
+        <motion.h1
+          initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 font-display text-[clamp(2.4rem,6vw,5rem)] font-normal leading-[1.0] tracking-[-0.02em] text-ink"
         >
-          Log the fits you actually wore. OUTFT reads them back as a breakdown,
-          and prints the card that says who you are.
-        </motion.p>
+          tracing{" "}
+          <AnimatedTextCycle words={TRACING} interval={2200} className="italic" />
+          <span aria-hidden>.</span>
+        </motion.h1>
 
         <motion.a
           href="#demo"
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-          className="lbl lbl-ink mt-10 inline-flex w-fit items-center gap-2 border-b border-ink pb-1 hover:opacity-60"
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="lbl lbl-ink mt-10 inline-flex items-center gap-2 border-b border-ink pb-1 hover:opacity-60"
         >
           See the demo
           <span aria-hidden>↓</span>
