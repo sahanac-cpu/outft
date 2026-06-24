@@ -13,7 +13,7 @@ export function ContactFancy() {
       <ul className="flex flex-col space-y-1.5">
         <li>
           <a href="https://www.linkedin.com/company/outft" target="_blank" rel="noopener noreferrer">
-            <CenterUnderline label="LinkedIn — outft" />
+            <CenterUnderline label="LinkedIn — OUTFT." />
           </a>
         </li>
         <li>
