@@ -19,7 +19,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative border-t border-line">
+    <footer className="relative border-t border-line2 bg-mist">
       <div className="mx-auto max-w-[1500px] px-6 py-16 md:px-10 md:py-20">
         <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr]">
           <div>

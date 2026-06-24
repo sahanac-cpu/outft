@@ -7,7 +7,13 @@ import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 export function RequestAccess() {
   const reduce = useReducedMotionSafe();
   return (
-    <section id="access" className="relative border-t border-line">
+    <section id="access" className="relative overflow-hidden border-t border-line2">
+      {/* grey image background from git */}
+      <div className="absolute inset-0 -z-10">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/IMG_2115.jpeg" alt="" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-[rgba(231,230,227,0.72)]" />
+      </div>
       <div className="mx-auto max-w-[1500px] px-6 py-28 text-center md:px-10 md:py-44">
         <motion.span
           initial={reduce ? false : { opacity: 0 }}

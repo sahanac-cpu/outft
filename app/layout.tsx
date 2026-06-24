@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
-import { AuraBg } from "@/components/aura-bg";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 
@@ -50,7 +49,6 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${cormorant.variable} ${jost.variable} antialiased`}
       >
-        <AuraBg />
         <Nav />
         <main>{children}</main>
         <Footer />
