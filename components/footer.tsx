@@ -1,27 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { CrumpledBg } from "@/components/crumpled-bg";
+import {
+  ComesInGoesOutUnderline,
+  GoesOutComesInUnderline,
+} from "@/components/ui/underline-animation";
 
 export function Footer() {
-  const cols: { head: string; links: { label: string; href: string }[] }[] = [
-    {
-      head: "Product",
-      links: [
-        { label: "The demo", href: "/#demo" },
-        { label: "Request a demo", href: "/request-demo" },
-      ],
-    },
-    {
-      head: "Company",
-      links: [
-        { label: "Talk to the founders", href: "/founders" },
-        { label: "FAQ", href: "/faq" },
-      ],
-    },
-  ];
+  const pathname = usePathname();
+  // /why is a single, self-contained screen — no footer below it.
+  if (pathname === "/why") return null;
 
   return (
-    <footer className="relative border-t border-line2 bg-mist">
-      <div className="mx-auto max-w-[1500px] px-6 py-16 md:px-10 md:py-20">
-        <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-line2 text-ink">
+      <CrumpledBg overlay={0.64} />
+      <div className="relative z-10 mx-auto max-w-[1500px] px-6 py-16 md:px-10 md:py-20">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr] md:items-start">
           <div>
             <span className="font-display text-[24px] font-semibold tracking-[-0.01em] text-ink">
               OUTFT.
@@ -32,23 +28,30 @@ export function Footer() {
             </p>
           </div>
 
-          {cols.map((c) => (
-            <nav key={c.head}>
-              <span className="lbl">{c.head}</span>
-              <ul className="mt-4 space-y-2.5">
-                {c.links.map((l) => (
-                  <li key={l.label}>
-                    <Link href={l.href} className="lbl lbl-ink hover:opacity-60">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
+          {/* contact — same edits as the founders page */}
+          <div className="flex flex-row items-start gap-8 font-sans text-[clamp(0.95rem,1.6vw,1.25rem)] uppercase tracking-tight text-ink md:justify-end">
+            <div className="text-[#808080]">Contact</div>
+            <ul className="flex flex-col space-y-1.5">
+              <li>
+                <Link href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
+                  <ComesInGoesOutUnderline label="Instagram — outft.co" direction="right" />
+                </Link>
+              </li>
+              <li className="pt-8">
+                <Link href="mailto:sahana@outft.app">
+                  <GoesOutComesInUnderline label="sahana@outft.app" direction="left" />
+                </Link>
+              </li>
+              <li>
+                <Link href="mailto:victoria@outft.app">
+                  <GoesOutComesInUnderline label="victoria@outft.app" direction="right" />
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-2 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 flex flex-col gap-2 border-t border-[#bdb8af] pt-6 md:flex-row md:items-center md:justify-between">
           <span className="lbl">OUTFT © 2026 · Style Journal Nº01</span>
           <span className="lbl">Log · Read · Share</span>
           <span className="lbl">The fits you chose</span>

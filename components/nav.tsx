@@ -7,7 +7,6 @@ import { motion, useMotionValueEvent, useScroll } from "motion/react";
 const LINKS = [
   { label: "Why", href: "/why" },
   { label: "The demo", href: "/#demo" },
-  { label: "Request a demo", href: "/request-demo" },
   { label: "Founders", href: "/founders" },
 ];
 
@@ -49,7 +48,7 @@ export function Nav() {
             </Link>
           ))}
           <Link
-            href="/request-demo"
+            href="/request-access"
             className="lbl lbl-ink border-b border-ink pb-1 hover:opacity-60"
           >
             Request access
@@ -78,7 +77,7 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
-          <Link href="/request-demo" onClick={() => setOpen(false)} className="mt-4 block lbl lbl-ink">
+          <Link href="/request-access" onClick={() => setOpen(false)} className="mt-4 block lbl lbl-ink">
             Request access
           </Link>
         </div>
