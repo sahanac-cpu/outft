@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   CenterUnderline,
   ComesInGoesOutUnderline,
@@ -13,27 +12,27 @@ export function ContactFancy() {
       <div className="text-[#808080]">Contact</div>
       <ul className="flex flex-col space-y-1.5">
         <li>
-          <Link href="https://www.linkedin.com/company/outft" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.linkedin.com/company/outft" target="_blank" rel="noopener noreferrer">
             <CenterUnderline label="LinkedIn — outft" />
-          </Link>
+          </a>
         </li>
         <li>
-          <Link href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
+          <a href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
             <ComesInGoesOutUnderline label="Instagram — outft.co" direction="right" />
-          </Link>
+          </a>
         </li>
 
         <li className="pt-12">
           <ul className="flex flex-col space-y-1.5">
             <li>
-              <Link href="mailto:sahana@outft.app">
+              <a href="mailto:sahana@outft.app">
                 <GoesOutComesInUnderline label="sahana@outft.app" direction="left" />
-              </Link>
+              </a>
             </li>
             <li>
-              <Link href="mailto:victoria@outft.app">
+              <a href="mailto:victoria@outft.app">
                 <GoesOutComesInUnderline label="victoria@outft.app" direction="right" />
-              </Link>
+              </a>
             </li>
           </ul>
         </li>
