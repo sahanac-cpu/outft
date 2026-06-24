@@ -1,7 +1,3 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { CrumpledBg } from "@/components/crumpled-bg";
 import {
   ComesInGoesOutUnderline,
@@ -9,10 +5,6 @@ import {
 } from "@/components/ui/underline-animation";
 
 export function Footer() {
-  const pathname = usePathname();
-  // /why is a single, self-contained screen — no footer below it.
-  if (pathname === "/why") return null;
-
   return (
     <footer className="relative overflow-hidden border-t border-line2 text-ink">
       <CrumpledBg overlay={0.64} />
@@ -33,19 +25,19 @@ export function Footer() {
             <div className="text-[#808080]">Contact</div>
             <ul className="flex flex-col space-y-1.5">
               <li>
-                <Link href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
+                <a href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
                   <ComesInGoesOutUnderline label="Instagram — outft.co" direction="right" />
-                </Link>
+                </a>
               </li>
               <li className="pt-8">
-                <Link href="mailto:sahana@outft.app">
+                <a href="mailto:sahana@outft.app">
                   <GoesOutComesInUnderline label="sahana@outft.app" direction="left" />
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="mailto:victoria@outft.app">
+                <a href="mailto:victoria@outft.app">
                   <GoesOutComesInUnderline label="victoria@outft.app" direction="right" />
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
