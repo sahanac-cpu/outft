@@ -2404,8 +2404,21 @@ try {
 } catch(_e){}
 parent.postMessage({type:'outft-ready'}, '*');
 
-// forward wheel gestures to the page so scrolling flips between phones
+// wheel: scroll the current screen's own content first; only hand the gesture
+// to the page (to flip phones) when that content is at its top/bottom edge —
+// or whenever the scroll is horizontal.
 window.addEventListener('wheel', function(e){
+  var vis = document.querySelector('.screen.vis');
+  var sc = vis && (vis.querySelector('.sc') || vis.querySelector('.prem-body') || vis.querySelector('#chat-history'));
+  var horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+  if (!horizontal && sc && sc.scrollHeight > sc.clientHeight + 1) {
+    var down = e.deltaY > 0;
+    var atTop = sc.scrollTop <= 0;
+    var atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 1;
+    if ((down && !atBottom) || (!down && !atTop)) {
+      return; // let the screen scroll its own content
+    }
+  }
   e.preventDefault();
   try { parent.postMessage({type:'outft-wheel', dx:e.deltaX, dy:e.deltaY}, '*'); } catch(_){}
 }, {passive:false});
