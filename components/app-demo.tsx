@@ -17,6 +17,7 @@ export function AppDemo() {
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const wheelAcc = useRef(0);
@@ -24,6 +25,13 @@ export function AppDemo() {
   const endTimer = useRef<number | null>(null);
 
   useEffect(() => { activeRef.current = active; }, [active]);
+
+  // idle auto-advance — a living demo that cycles every screen until you take over
+  useEffect(() => {
+    if (touched || hovered) return;
+    const id = window.setInterval(() => setActive((a) => (a + 1) % PHONES.length), 3400);
+    return () => window.clearInterval(id);
+  }, [touched, hovered]);
 
   // responsive params for the 3D spread
   useEffect(() => {
@@ -139,6 +147,7 @@ export function AppDemo() {
           tabIndex={0}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
+          onMouseEnter={() => setHovered(true)}
           className="cf-stage relative mt-12 outline-none md:mt-16"
         >
           <div className="cf-track">
@@ -330,6 +339,9 @@ export function AppDemo() {
         .device-btn--vol{ left:-3px; width:3px; height:50px; }
         .device-btn--vol1{ top:148px; } .device-btn--vol2{ top:208px; }
         .device-btn--power{ right:-3px; top:166px; width:3px; height:70px; }
+        /* premium floor reflection on the front phone */
+        .cf-phone.is-active .device-frame{ -webkit-box-reflect: below 12px linear-gradient(transparent, transparent 55%, rgba(20,18,15,0.14)); }
+        .cf-phone.is-active .device-shadow{ opacity:.24; }
 
         .cf-arrow{
           position:absolute; top:50%; transform:translateY(-50%); z-index:120;
