@@ -20,7 +20,7 @@ export function AppDemo() {
   const stageRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const wheelAcc = useRef(0);
-  const armedRef = useRef(true);        // ready to fire the next step
+  const lastFlip = useRef(0);           // timestamp of the last flip
   const endTimer = useRef<number | null>(null);
 
   useEffect(() => { activeRef.current = active; }, [active]);
@@ -62,15 +62,21 @@ export function AppDemo() {
     const canGo = dir > 0 ? activeRef.current < PHONES.length - 1 : activeRef.current > 0;
     if (!canGo) return false; // let the page keep scrolling at the ends
 
-    // re-arm only after the gesture (incl. momentum) goes quiet
-    if (endTimer.current) window.clearTimeout(endTimer.current);
-    endTimer.current = window.setTimeout(() => { armedRef.current = true; wheelAcc.current = 0; }, 90);
+    const now = performance.now();
+    // after a flip, swallow the trackpad's momentum tail so one gesture moves
+    // exactly one screen (never skips past DNA etc.)
+    if (now - lastFlip.current < 420) { wheelAcc.current = 0; return true; }
 
-    if (!armedRef.current) return true; // still the same flick — swallow it
+    // reset the running total if the gesture pauses or reverses
+    if (endTimer.current) window.clearTimeout(endTimer.current);
+    endTimer.current = window.setTimeout(() => { wheelAcc.current = 0; }, 130);
+
+    // needs a deliberate scroll to flip, so a glance-scroll won't yank you off a screen
+    if (Math.sign(wheelAcc.current) !== dir) wheelAcc.current = 0;
     wheelAcc.current += d;
-    if (Math.abs(wheelAcc.current) > 14) {
+    if (Math.abs(wheelAcc.current) > 90) {
       move(dir);
-      armedRef.current = false;
+      lastFlip.current = now;
       wheelAcc.current = 0;
     }
     return true;
