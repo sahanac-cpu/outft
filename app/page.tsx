@@ -1,6 +1,7 @@
 import { HeroImage } from "@/components/hero-image";
 import { IndexStatement } from "@/components/index-statement";
 import { AppDemo } from "@/components/app-demo";
+import { DnaLive } from "@/components/dna-live";
 
 export default function Home() {
   return (
@@ -13,6 +14,9 @@ export default function Home() {
 
       {/* the demo — main's app, in motion */}
       <AppDemo />
+
+      {/* try it live — real camera + AI style-DNA analyzer */}
+      <DnaLive />
     </>
   );
 }

@@ -1,0 +1,10 @@
+{
+  "name": "outft.",
+  "short_name": "outft.",
+  "description": "Capture an outfit and discover your style DNA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1916",
+  "theme_color": "#1A1916",
+  "orientation": "portrait-primary"
+}
