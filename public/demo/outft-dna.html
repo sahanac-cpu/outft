@@ -2912,6 +2912,15 @@ renderAppState();
 updateTraceTimeline(document.getElementById('trace-timeline-range').value);
 show(APP_STATE.session.isSignedIn?'home':'signin');
 
+// embedded deep-link: open a specific screen (e.g. ?s=camera), guest by default
+try {
+  var _s = new URLSearchParams(location.search).get('s');
+  if (_s) {
+    if (!APP_STATE.session.isSignedIn) { APP_STATE.session = { isSignedIn:true, mode:'guest', email:null }; persistAppState(); renderAppState(); }
+    show(_s);
+  }
+} catch(_e){}
+
 document.getElementById('trace-timeline-range').addEventListener('input',function(event){
   updateTraceTimeline(event.target.value);
 },false);
