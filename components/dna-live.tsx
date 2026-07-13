@@ -79,7 +79,7 @@ export function DnaLive() {
   // auto-cycle the reading + the Wrapped story
   useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const idR = window.setInterval(() => setI((v) => (v + 1) % READINGS.length), 4200);
+    const idR = window.setInterval(() => setI((v) => (v + 1) % READINGS.length), 2600);
     const idW = window.setInterval(() => setW((v) => (v + 1) % WRAPPED.length), 2600);
     return () => { window.clearInterval(idR); window.clearInterval(idW); };
   }, []);
@@ -239,7 +239,7 @@ export function DnaLive() {
         .dna-ticks{ display:flex; gap:6px; margin-top:16px; padding-top:2px; }
         .dna-tick{ height:3px; flex:1; border-radius:999px; background:#e7e6e3; overflow:hidden; position:relative; }
         .dna-tick.on{ background:#e0ddd6; }
-        .dna-tick.on::after{ content:''; position:absolute; inset:0; background:#8a7a68; transform-origin:left; animation:tickFill 4.2s linear both; }
+        .dna-tick.on::after{ content:''; position:absolute; inset:0; background:#8a7a68; transform-origin:left; animation:tickFill 2.6s linear both; }
         @keyframes tickFill{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
 
         /* 02 wrapped panel */
