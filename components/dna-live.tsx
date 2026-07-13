@@ -51,7 +51,22 @@ export function DnaLive() {
   const [i, setI] = useState(0);
   const [w, setW] = useState(0);
   const r = READINGS[i];
-  const wr = WRAPPED[w];
+  // Wrapped's "top aesthetic" page mirrors the current reading, so they feel connected
+  const wr =
+    w === 1
+      ? { k: "Top aesthetic", big: r.top, sub: `${r.bars[0][1]}% of your fits this month`, italic: true }
+      : WRAPPED[w];
+
+  // DNA ring segments (the app's signature wheel)
+  const RC = 2 * Math.PI * 50;
+  const RING_COLORS = ["#2A2820", "#8A7A68", "#B4A898", "#C4B098", "#D8CFC4"];
+  let acc = 0;
+  const segs = r.bars.map(([, pct], idx) => {
+    const arc = (pct / 100) * RC;
+    const seg = { arc, offset: acc, color: RING_COLORS[idx % RING_COLORS.length] };
+    acc += arc;
+    return seg;
+  });
 
   // render the app at true 390px, then scale into the frame
   useEffect(() => {
@@ -98,10 +113,33 @@ export function DnaLive() {
               <span className="dna-scanning"><span className="dna-scan-dot" /> analyzing</span>
             </div>
 
-            <div className="dna-top">
-              <span className="dna-top-label">You read as</span>
-              <div key={`t${i}`} className="dna-top-name">
-                {r.top}<span className="dna-top-dot">.</span>
+            <div className="dna-head-row">
+              <svg className="dna-ring" viewBox="0 0 120 120" key={`r${i}`} aria-hidden>
+                <g transform="rotate(-90 60 60)" fill="none" strokeWidth="11">
+                  {segs.map((s, idx) => (
+                    <circle
+                      key={idx}
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      stroke={s.color}
+                      strokeDasharray={`${s.arc.toFixed(2)} ${(RC - s.arc).toFixed(2)}`}
+                      strokeDashoffset={(-s.offset).toFixed(2)}
+                      style={{ animationDelay: `${idx * 0.09}s` }}
+                    />
+                  ))}
+                </g>
+                <text x="60" y="58" textAnchor="middle" className="dna-ring-pct">
+                  {r.bars[0][1]}<tspan className="dna-ring-sign">%</tspan>
+                </text>
+                <text x="60" y="72" textAnchor="middle" className="dna-ring-lbl">STYLE DNA</text>
+              </svg>
+              <div>
+                <span className="dna-top-label">You read as</span>
+                <div key={`t${i}`} className="dna-top-name">
+                  {r.top}<span className="dna-top-dot">.</span>
+                </div>
+                <span className="dna-head-note">{r.bars.length} aesthetics detected</span>
               </div>
             </div>
 
@@ -205,10 +243,17 @@ export function DnaLive() {
         .dna-scan-dot{ width:6px;height:6px;border-radius:999px;background:#4bb47a; animation:scanBlink 1.1s steps(2,end) infinite; }
         @keyframes scanBlink{ 50%{ opacity:.25; } }
 
-        .dna-top{ margin-bottom:22px; }
+        .dna-head-row{ display:flex; align-items:center; gap:18px; margin-bottom:22px; }
+        .dna-ring{ width:104px; height:104px; flex-shrink:0; }
+        .dna-ring circle{ animation:ringDraw .8s cubic-bezier(.16,1,.3,1) both; }
+        @keyframes ringDraw{ from{ stroke-dasharray:0 314.16; } }
+        .dna-ring-pct{ font-family:var(--font-cormorant),serif; font-size:27px; fill:#16140f; }
+        .dna-ring-sign{ font-size:13px; fill:#8a7a68; }
+        .dna-ring-lbl{ font-family:var(--font-jost),sans-serif; font-size:6.5px; letter-spacing:1.6px; fill:#a49e94; }
         .dna-top-label{ font-family:var(--font-jost),sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#a49e94; }
-        .dna-top-name{ font-family:var(--font-cormorant),serif; font-style:italic; font-size:clamp(2.2rem,4.5vw,3.4rem); line-height:1.02; color:#16140f; margin-top:4px; animation:riseIn .6s cubic-bezier(.16,1,.3,1) both; }
+        .dna-top-name{ font-family:var(--font-cormorant),serif; font-style:italic; font-size:clamp(2rem,4vw,3rem); line-height:1.02; color:#16140f; margin:3px 0; animation:riseIn .6s cubic-bezier(.16,1,.3,1) both; }
         .dna-top-dot{ color:#b19a86; }
+        .dna-head-note{ font-family:var(--font-jost),sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#bebab4; }
         @keyframes riseIn{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:translateY(0); } }
 
         .dna-bars{ display:flex; flex-direction:column; gap:13px; margin-bottom:20px; }
@@ -273,7 +318,7 @@ export function DnaLive() {
         .dna-shadow{ position:absolute; left:50%; bottom:-44px; width:76%; height:44px; transform:translateX(-50%); background:radial-gradient(ellipse at center, rgba(40,36,30,.34), transparent 70%); filter:blur(12px); z-index:-1; }
 
         @media (prefers-reduced-motion: reduce){
-          .dna-aura,.dna-dot,.dna-device,.dna-scanline,.dna-scan-dot,.dna-fill,.dna-tag,.dna-top-name,.dna-insight,.dna-tick.on::after,.dna-snaphint,.wrap-seg.active::after,.wrap-body{ animation:none !important; }
+          .dna-aura,.dna-dot,.dna-device,.dna-scanline,.dna-scan-dot,.dna-fill,.dna-tag,.dna-top-name,.dna-insight,.dna-tick.on::after,.dna-snaphint,.wrap-seg.active::after,.wrap-body,.dna-ring circle{ animation:none !important; }
           .dna-fill{ width:var(--pct); }
         }
       `}</style>
