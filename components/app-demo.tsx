@@ -18,6 +18,7 @@ export function AppDemo() {
   const [touched, setTouched] = useState(false);
   const [compact, setCompact] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [dims, setDims] = useState({ pw: 300, frameH: 621, scale: 0.7077 });
   const stageRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const wheelAcc = useRef(0);
@@ -34,11 +35,26 @@ export function AppDemo() {
   }, [touched, hovered]);
 
   // responsive params for the 3D spread
+  // size the phone to the viewport so the whole demo fits on one screen
   useEffect(() => {
-    const onResize = () => setCompact(window.innerWidth < 768);
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    const compute = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const mob = vw < 768;
+      setCompact(mob);
+      // reserve space for the header + caption + padding, then size the phone
+      const frameH = Math.max(320, Math.min(vh - (mob ? 400 : 420), mob ? 560 : 560));
+      const screenH = frameH - 24;              // frame padding
+      const screenW = (screenH * 390) / 844;    // phone aspect
+      setDims({
+        pw: Math.round(screenW + 24),
+        frameH: Math.round(frameH),
+        scale: +(screenW / 390).toFixed(4),
+      });
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
   }, []);
 
   const move = useCallback(
@@ -116,26 +132,26 @@ export function AppDemo() {
     if (Math.abs(dx) > 40) move(dx < 0 ? 1 : -1);
   };
 
-  const SPACING = compact ? 132 : 244;
-  const DEPTH = compact ? 150 : 240;
+  const SPACING = dims.pw * (compact ? 0.53 : 0.81);
+  const DEPTH = dims.pw * (compact ? 0.6 : 0.8);
   const ANGLE = compact ? 38 : 46;
 
   return (
     <section id="demo" className="relative overflow-hidden border-t border-line2 bg-panel">
       <div aria-hidden className="demo-aura" />
 
-      <div className="relative mx-auto max-w-[1500px] px-6 py-20 md:px-10 md:py-28">
+      <div className="relative mx-auto flex min-h-screen max-w-[1500px] flex-col justify-center px-6 py-6 md:px-10 md:py-8">
         {/* header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="lbl inline-flex items-center gap-2">
               <span className="live-dot" /> The app — every screen is live
             </span>
-            <h2 className="mt-4 max-w-[18ch] font-display text-[clamp(2rem,5vw,3.8rem)] font-normal leading-[0.98] tracking-[-0.02em] text-ink">
+            <h2 className="mt-3 max-w-[18ch] font-display text-[clamp(1.7rem,3.4vw,2.9rem)] font-normal leading-[1] tracking-[-0.02em] text-ink">
               Flip through it. Then go play.
             </h2>
           </div>
-          <p className="font-serif text-[clamp(1rem,1.6vw,1.25rem)] font-light italic text-ink2 md:max-w-[34ch] md:text-right">
+          <p className="hidden font-serif text-[clamp(0.95rem,1.35vw,1.15rem)] font-light italic text-ink2 md:block md:max-w-[32ch] md:text-right">
             Not screenshots — the real product. Bring any screen to the front, then tap straight
             into it.
           </p>
@@ -148,7 +164,13 @@ export function AppDemo() {
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
           onMouseEnter={() => setHovered(true)}
-          className="cf-stage relative mt-12 outline-none md:mt-16"
+          style={{
+            ["--pw" as string]: `${dims.pw}px`,
+            ["--ph" as string]: `${dims.frameH}px`,
+            ["--scale" as string]: `${dims.scale}`,
+            height: `${dims.frameH + 30}px`,
+          }}
+          className="cf-stage relative mt-6 outline-none md:mt-8"
         >
           <div className="cf-track">
             {PHONES.map((p, i) => {
@@ -239,16 +261,16 @@ export function AppDemo() {
         </div>
 
         {/* active caption */}
-        <div className="mt-8 flex flex-col items-center text-center">
+        <div className="mt-5 flex flex-col items-center text-center">
           <div key={active} className="cf-caption">
             <span className="lbl">{PHONES[active].n} — {PHONES[active].title}</span>
-            <p className="mx-auto mt-2 max-w-[36ch] font-serif text-[clamp(1rem,1.5vw,1.2rem)] font-light italic leading-snug text-ink2">
+            <p className="mx-auto mt-2 flex min-h-[2.8rem] max-w-[34ch] items-center justify-center font-serif text-[clamp(1rem,1.5vw,1.2rem)] font-light italic leading-snug text-ink2">
               {PHONES[active].sub}
             </p>
           </div>
 
           {/* dots */}
-          <div className="mt-6 flex items-center gap-2.5">
+          <div className="mt-4 flex items-center gap-2.5">
             {PHONES.map((p, i) => (
               <button
                 key={p.screen}
@@ -259,7 +281,7 @@ export function AppDemo() {
               />
             ))}
           </div>
-          <span className="mt-5 text-[11px] uppercase tracking-[0.18em] text-grey-soft">
+          <span className="mt-3 text-[11px] uppercase tracking-[0.18em] text-grey-soft">
             14 screens · scroll to flip · tap a phone to play
           </span>
         </div>
@@ -276,7 +298,7 @@ export function AppDemo() {
         .live-dot{ width:7px;height:7px;border-radius:999px;background:#16140f;display:inline-block; box-shadow:0 0 0 0 rgba(22,20,15,.5); animation:livePulse 1.8s ease-out infinite; }
         @keyframes livePulse{ 0%{box-shadow:0 0 0 0 rgba(22,20,15,.45);} 70%{box-shadow:0 0 0 7px rgba(22,20,15,0);} 100%{box-shadow:0 0 0 0 rgba(22,20,15,0);} }
 
-        .cf-stage{ height:clamp(540px,72vh,680px); perspective:1700px; }
+        .cf-stage{ perspective:1700px; }
         .cf-track{ position:relative; width:100%; height:100%; transform-style:preserve-3d; }
         .cf-phone{
           position:absolute; left:50%; top:50%;
@@ -285,9 +307,7 @@ export function AppDemo() {
           transition:transform .42s cubic-bezier(0.22,1,0.36,1), opacity .42s ease, filter .42s ease;
           will-change:transform;
         }
-        :root{}
-        .cf-stage{ --pw:300px; --ph:622px; --scale:0.7077; }
-        @media (max-width:767px){ .cf-stage{ --pw:248px; --ph:510px; --scale:0.5744; } }
+        /* --pw / --ph / --scale and height are set inline from the viewport */
 
         .cf-catch{ position:absolute; inset:0; z-index:20; cursor:pointer; background:transparent; border:0; padding:0; border-radius:50px; }
         .cf-hint{ position:absolute; left:50%; top:-18px; transform:translate(-50%,-100%); z-index:25; pointer-events:none; transition:opacity .5s ease, transform .5s ease; }
