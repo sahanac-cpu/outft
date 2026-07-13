@@ -107,9 +107,9 @@ export function DnaLive() {
           <figure className="dna-cell">
             <div className="dna-panel dna-panel--read">
               <div className="dna-card-hd">
-                <span className="dna-card-kicker">Style DNA</span>
-                <span className="dna-scanning"><span className="dna-scan-dot" /> analyzing</span>
+                <span className="dna-card-kicker">Style DNA · reading</span>
               </div>
+              <div className="dna-read-body">
               <svg className="dna-ring" viewBox="0 0 120 120" key={`r${i}`} aria-hidden>
                 <g transform="rotate(-90 60 60)" fill="none" strokeWidth="11">
                   {segs.map((s, idx) => (
@@ -142,6 +142,8 @@ export function DnaLive() {
                 {r.tags.slice(0, 3).map((t, idx) => (
                   <span className="dna-tag" style={{ animationDelay: `${0.2 + idx * 0.07}s` }} key={t}>{t}</span>
                 ))}
+              </div>
+              <p key={`i${i}`} className="dna-insight">{r.insight}</p>
               </div>
               <div className="dna-ticks">
                 {READINGS.map((_, idx) => (
@@ -212,9 +214,7 @@ export function DnaLive() {
         .dna-panel--read{ background:#fff; border:1px solid var(--color-line); display:flex; flex-direction:column; padding:22px 22px 20px; }
         .dna-card-hd{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
         .dna-card-kicker{ font-family:var(--font-jost),sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#a49e94; }
-        .dna-scanning{ display:inline-flex; align-items:center; gap:7px; font-family:var(--font-jost),sans-serif; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#3f9e6a; }
-        .dna-scan-dot{ width:6px;height:6px;border-radius:999px;background:#4bb47a; animation:scanBlink 1.1s steps(2,end) infinite; }
-        @keyframes scanBlink{ 50%{ opacity:.25; } }
+        .dna-read-body{ flex:1; display:flex; flex-direction:column; justify-content:center; }
         .dna-ring{ width:132px; height:132px; align-self:center; margin:6px 0 2px; }
         .dna-ring circle{ animation:ringDraw .8s cubic-bezier(.16,1,.3,1) both; }
         @keyframes ringDraw{ from{ stroke-dasharray:0 314.16; } }
@@ -235,7 +235,8 @@ export function DnaLive() {
         .dna-tags{ display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
         .dna-tag{ font-family:var(--font-jost),sans-serif; font-size:11px; letter-spacing:.04em; color:#5e5a53; border:1px solid var(--color-line2); border-radius:999px; padding:5px 12px; animation:tagIn .5s ease both; }
         @keyframes tagIn{ from{ opacity:0; transform:translateY(6px) scale(.96); } to{ opacity:1; transform:none; } }
-        .dna-ticks{ display:flex; gap:6px; margin-top:auto; padding-top:16px; }
+        .dna-insight{ font-family:var(--font-cormorant),serif; font-style:italic; font-size:14px; line-height:1.5; color:#5e5a53; margin-top:16px; padding-top:14px; border-top:1px solid var(--color-line); animation:fadeIn .7s ease both; }
+        .dna-ticks{ display:flex; gap:6px; margin-top:16px; padding-top:2px; }
         .dna-tick{ height:3px; flex:1; border-radius:999px; background:#e7e6e3; overflow:hidden; position:relative; }
         .dna-tick.on{ background:#e0ddd6; }
         .dna-tick.on::after{ content:''; position:absolute; inset:0; background:#8a7a68; transform-origin:left; animation:tickFill 4.2s linear both; }
@@ -266,7 +267,7 @@ export function DnaLive() {
         @keyframes scanSweep{ 0%{ transform:translateY(-40%); opacity:0; } 15%{ opacity:1; } 85%{ opacity:1; } 100%{ transform:translateY(300%); opacity:0; } }
 
         @media (prefers-reduced-motion: reduce){
-          .dna-aura,.dna-dot,.dna-scanline,.dna-scan-dot,.dna-fill,.dna-tag,.dna-top-name,.dna-tick.on::after,.wrap-seg.active::after,.wrap-body,.dna-ring circle{ animation:none !important; }
+          .dna-aura,.dna-dot,.dna-scanline,.dna-fill,.dna-tag,.dna-top-name,.dna-insight,.dna-tick.on::after,.wrap-seg.active::after,.wrap-body,.dna-ring circle{ animation:none !important; }
           .dna-fill{ width:var(--pct); }
         }
       `}</style>
