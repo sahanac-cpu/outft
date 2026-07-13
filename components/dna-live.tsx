@@ -182,7 +182,6 @@ export function DnaLive() {
                 loading="lazy"
                 className="dna-iframe"
               />
-              <div aria-hidden className="dna-scanline" />
             </div>
             <figcaption className="dna-cap"><span>03</span> Snap yours — live</figcaption>
           </figure>
@@ -261,13 +260,9 @@ export function DnaLive() {
         /* 03 camera panel */
         .dna-panel--cam{ background:#1A1916; --dna-scale:0.82; }
         .dna-iframe{ position:absolute; top:0; left:0; width:390px; height:844px; transform-origin:top left; transform:scale(var(--dna-scale)); border:0; background:#1A1916; }
-        .dna-scanline{ position:absolute; left:0; right:0; height:32%; pointer-events:none; transition:opacity .4s ease;
-          background:linear-gradient(180deg, transparent, rgba(120,210,160,0.10) 60%, rgba(120,210,160,0.20)); mix-blend-mode:screen; animation:scanSweep 3.6s cubic-bezier(.5,0,.5,1) infinite; }
-        .dna-panel--cam:hover .dna-scanline{ opacity:0; }
-        @keyframes scanSweep{ 0%{ transform:translateY(-40%); opacity:0; } 15%{ opacity:1; } 85%{ opacity:1; } 100%{ transform:translateY(300%); opacity:0; } }
 
         @media (prefers-reduced-motion: reduce){
-          .dna-aura,.dna-dot,.dna-scanline,.dna-fill,.dna-tag,.dna-top-name,.dna-insight,.dna-tick.on::after,.wrap-seg.active::after,.wrap-body,.dna-ring circle{ animation:none !important; }
+          .dna-aura,.dna-dot,.dna-fill,.dna-tag,.dna-top-name,.dna-insight,.dna-tick.on::after,.wrap-seg.active::after,.wrap-body,.dna-ring circle{ animation:none !important; }
           .dna-fill{ width:var(--pct); }
         }
       `}</style>
