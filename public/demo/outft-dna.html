@@ -1506,10 +1506,10 @@ function openPostDetail(idx) {
   });
   var pdImg = document.getElementById('post-detail-img');
   if (pdImg) {
-    pdImg.style.backgroundImage = '';
     var pdPhoto = (idx === 0 && APP_STATE.latestOutfit && APP_STATE.latestOutfit.photo)
       ? APP_STATE.latestOutfit.photo : (post.photo || null);
-    if (pdPhoto) applyPhotoToPlaceholder(pdImg, pdPhoto);
+    if (pdPhoto) { applyPhotoToPlaceholder(pdImg, pdPhoto); }
+    else { pdImg.style.backgroundImage = 'url("/demo/img/ed1.jpg")'; pdImg.style.backgroundSize = 'cover'; pdImg.style.backgroundPosition = 'center'; }
   }
   currentCommentKey = 'post-' + idx;
   show('post-detail');
@@ -3084,6 +3084,22 @@ window.openBadgeSheet = function(name){
 
 
 
+</script>
+<script>
+/* fill grey placeholders with the editorial image set (incl. dynamically-created ones) */
+(function(){
+  var IMGS=['/demo/img/ed1.jpg','/demo/img/ed2.jpg','/demo/img/ed3.jpg','/demo/img/ed4.jpg','/demo/img/ed5.jpg'];
+  var i=0;
+  function fill(){
+    document.querySelectorAll('.img-ph:not([data-ed]),.echo-ph:not([data-ed]),.pol-ph:not([data-ed])').forEach(function(el){
+      el.setAttribute('data-ed','1');
+      if(!el.style.backgroundImage){ el.style.backgroundImage='url("'+IMGS[i%IMGS.length]+'")'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; el.style.backgroundColor='#e8e4dd'; i++; }
+    });
+  }
+  fill();
+  var t; var mo=new MutationObserver(function(){ clearTimeout(t); t=setTimeout(fill,30); });
+  try{ mo.observe(document.body,{childList:true,subtree:true}); }catch(e){}
+})();
 </script>
 </body>
 </html>
