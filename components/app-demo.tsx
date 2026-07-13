@@ -43,7 +43,7 @@ export function AppDemo() {
       const mob = vw < 768;
       setCompact(mob);
       // reserve space for the header + caption + padding, then size the phone
-      const frameH = Math.max(320, Math.min(vh - (mob ? 400 : 420), mob ? 560 : 560));
+      const frameH = Math.max(340, Math.min(vh - (mob ? 380 : 380), mob ? 620 : 700));
       const screenH = frameH - 24;              // frame padding
       const screenW = (screenH * 390) / 844;    // phone aspect
       setDims({
@@ -184,9 +184,9 @@ export function AppDemo() {
                   key={p.screen}
                   className={`cf-phone ${isActive ? "is-active" : ""}`}
                   style={{
-                    transform: `translateX(${off * SPACING}px) translateZ(${-a * DEPTH}px) rotateY(${-sign * ANGLE}deg) scale(${Math.max(0.66, 1 - a * 0.085)})`,
+                    transform: `translateX(${off * SPACING}px) translateZ(${-a * DEPTH}px) rotateY(${-sign * ANGLE}deg) scale(${Math.max(0.62, 1 - a * 0.12)})`,
                     zIndex: 100 - a,
-                    opacity: hidden ? 0 : 1 - a * 0.16,
+                    opacity: hidden ? 0 : 1 - a * 0.22,
                     pointerEvents: hidden ? "none" : "auto",
                     filter: isActive ? "none" : "brightness(0.86) saturate(0.92)",
                   }}
