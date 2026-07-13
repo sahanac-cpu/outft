@@ -2478,12 +2478,13 @@ window.openBadgeSheet = function(name){
 
 </script>
 <script>
-/* fill grey placeholders with the editorial image set (incl. dynamically-created ones) */
+/* fill Friends' Traces placeholders with the editorial image set — leave
+   Today's Trace (#home-hero) and everything else as the plain placeholder */
 (function(){
   var IMGS=['/demo/img/ed1.jpg','/demo/img/ed2.jpg','/demo/img/ed3.jpg','/demo/img/ed4.jpg','/demo/img/ed5.jpg'];
   var i=0;
   function fill(){
-    document.querySelectorAll('.img-ph:not([data-ed]),.echo-ph:not([data-ed]),.pol-ph:not([data-ed])').forEach(function(el){
+    document.querySelectorAll('#s-feed .trace-post-inner .img-ph:not([data-ed])').forEach(function(el){
       el.setAttribute('data-ed','1');
       if(!el.style.backgroundImage){ el.style.backgroundImage='url("'+IMGS[i%IMGS.length]+'")'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; el.style.backgroundColor='#e8e4dd'; i++; }
     });
