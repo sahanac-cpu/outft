@@ -1,2498 +1,449 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>outft.</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;}
-
-.shell{display:flex;flex-direction:column;width:100vw;height:100vh;max-width:430px;margin:0 auto;}
-
-/* picker */
-.picker{display:flex;gap:5px;overflow-x:auto;padding:9px 12px;background:#0E0D0B;flex-shrink:0;}
-.picker::-webkit-scrollbar{display:none;}
-.pk{flex-shrink:0;font-size:9.5px;padding:6px 11px;border-radius:999px;border:1px solid #2A2820;background:none;color:#5A5549;white-space:nowrap;cursor:pointer;font-family:'Jost',sans-serif;letter-spacing:.08em;text-transform:uppercase;}
-.pk.active{background:#fff;color:#1A1916;}
-
-/* app */
-.app{flex:1;background:#fff;display:flex;flex-direction:column;overflow:hidden;position:relative;}
-
-/* status */
-.sbar{display:flex;justify-content:space-between;padding:16px 22px 0;font-size:12px;font-weight:400;color:#1A1916;flex-shrink:0;letter-spacing:.04em;}
-
-/* header */
-.ah{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 12px;flex-shrink:0;}
-.logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#1A1916;letter-spacing:.02em;}
-.dtag{font-size:11px;color:#8A8278;letter-spacing:.12em;text-transform:uppercase;}
-.hbtn{background:none;border:none;cursor:pointer;padding:3px;display:flex;align-items:center;}
-.ic{width:18px;height:18px;stroke:#1A1916;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-
-/* scroll */
-.sc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.sc::-webkit-scrollbar{display:none;}
-
-/* bottom nav */
-.bnav{display:flex;justify-content:space-around;align-items:center;padding:12px 0 calc(env(safe-area-inset-bottom,0px)+16px);border-top:1px solid #E8E8E8;flex-shrink:0;background:#fff;}
-.nb{background:none;border:none;cursor:pointer;padding:8px 18px;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.nb svg{width:22px;height:22px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:stroke .15s;}
-.nb span{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#C5BEB3;transition:color .15s;}
-.nb.active svg{stroke:#1A1916;}
-.nb.active span{color:#1A1916;}
-.nb-ft{background:none;border:none;cursor:pointer;padding:8px 18px;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.nb-ft svg{width:22px;height:22px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s;}
-.nb-ft span{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#C5BEB3;transition:color .15s;}
-.nb-ft.active svg{stroke:#1A1916;}
-.nb-ft.active span{color:#1A1916;}
-
-/* screens */
-.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
-.screen.vis{display:flex;}
-
-/* ruled divider */
-.rule{height:1px;background:#E8E8E8;margin:0;}
-
-/* section label */
-.sl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#B5ADA3;padding:0 22px;margin-bottom:10px;display:block;}
-
-/*  HOME  */
-.home-top{padding:8px 22px 16px;}
-.home-top h1{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:#1A1916;line-height:1.25;}
-.home-top h1 em{font-style:italic;}
-
-/* streak banner */
-.streak-bar{margin:0 22px 18px;border:1px solid #E8E8E8;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;}
-.streak-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:#1A1916;flex-shrink:0;}
-.streak-info{flex:1;}
-.streak-info p:first-child{font-size:13px;font-weight:500;color:#1A1916;}
-.streak-info p:last-child{font-size:10px;color:#B5ADA3;margin-top:2px;letter-spacing:.04em;}
-.streak-days{display:flex;gap:5px;}
-.sday{width:28px;height:28px;border-radius:50%;border:1px solid #E8E8E8;display:flex;align-items:center;justify-content:center;font-size:9px;color:#B5ADA3;}
-.sday.ok{background:#1A1916;border-color:#1A1916;color:#fff;}
-.sday.td{border:1.5px solid #1A1916;color:#1A1916;}
-
-/* today trace */
-.today-block{margin:0 22px 18px;cursor:pointer;}
-.today-img-wrap{border-radius:12px;overflow:hidden;position:relative;}
-.today-img-wrap img{width:100%;height:200px;object-fit:cover;display:block;}
-.today-label-bar{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#F7F7F7;border-radius:0 0 12px 12px;}
-.today-label-bar p{font-size:12px;font-weight:500;color:#1A1916;}
-
-/* echoes */
-.echoes-hd{display:flex;justify-content:space-between;align-items:baseline;padding:0 22px;margin-bottom:12px;}
-.echoes-hd h2{font-family:'Cormorant Garamond',serif;font-size:19px;color:#1A1916;}
-.echoes-hd span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;}
-.echoes-row{display:flex;gap:9px;overflow-x:auto;padding:0 22px 4px;}
-.echoes-row::-webkit-scrollbar{display:none;}
-.echo-th{width:72px;flex-shrink:0;border-radius:9px;overflow:hidden;position:relative;cursor:pointer;}
-.echo-th img{width:72px;height:90px;object-fit:cover;display:block;}
-.echo-badge{position:absolute;top:6px;left:6px;background:rgba(255,255,255,.92);border-radius:999px;padding:2px 6px;font-size:8px;font-weight:500;color:#1A1916;max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-
-/* insight */
-.insight{margin:16px 22px 8px;background:#F7F7F7;border-radius:12px;padding:15px 16px;}
-.insight p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;color:#5A5549;line-height:1.6;}
-
-/*  FEED (Friends' Traces)  */
-.feed-hd{display:flex;justify-content:space-between;align-items:baseline;padding:8px 22px 14px;}
-.feed-hd h1{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:#1A1916;}
-
-/* Mains-style editorial post */
-.trace-post{padding:0 22px 20px;}
-.trace-post-inner{display:flex;gap:14px;cursor:pointer;}
-.trace-post-inner img{width:110px;height:140px;object-fit:cover;border-radius:8px;flex-shrink:0;}
-.trace-post-right{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0;}
-.tp-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#1A1916;}
-.tp-sub{font-size:11px;color:#8A8278;margin:3px 0 8px;letter-spacing:.02em;}
-.tp-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
-.tptag{font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;cursor:pointer;}
-.tptag.on{background:#1A1916;color:#fff;border-color:#1A1916;}
-.tp-acts{display:flex;gap:11px;align-items:center;}
-.tp-acts svg{width:20px;height:20px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;transition:all .15s;}
-.tp-acts svg *{pointer-events:none;}
-.tp-acts svg.liked{stroke:#D94F4F;fill:#D94F4F;}
-[data-heart].liked{stroke:#D94F4F !important;fill:#D94F4F !important;}
-[data-bookmark].saved,[data-save-to-collection].saved{stroke:#1A1916 !important;fill:#1A1916 !important;}
-.tp-save{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#8A8278;background:none;border:none;cursor:pointer;margin-left:auto;font-family:'Jost',sans-serif;}
-.tp-save.saved{color:#1A1916;font-weight:500;}
-.feed-rule{height:1px;background:#E8E8E8;margin:0 22px 20px;}
-
-/*  CAMERA  */
-.cam-hd{padding:6px 22px 14px;}
-.cam-hd h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:#1A1916;}
-.cam-cats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 22px 16px;}
-.cat-btn{border:1px solid #E8E8E8;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;}
-.cat-btn.sel{background:#1A1916;border-color:#1A1916;}
-.cat-btn.sel p:first-child{color:#fff;}
-.cat-btn.sel p:last-child{color:rgba(255,255,255,.6);}
-.cat-icon{font-size:18px;margin-bottom:4px;}
-.cat-name{font-size:11px;font-weight:500;color:#1A1916;}
-.cat-desc{font-size:9px;color:#B5ADA3;letter-spacing:.04em;margin-top:1px;}
-.cam-vf-area{margin:0 22px 14px;position:relative;border-radius:14px;overflow:hidden;cursor:pointer;}
-.cam-vf-area img{width:100%;height:220px;object-fit:cover;display:block;}
-.cam-vf-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
-.cam-vf-overlay p{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75);pointer-events:none;}
-.cam-vf-corners .c{position:absolute;width:18px;height:18px;border-color:#fff;border-style:solid;opacity:.7;}
-.cam-vf-corners .tl{top:10px;left:10px;border-width:2px 0 0 2px;border-top-left-radius:3px;}
-.cam-vf-corners .tr{top:10px;right:10px;border-width:2px 2px 0 0;border-top-right-radius:3px;}
-.cam-vf-corners .bl{bottom:10px;left:10px;border-width:0 0 2px 2px;border-bottom-left-radius:3px;}
-.cam-vf-corners .br{bottom:10px;right:10px;border-width:0 2px 2px 0;border-bottom-right-radius:3px;}
-.cam-shutter-row{display:flex;justify-content:center;align-items:center;gap:24px;padding:2px 22px 8px;}
-.shutter{width:64px;height:64px;border-radius:50%;background:#1A1916;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}
-.shutter::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid #C5BEB3;}
-
-/* receipt overlay */
-.rcpt-ov{position:absolute;inset:0;background:rgba(255,255,255,.96);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px;}
-.rcpt-ov.show{display:flex;}
-.rcpt-paper{background:#fff;border:1px solid #E8E8E8;border-radius:3px;padding:24px 20px 18px;width:100%;max-width:290px;box-shadow:0 8px 40px -10px rgba(26,25,22,.2);position:relative;}
-.rcpt-paper::before,.rcpt-paper::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;top:50%;transform:translateY(-50%);z-index:1;}
-.rcpt-paper::before{left:-6px;box-shadow:inset 0 0 0 1px #E8E8E8;}
-.rcpt-paper::after{right:-6px;box-shadow:inset 0 0 0 1px #E8E8E8;}
-.rt{text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;letter-spacing:.22em;color:#1A1916;margin-bottom:3px;}
-.rno{text-align:center;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#B5ADA3;margin-bottom:11px;}
-.rdiv{border-top:1px dashed #D8D0C4;margin:9px 0;}
-.rrow{font-size:10px;color:#5A5549;margin:2px 0;letter-spacing:.04em;}
-.rbc{display:flex;justify-content:center;margin:9px 0 5px;}
-.rfooter{text-align:center;font-size:9px;color:#B5ADA3;letter-spacing:.1em;text-transform:uppercase;}
-.rcpt-actions{display:flex;gap:12px;margin-top:18px;}
-.rcpt-btn{flex:1;padding:12px;border-radius:999px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
-.rcpt-btn.sec{border:1px solid #E8E8E8;background:none;color:#5A5549;}
-.rcpt-btn.pri{background:#1A1916;border:none;color:#fff;}
-
-/*  TWINS  */
-.twins-hero{padding:6px 22px 6px;text-align:center;border-bottom:1px solid #E8E8E8;}
-.twins-hero h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:#1A1916;}
-.twins-hero p{font-size:11px;color:#8A8278;letter-spacing:.04em;margin-top:3px;padding-bottom:14px;}
-
-/* twin main feature - side by side editorial */
-.twin-feature{margin:16px 22px;display:grid;grid-template-columns:1fr 1fr;gap:8px;cursor:pointer;}
-.tf-left img,.tf-right img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;display:block;}
-.tf-right{position:relative;}
-.tf-overlay{position:absolute;bottom:0;left:0;right:0;padding:12px 10px;background:linear-gradient(transparent,rgba(26,25,22,.75));border-radius:0 0 10px 10px;}
-.tf-overlay p:first-child{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:3px;}
-.tf-overlay p:last-child{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#fff;}
-.twin-pct-row{display:flex;align-items:center;gap:10px;padding:0 22px 14px;}
-.twin-pct-num{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:#1A1916;}
-.twin-line{flex:1;height:1px;background:#E8E8E8;}
-
-/* more echoes */
-.echoes-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 22px;}
-.eg-item{border-radius:10px;overflow:hidden;cursor:pointer;position:relative;}
-.eg-item img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
-
-/* friends search */
-.srch{display:flex;align-items:center;gap:9px;border:1px solid #E8E8E8;border-radius:999px;padding:10px 16px;margin:0 22px 16px;color:#B5ADA3;font-size:13px;background:#F7F7F7;}
-.srch svg{width:14px;height:14px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;flex-shrink:0;}
-.friend-row{display:flex;align-items:center;gap:11px;padding:11px 22px;border-bottom:1px solid #F0EBE2;}
-.ava{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;font-family:'Jost',sans-serif;}
-.fl-btn{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:7px 13px;border:1px solid #E0D8CB;border-radius:999px;background:none;color:#5A5549;cursor:pointer;font-family:'Jost',sans-serif;margin-left:auto;}
-.fl-btn.following{background:#1A1916;color:#fff;border-color:#1A1916;}
-
-/*  PROFILE  */
-.prof-cover{position:relative;}
-.prof-cover img{width:100%;height:240px;object-fit:cover;object-position:top;display:block;}
-.prof-cover-fade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,#fff);}
-.prof-body{padding:14px 22px 0;}
-.prof-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:#1A1916;text-align:center;}
-.prof-since{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;text-align:center;margin:3px 0 16px;}
-.prof-stats{display:flex;border-top:1px solid #E8E8E8;border-bottom:1px solid #E8E8E8;padding:13px 0;margin-bottom:16px;}
-.ps{flex:1;text-align:center;}
-.ps strong{display:block;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:#1A1916;}
-.ps span{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;margin-top:2px;display:block;}
-.ps+.ps{border-left:1px solid #E8E8E8;}
-
-/* profile 4 sub-tabs */
-.ptabs{display:flex;border-bottom:1px solid #E8E8E8;margin-bottom:0;}
-.ptab{flex:1;text-align:center;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;background:none;border:none;padding:0 0 11px;cursor:pointer;border-bottom:1.5px solid transparent;}
-.ptab.on{color:#1A1916;border-bottom-color:#1A1916;}
-.ptab-panel{display:none;padding:16px 22px;}
-.ptab-panel.on{display:block;}
-
-/* signature trace */
-.sig-words{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.sig-word{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5A5549;padding:6px 14px;border-radius:999px;border:1px solid #D8D0C4;}
-.cdots{display:flex;gap:7px;margin-bottom:16px;}
-.cdot{width:24px;height:24px;border-radius:50%;cursor:pointer;}
-
-.prof-arch-btn{width:100%;border:1px solid #1A1916;border-radius:999px;padding:14px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:none;color:#1A1916;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;}
-.prof-arch-btn:active{background:#1A1916;color:#fff;}
-
-/* saves / boards */
-.board-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.board-card{border:1px solid #E8E8E8;border-radius:12px;overflow:hidden;cursor:pointer;}
-.board-card-img{height:100px;background:#F7F7F7;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.board-card-img img{width:100%;height:100%;object-fit:cover;}
-.board-card-info{padding:10px 12px;}
-.board-name{font-size:12.5px;font-weight:500;color:#1A1916;}
-.board-ct{font-size:10px;color:#B5ADA3;margin-top:2px;}
-
-/* polaroid backlog */
-.bl-month-hdr{font-family:'Cormorant Garamond',serif;font-size:17px;color:#1A1916;}
-.bl-year-hdr{font-family:'Cormorant Garamond',serif;font-size:26px;color:#1A1916;margin-bottom:2px;}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.pol{border-radius:3px;padding:5px 5px 13px;background:#fff;border:1px solid #E8E8E8;box-shadow:0 2px 10px -4px rgba(26,25,22,.18);cursor:pointer;}
-.pol:nth-child(3n+1){transform:rotate(-1.8deg);}
-.pol:nth-child(3n+2){transform:rotate(.5deg);}
-.pol:nth-child(3n){transform:rotate(2.1deg);}
-.pol img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:1px;}
-
-/* badges */
-.badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.bcard{border:1px solid #E8E8E8;border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:background .15s;}
-.bcard:active{background:#F7F7F7;}
-.bcard.locked{border-style:dashed;opacity:.5;}
-.bico{width:36px;height:36px;border-radius:50%;background:#F7F7F7;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
-.bico svg{width:15px;height:15px;stroke:#5A5549;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.bnm{font-size:10.5px;color:#1A1916;letter-spacing:.04em;}
-
-/* DNA */
-.dna-wrap{display:flex;justify-content:center;margin:6px 0 16px;}
-.dleg{list-style:none;padding:0 22px;margin-bottom:16px;}
-.dleg li{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 0;border-bottom:1px solid #E8E8E8;color:#3A3830;}
-.dleg li:last-child{border-bottom:none;}
-.ddot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.dpct{margin-left:auto;font-weight:500;font-size:12px;color:#1A1916;}
-.mini{display:flex;align-items:center;gap:11px;padding:13px 22px;border-bottom:1px solid #E8E8E8;cursor:pointer;}
-.mini-inf{flex:1;}
-.mt{font-family:'Cormorant Garamond',serif;font-size:16px;color:#1A1916;}
-.ms{font-size:10px;color:#8A8278;margin-top:2px;letter-spacing:.04em;}
-.arr{width:14px;height:14px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;flex-shrink:0;}
-
-/* wrapped */
-.wpage{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;}
-.wpage.on{display:flex;}
-
-/* messages */
-.msgr{display:flex;align-items:center;gap:11px;padding:12px 22px;border-bottom:1px solid #E8E8E8;cursor:pointer;}
-.mn{font-size:13px;font-weight:500;color:#1A1916;}
-.mp{font-size:11px;color:#8A8278;margin-top:2px;}
-.mt2{font-size:9.5px;color:#C5BEB3;flex-shrink:0;}
-
-/* activity */
-.actr{display:flex;align-items:flex-start;gap:11px;padding:12px 22px;border-bottom:1px solid #E8E8E8;}
-.actr svg{width:14px;height:14px;flex-shrink:0;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-top:3px;}
-.actt{flex:1;font-size:12px;color:#3A3830;line-height:1.5;}
-.atm{color:#B5ADA3;font-size:11px;}
-
-/* premium */
-.prem-bk{background:#1A1916;flex:1;display:flex;flex-direction:column;}
-.prem-body{flex:1;overflow-y:auto;padding:46px 24px 22px;color:#fff;text-align:center;}
-.pfeat{display:flex;gap:11px;align-items:flex-start;text-align:left;margin-bottom:12px;}
-.pfeat svg{width:13px;height:13px;flex-shrink:0;margin-top:2px;}
-.pfeat span{font-size:12.5px;color:rgba(255,255,255,.85);font-family:'Cormorant Garamond',serif;}
-
-/* sheet */
-.ov{position:absolute;inset:0;background:rgba(26,25,22,.48);z-index:100;display:none;align-items:flex-end;}
-.ov.show{display:flex;}
-.sheet{background:#fff;border-radius:20px 20px 0 0;padding:22px 0 calc(env(safe-area-inset-bottom,0px)+32px);width:100%;}
-.sh-pill{display:block;width:36px;height:4px;border-radius:2px;background:#D8D0C4;margin:0 auto 20px;}
-.sh-ttl{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:#1A1916;margin-bottom:18px;padding:0 24px;}
-.sh-row{display:flex;align-items:center;gap:16px;padding:15px 24px;border-bottom:1px solid #E8E8E8;cursor:pointer;}
-.sh-row:last-child{border-bottom:none;}
-.sh-row svg{width:19px;height:19px;stroke:#5A5549;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
-.sh-row p{font-size:14px;color:#1A1916;}
-
-/* toast */
-.toast{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);background:#1A1916;color:#fff;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 17px;border-radius:999px;z-index:300;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;font-family:'Jost',sans-serif;}
-.toast.show{opacity:1;}
-
-  /* ── PLACEHOLDERS ── */
-  .img-ph{background:linear-gradient(145deg,#EFEFEF,#E0E0E0);display:block;}
-  /* sizing via parent context */
-  .today-img-wrap .img-ph{width:100%;height:200px;}
-  .trace-post-inner .img-ph{width:110px;height:140px;border-radius:8px;flex-shrink:0;}
-  .prof-cover .img-ph{width:100%;height:240px;}
-  .tf-left .img-ph,.tf-right .img-ph{width:100%;aspect-ratio:3/4;border-radius:10px;}
-  .eg-item .img-ph{width:100%;aspect-ratio:3/4;}
-  .cam-vf-area .img-ph{width:100%;height:220px;}
-  .board-card-img .img-ph{width:100%;height:100%;}
-  .echo-ph{width:72px;height:90px;border-radius:9px;background:linear-gradient(145deg,#EFEFEF,#E0E0E0);}
-  .pol-ph{width:100%;aspect-ratio:3/4;border-radius:1px;background:linear-gradient(145deg,#EFEFEF,#E0E0E0);}
-  .cat-icon{display:none;}
-  /* embedded in marketing site — screen-jump picker is driven by the page */
-  .picker{display:none;}
+  /* Tokens ported from the real app (app/src/theme.ts) */
+  :root{
+    --ink:#1A1916; --paper:#FFFFFF; --cream:#F7F7F7; --cream-dark:#F0EBE3;
+    --line:#E8E8E8; --line-warm:#F0EBE2; --taupe:#8A8278; --muted:#5A5549;
+    --sand:#B5ADA3; --faint:#C5BEB3; --tag-border:#E0D8CB; --ph:#DFDFDF;
+    --paper-warm:#FAF9F7; --flame:#E07840;
+    --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --sans:'Jost','Avenir Next','Century Gothic',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--paper);font-family:var(--sans);color:var(--ink);overflow:hidden}
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--paper)}
+  .screen.on{display:flex}
+  .sbar{display:flex;justify-content:space-between;padding:14px 22px 0;font-size:12px;letter-spacing:.4px;color:var(--ink)}
+  .sc{flex:1;overflow-y:auto;padding:0 22px 96px;scrollbar-width:none}
+  .sc::-webkit-scrollbar{display:none}
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding-top:12px}
+  .wordmark{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.5px}
+  .glyphs{display:flex;gap:18px;font-size:15px;color:var(--ink)}
+  .lbl{font-size:9px;letter-spacing:2.2px;color:var(--sand);text-transform:uppercase}
+  .h1{font-family:var(--serif);font-size:30px;line-height:1.15;margin-top:22px}
+  .h1 i{font-style:italic;color:var(--muted)}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:18px;background:var(--paper)}
+  .streak-row{display:flex;align-items:center;gap:16px}
+  .streak-num{font-family:var(--serif);font-size:44px;line-height:1}
+  .streak-label{font-size:12px;letter-spacing:1px;text-transform:uppercase}
+  .streak-sub{font-size:11px;color:var(--sand);margin-top:3px}
+  .days{display:flex;justify-content:space-between;margin-top:16px}
+  .day{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--faint);border:1px solid var(--line)}
+  .day.fill{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .day.today{border:1.5px solid var(--ink);color:var(--ink)}
+  .photo{width:100%;aspect-ratio:3/4;border-radius:12px;background:var(--ph);background-size:cover;background-position:center top;display:block}
+  .photo-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 2px 0;font-size:11px;color:var(--taupe)}
+  .insight{border:1px solid var(--line-warm);background:var(--paper-warm);border-radius:12px;padding:16px;margin-top:14px;font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.5;color:var(--muted)}
+  .sponsor-card{border:1px solid var(--tag-border);border-radius:12px;padding:16px;margin-top:14px;background:var(--paper-warm)}
+  .sponsor-brand{font-family:var(--serif);font-size:20px;margin-top:8px}
+  .sponsor-copy{font-size:12px;color:var(--muted);margin-top:4px}
+  .shoplink{display:inline-block;margin-top:10px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:2px}
+  .pill{border:1px solid var(--ink);border-radius:999px;padding:10px 26px;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;font-family:var(--sans);color:var(--ink);cursor:pointer}
+  .pill.dark{background:var(--ink);color:var(--paper)}
+  /* bottom nav — mirrors the real app's BottomNav: HOME · CREATE · TWINS · PROFILE */
+  .bnav{position:absolute;left:0;right:0;bottom:0;display:flex;background:var(--paper);border-top:1px solid var(--line);padding:10px 8px calc(14px + env(safe-area-inset-bottom));z-index:10}
+  .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-family:var(--sans)}
+  .nb svg{width:22px;height:22px;stroke:var(--faint);fill:none;stroke-width:1.5}
+  .nb span{font-size:8px;letter-spacing:1.8px;color:var(--faint)}
+  .nb.on svg{stroke:var(--ink)} .nb.on span{color:var(--ink)}
+  .ava{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:.5px;color:var(--ink)}
+  .post{margin-top:26px}
+  .post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .post-name{font-size:13px}
+  .post-date{font-size:10px;color:var(--sand)}
+  .caption{font-family:var(--serif);font-style:italic;font-size:16px;margin-top:10px;color:var(--ink)}
+  .tags{display:flex;gap:6px;margin-top:8px}
+  .tag{border:1px solid var(--tag-border);border-radius:999px;padding:3px 10px;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--taupe)}
+  /* twins */
+  .dna-flex{display:flex;align-items:center;gap:16px;margin-top:12px}
+  .dna-rows{flex:1;display:flex;flex-direction:column;gap:10px}
+  .dna-row{display:flex;align-items:center;font-size:12px;color:var(--muted)}
+  .dot{width:8px;height:8px;border-radius:4px;margin-right:8px}
+  .dna-pct{font-family:var(--serif);font-size:16px;color:var(--ink);margin-left:auto}
+  .wrapped-banner{background:var(--ink);border-radius:12px;padding:16px;margin-top:14px;display:flex;align-items:center;color:var(--paper);cursor:pointer}
+  .grid{display:flex;flex-wrap:wrap;justify-content:space-between;row-gap:16px;margin-top:12px}
+  .gitem{width:48%;position:relative;cursor:pointer}
+  .gphoto{width:100%;aspect-ratio:3/4;border-radius:8px;background-size:cover;background-position:center top;display:block}
+  .gbadge{position:absolute;top:8px;left:8px;background:var(--paper);border-radius:999px;padding:3px 9px;font-size:10px;color:var(--taupe)}
+  .gsp{font-size:8px;letter-spacing:1px;color:var(--sand);margin-top:5px;text-transform:uppercase}
+  .gdna{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45}
+  /* camera */
+  .cam{position:absolute;inset:0;background:var(--ink);display:flex;flex-direction:column}
+  .viewfinder{flex:1;background-size:cover;background-position:center;position:relative;margin:8px 14px 0;border-radius:16px;overflow:hidden}
+  .vf-grid{position:absolute;inset:0;background:
+    linear-gradient(transparent calc(33% - .5px),rgba(255,255,255,.12) 33%,transparent calc(33% + .5px)),
+    linear-gradient(transparent calc(66% - .5px),rgba(255,255,255,.12) 66%,transparent calc(66% + .5px)),
+    linear-gradient(90deg,transparent calc(33% - .5px),rgba(255,255,255,.12) 33%,transparent calc(33% + .5px)),
+    linear-gradient(90deg,transparent calc(66% - .5px),rgba(255,255,255,.12) 66%,transparent calc(66% + .5px))}
+  .cats{display:flex;gap:8px;justify-content:center;padding:16px 14px 6px;flex-wrap:wrap}
+  .cat{border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.75);border-radius:999px;padding:6px 14px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;background:none;font-family:var(--sans);cursor:pointer}
+  .cat.sel{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .cam-controls{display:flex;align-items:center;justify-content:space-around;padding:12px 30px calc(90px + env(safe-area-inset-bottom))}
+  .cam-side{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:none;color:rgba(255,255,255,.85);font-size:15px;cursor:pointer}
+  .shutter{width:74px;height:74px;border-radius:50%;border:2.5px solid var(--paper);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .shutter i{display:block;width:58px;height:58px;border-radius:50%;background:var(--paper)}
+  /* receipt overlay */
+  .rcpt{position:absolute;inset:0;background:rgba(26,25,22,.55);display:none;align-items:flex-end;z-index:30}
+  .rcpt.show{display:flex}
+  .rcpt-card{background:var(--paper);width:100%;border-radius:18px 18px 0 0;padding:22px 22px calc(26px + env(safe-area-inset-bottom));max-height:88%;overflow-y:auto}
+  .rcpt-photo{width:100%;aspect-ratio:3/4;max-height:260px;object-fit:cover;border-radius:12px;background:#C4B098;background-size:cover;background-position:center top}
+  .rbar{margin-top:16px}
+  .rbar-row{display:flex;align-items:center;gap:10px;margin-top:9px;font-size:12px;color:var(--muted)}
+  .rtrack{flex:1;height:4px;background:var(--cream-dark);border-radius:2px;overflow:hidden}
+  .rfill{height:100%;background:var(--ink);border-radius:2px;width:0;transition:width .8s ease}
+  .rpct{font-family:var(--serif);font-size:15px;color:var(--ink);width:38px;text-align:right}
+  /* profile */
+  .pf-head{display:flex;align-items:center;gap:14px;margin-top:20px}
+  .pf-ava{width:64px;height:64px;border-radius:50%;background:#CDB89B;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .pf-stats{display:flex;gap:0;border:1px solid var(--line);border-radius:12px;margin-top:18px}
+  .pf-stat{flex:1;text-align:center;padding:14px 0}
+  .pf-stat b{font-family:var(--serif);font-size:22px;font-weight:500;display:block}
+  .pf-stat span{font-size:9px;letter-spacing:1.6px;color:var(--sand);text-transform:uppercase}
+  .pgrid{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px}
+  .pgrid .cell{width:calc(33.33% - 3px);aspect-ratio:3/4;border-radius:4px;background-size:cover;background-position:center top}
+  /* dna screen */
+  .dna-hero{display:flex;justify-content:center;margin-top:26px}
+  .dna-list{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+  .dna-item{display:flex;align-items:center;gap:10px}
+  .dtrack{flex:1;height:5px;background:var(--cream);border-radius:3px;overflow:hidden}
+  .dfill{height:100%;background:var(--ink)}
+  .dlabel{width:98px;font-size:12px;color:var(--muted)}
+  .dpct{font-family:var(--serif);font-size:16px;width:42px;text-align:right}
+  /* wrapped */
+  .wrap-screen{background:var(--ink);color:var(--paper)}
+  .wrap-big{font-family:var(--serif);font-size:88px;line-height:1;margin-top:40px}
+  .wrap-line{border-top:1px solid rgba(255,255,255,.18);margin:22px 0;padding-top:18px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.65)}
+  .wrap-line b{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--paper)}
+  .back{position:absolute;top:46px;left:18px;z-index:5;background:none;border:none;font-size:18px;color:inherit;cursor:pointer}
+  .toast{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);background:var(--ink);color:var(--paper);border-radius:999px;padding:9px 18px;font-size:11px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;white-space:nowrap}
+  .toast.show{opacity:1}
 </style>
 </head>
 <body>
-<div class="shell">
-<div class="picker" id="picker">
-  <button class="pk active" data-s="home">home</button>
-  <button class="pk" data-s="feed">friends' traces</button>
-  <button class="pk" data-s="camera">camera</button>
-  <button class="pk" data-s="twins">twins</button>
-  <button class="pk" data-s="profile">profile</button>
-  <button class="pk" data-s="dna">dna</button>
-  <button class="pk" data-s="wrapped">wrapped</button>
-  <button class="pk" data-s="premium">premium</button>
-  <button class="pk" data-s="messages">messages</button>
-  <button class="pk" data-s="activity">activity</button>
-</div>
 
-<div class="app">
-
-<!--  HOME  -->
-<div class="screen vis" id="s-home">
+<!-- HOME — mirrors app/src/screens/HomeScreen.tsx -->
+<div class="screen" id="s-home">
   <div class="sbar"><span>9:41</span><span>22 June</span></div>
-  <div class="ah"><span class="logo">outft.</span><div style="display:flex;gap:13px;">
-    <button class="hbtn" data-go="messages"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></button>
-    <button class="hbtn" data-go="activity"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></button>
-  </div></div>
   <div class="sc">
-    <div class="home-top"><h1>Good morning, <em>Elena.</em><br>Your trace continues.</h1></div>
+    <div class="hdr"><span class="wordmark">outft.</span><span class="glyphs"><span>▤</span><span>◈</span></span></div>
+    <div class="h1">Good morning, Eva.<br><i>Your trace continues.</i></div>
 
-    <div class="streak-bar" data-go="profile">
-      <div class="streak-num">14</div>
-      <div class="streak-info">
-        <p>Day streak</p>
-        <p>capture today to keep it alive</p>
+    <div class="card" data-go="profile" role="button">
+      <div class="streak-row">
+        <span class="streak-num">12</span>
+        <div><div class="streak-label">Day streak</div><div class="streak-sub">capture today to keep it alive</div></div>
       </div>
-      <div class="streak-days">
-        <div class="sday ok">M</div><div class="sday ok">T</div><div class="sday ok">W</div>
-        <div class="sday ok">T</div><div class="sday td" data-go="camera">F</div>
-        <div class="sday">S</div><div class="sday">S</div>
-      </div>
-    </div>
-
-    <div class="today-block">
-      <div class="today-img-wrap" data-postidx="0" style="cursor:pointer;">
-        <div class="img-ph" id="home-hero"></div>
-        <div class="today-label-bar"><p>Today's trace · 22 June</p><button data-go="camera" style="background:none;border:none;cursor:pointer;padding:0 0 0 4px;display:flex;align-items:center;flex-shrink:0;"><svg style="width:15px;height:15px;stroke:#5A5549;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button></div>
+      <div class="days">
+        <span class="day fill">M</span><span class="day fill">T</span><span class="day fill">W</span>
+        <span class="day fill">T</span><span class="day today" data-go="camera">F</span>
+        <span class="day">S</span><span class="day">S</span>
       </div>
     </div>
 
-    <div class="echoes-hd"><h2>Recent echoes</h2><span style="font-size:9.5px;color:#B5ADA3;letter-spacing:.06em;">fits that match yours</span></div>
-    <div class="echoes-row" id="echo-row"></div>
-
-    <div class="insight">
-      <p>This week, your style has been tracing quiet confidence. 5 people echoed your fits.</p>
+    <div class="lbl" style="margin-top:30px">Latest trace</div>
+    <div style="margin-top:12px" data-go="camera" role="button">
+      <span class="photo" style="background-image:url('img/ed1.jpg')"></span>
+      <div class="photo-bar"><span>Latest trace · 21 June</span><span>✎</span></div>
     </div>
-    <div style="height:16px;"></div>
-  </div>
-  <div class="bnav">
-    <button class="nb active" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
-    <button class="nb" data-go="camera"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2l1-2h8l1 2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/></svg><span>Camera</span></button>
-    <button class="nb-ft" data-go="twins"><svg viewBox="0 0 24 24" style="pointer-events:none;"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Twins</span></button>
-    <button class="nb" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>Profile</span></button>
+
+    <div class="insight">Tonal layering with palette discipline — your quiet-luxury lane is deepening.</div>
+
+    <div class="sponsor-card">
+      <div class="lbl">Sponsored · Quiet luxury lane</div>
+      <div class="sponsor-brand">Toteme</div>
+      <div class="sponsor-copy">Shop the pieces closest to your trace.</div>
+      <span class="shoplink">Shop the fit</span>
+    </div>
+
+    <div class="lbl" style="margin-top:32px">Friends</div>
+    <div class="post" style="margin-top:14px" data-go="feed" role="button">
+      <div class="post-head"><span class="ava" style="background:#C4BAAA">MY</span>
+        <div><div class="post-name">Maya Chen</div><div class="post-date">today · 8:12</div></div></div>
+      <span class="photo" style="background-image:url('img/ed2.jpg')"></span>
+      <div class="caption">Night out. Leather, cargo, no hesitation.</div>
+      <div class="tags"><span class="tag">party</span><span class="tag">solo</span></div>
+    </div>
+    <div class="post" data-go="feed" role="button">
+      <div class="post-head"><span class="ava" style="background:#B8C4C0">LI</span>
+        <div><div class="post-name">Lila Moreau</div><div class="post-date">today · 7:48</div></div></div>
+      <span class="photo" style="background-image:url('img/ed3.jpg')"></span>
+      <div class="caption">Soft structure for a late dinner.</div>
+      <div class="tags"><span class="tag">date</span><span class="tag">uni</span></div>
+    </div>
+    <div class="post" data-go="feed" role="button">
+      <div class="post-head"><span class="ava" style="background:#9FBBCB">JD</span>
+        <div><div class="post-name">Jade Okafor</div><div class="post-date">yesterday</div></div></div>
+      <span class="photo" style="background-image:url('img/ed4.jpg')"></span>
+      <div class="caption">Work fit, softened.</div>
+      <div class="tags"><span class="tag">work</span><span class="tag">minimal</span></div>
+    </div>
   </div>
 </div>
 
-<!--  FEED  -->
+<!-- FEED — friends' traces -->
 <div class="screen" id="s-feed">
   <div class="sbar"><span>9:41</span><span>22 June</span></div>
-  <div class="ah"><span class="logo">outft.</span><div style="display:flex;gap:13px;">
-    <button class="hbtn" data-go="messages"><svg class="ic" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></button>
-    <button class="hbtn" data-go="activity"><svg class="ic" viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></button>
-  </div></div>
   <div class="sc">
-    <div class="feed-hd"><h1>Friends' traces.</h1><span class="dtag">22 June</span></div>
-    <div class="rule"></div>
-
-    <div class="trace-post" style="padding-top:16px;">
-      <div class="trace-post-inner">
-        <div class="img-ph" id="fp1"></div>
-        <div class="trace-post-right">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-              <p class="tp-name" data-person="maya" style="cursor:pointer;">maya</p>
-              <button class="hbtn" data-sheet="post" aria-label="Options"><svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;pointer-events:none;"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button>
-            </div>
-            <p class="tp-sub">Night out.</p>
-            <div class="tp-tags"><span class="tptag on">party</span><span class="tptag on">solo</span></div>
-          </div>
-          <div class="tp-acts">
-            <svg viewBox="0 0 24 24" data-heart="1"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="feed-1" style="cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            <svg viewBox="0 0 24 24" data-save-to-collection="feed" style="width:17px;height:17px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;transition:all .15s;"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></svg>
-          </div>
-        </div>
-      </div>
+    <div class="hdr"><span class="wordmark">outft.</span><span class="glyphs"><span>▤</span><span>◈</span></span></div>
+    <div class="h1" style="font-size:26px">Friends' traces.</div>
+    <div class="post">
+      <div class="post-head"><span class="ava" style="background:#C4BAAA">MY</span>
+        <div><div class="post-name">Maya Chen</div><div class="post-date">today · 8:12</div></div></div>
+      <span class="photo" style="background-image:url('img/ed2.jpg')"></span>
+      <div class="caption">Night out. Leather, cargo, no hesitation.</div>
+      <div class="tags"><span class="tag">party</span><span class="tag">solo</span></div>
     </div>
-    <div class="feed-rule"></div>
-
-    <div class="trace-post">
-      <div class="trace-post-inner">
-        <div class="img-ph" id="fp2"></div>
-        <div class="trace-post-right">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-              <p class="tp-name" data-person="lila" style="cursor:pointer;">lila</p>
-              <button class="hbtn" data-sheet="post" aria-label="Options"><svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;pointer-events:none;"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button>
-            </div>
-            <p class="tp-sub">20 June</p>
-            <div class="tp-tags"><span class="tptag on">date</span><span class="tptag on">uni</span></div>
-          </div>
-          <div class="tp-acts">
-            <svg viewBox="0 0 24 24" data-heart="2"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="feed-2" style="cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            <svg viewBox="0 0 24 24" data-save-to-collection="feed" style="width:17px;height:17px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;transition:all .15s;"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></svg>
-          </div>
-        </div>
-      </div>
+    <div class="post">
+      <div class="post-head"><span class="ava" style="background:#B8C4C0">LI</span>
+        <div><div class="post-name">Lila Moreau</div><div class="post-date">today · 7:48</div></div></div>
+      <span class="photo" style="background-image:url('img/ed3.jpg')"></span>
+      <div class="caption">Soft structure for a late dinner.</div>
+      <div class="tags"><span class="tag">date</span><span class="tag">uni</span></div>
     </div>
-    <div class="feed-rule"></div>
-
-    <div class="trace-post">
-      <div class="trace-post-inner">
-        <div class="img-ph" id="fp3"></div>
-        <div class="trace-post-right">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-              <p class="tp-name" data-person="jade" style="cursor:pointer;">jade</p>
-              <button class="hbtn" data-sheet="post" aria-label="Options"><svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;pointer-events:none;"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button>
-            </div>
-            <p class="tp-sub">19 June</p>
-            <div class="tp-tags"><span class="tptag on">work</span><span class="tptag on">minimal</span></div>
-          </div>
-          <div class="tp-acts">
-            <svg viewBox="0 0 24 24" data-heart="3"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="feed-3" style="cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            <svg viewBox="0 0 24 24" data-save-to-collection="feed" style="width:17px;height:17px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;transition:all .15s;"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></svg>
-          </div>
-        </div>
-      </div>
+    <div class="post">
+      <div class="post-head"><span class="ava" style="background:#9FBBCB">JD</span>
+        <div><div class="post-name">Jade Okafor</div><div class="post-date">yesterday</div></div></div>
+      <span class="photo" style="background-image:url('img/ed4.jpg')"></span>
+      <div class="caption">Work fit, softened.</div>
+      <div class="tags"><span class="tag">work</span><span class="tag">minimal</span></div>
     </div>
-    <div style="height:16px;"></div>
-  </div>
-  <div class="bnav">
-    <button class="nb active" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
-    <button class="nb" data-go="camera"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2l1-2h8l1 2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/></svg><span>Camera</span></button>
-    <button class="nb-ft" data-go="twins"><svg viewBox="0 0 24 24" style="pointer-events:none;"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Twins</span></button>
-    <button class="nb" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>Profile</span></button>
   </div>
 </div>
 
-<!--  CAMERA  -->
+<!-- CAMERA — static mock of CameraScreen; shutter runs the receipt flow -->
 <div class="screen" id="s-camera">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah"><span class="logo">outft.</span><button class="hbtn" data-go="home"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-  <div class="sc">
-    <div class="cam-hd"><h1>Capture your trace</h1></div>
-    <div class="cam-cats" id="cam-cats">
-      <div class="cat-btn sel" data-cat="Daily"><p class="cat-name">Daily</p><p class="cat-desc">everyday ft.</p></div>
-      <div class="cat-btn" data-cat="Night out"><p class="cat-name">Night out</p><p class="cat-desc">evening trace</p></div>
-      <div class="cat-btn" data-cat="Work"><p class="cat-name">Work</p><p class="cat-desc">office fit</p></div>
-      <div class="cat-btn" data-cat="Gym"><p class="cat-name">Gym</p><p class="cat-desc">active trace</p></div>
-      <div class="cat-btn" data-cat="Travel"><p class="cat-name">Travel</p><p class="cat-desc">on the go</p></div>
-      <div class="cat-btn" data-cat="Event"><p class="cat-name">Event</p><p class="cat-desc">occasion ft.</p></div>
+  <div class="cam">
+    <div class="sbar" style="color:#fff;position:relative;z-index:2"><span>9:41</span><span>22 June</span></div>
+    <div class="viewfinder" style="background:linear-gradient(180deg,#4A463E,#1A1916)"><div class="vf-grid"></div></div>
+    <div class="cats">
+      <button class="cat sel">Daily</button><button class="cat">Night out</button>
+      <button class="cat">Work</button><button class="cat">Date</button>
     </div>
-    <div class="cam-vf-area" data-action="capture">
-      <div class="img-ph" id="cam-img"></div>
-      <div class="cam-vf-corners">
-        <div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div>
-      </div>
-      <div class="cam-vf-overlay"><p>Hold to capture your today</p></div>
+    <div class="cam-controls">
+      <button class="cam-side" onclick="toast('photo library opens in the app')">▦</button>
+      <button class="shutter" id="shutter" aria-label="Capture"><i></i></button>
+      <button class="cam-side" onclick="toast('camera flips in the app')">⟳</button>
     </div>
-    <div class="cam-shutter-row">
-      <svg style="width:20px;height:20px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 11-12.73 0"/><path d="M12 2v10"/></svg>
-      <button class="shutter" data-action="capture" aria-label="Capture">
-        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-      </button>
-      <svg style="width:20px;height:20px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg>
-    </div>
-    <p style="text-align:center;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;padding-bottom:16px;">Hold to capture your today</p>
   </div>
-  <!-- receipt -->
-  <div class="rcpt-ov" id="rcpt-ov">
-    <div class="rcpt-paper">
-      <p class="rt">OUTFT.</p>
-      <p class="rno">fit of record · no. <span id="rcpt-no">0143</span></p>
-      <div class="rdiv"></div>
-      <p class="rrow"><span id="rcpt-cat">Daily</span> · 22 June 2026</p>
-      <p class="rrow">14:32 · afternoon window</p>
-      <div class="rdiv"></div>
-      <div class="rbc">
-        <svg width="140" height="30" viewBox="0 0 140 30" aria-label="Fit barcode">
-          <rect x="0" y="0" width="2" height="30" fill="#3A3830"/><rect x="4" y="0" width="1" height="30" fill="#3A3830"/><rect x="7" y="0" width="3" height="30" fill="#3A3830"/><rect x="12" y="0" width="1" height="30" fill="#3A3830"/><rect x="15" y="0" width="2" height="30" fill="#3A3830"/><rect x="19" y="0" width="1" height="30" fill="#3A3830"/><rect x="22" y="0" width="3" height="30" fill="#3A3830"/><rect x="27" y="0" width="1" height="30" fill="#3A3830"/><rect x="30" y="0" width="2" height="30" fill="#3A3830"/><rect x="34" y="0" width="1" height="30" fill="#3A3830"/><rect x="37" y="0" width="3" height="30" fill="#3A3830"/><rect x="42" y="0" width="2" height="30" fill="#3A3830"/><rect x="46" y="0" width="1" height="30" fill="#3A3830"/><rect x="49" y="0" width="2" height="30" fill="#3A3830"/><rect x="53" y="0" width="3" height="30" fill="#3A3830"/><rect x="58" y="0" width="1" height="30" fill="#3A3830"/><rect x="61" y="0" width="2" height="30" fill="#3A3830"/><rect x="65" y="0" width="1" height="30" fill="#3A3830"/><rect x="68" y="0" width="3" height="30" fill="#3A3830"/><rect x="73" y="0" width="1" height="30" fill="#3A3830"/><rect x="76" y="0" width="2" height="30" fill="#3A3830"/><rect x="80" y="0" width="1" height="30" fill="#3A3830"/><rect x="83" y="0" width="3" height="30" fill="#3A3830"/><rect x="88" y="0" width="2" height="30" fill="#3A3830"/><rect x="92" y="0" width="1" height="30" fill="#3A3830"/><rect x="95" y="0" width="2" height="30" fill="#3A3830"/><rect x="99" y="0" width="3" height="30" fill="#3A3830"/><rect x="104" y="0" width="1" height="30" fill="#3A3830"/><rect x="107" y="0" width="2" height="30" fill="#3A3830"/><rect x="111" y="0" width="1" height="30" fill="#3A3830"/><rect x="114" y="0" width="3" height="30" fill="#3A3830"/><rect x="119" y="0" width="2" height="30" fill="#3A3830"/><rect x="123" y="0" width="1" height="30" fill="#3A3830"/><rect x="126" y="0" width="2" height="30" fill="#3A3830"/><rect x="130" y="0" width="3" height="30" fill="#3A3830"/><rect x="135" y="0" width="1" height="30" fill="#3A3830"/><rect x="138" y="0" width="2" height="30" fill="#3A3830"/>
-        </svg>
+  <div class="rcpt" id="rcpt">
+    <div class="rcpt-card">
+      <div class="lbl">Fit of record · no. 0145</div>
+      <span class="rcpt-photo" style="display:block;margin-top:12px;background-image:url('img/ed1.jpg')"></span>
+      <div class="insight" id="r-insight" style="margin-top:16px">Reading your style DNA…</div>
+      <div class="rbar" id="r-bars" hidden>
+        <div class="rbar-row"><span class="dlabel">Quiet luxury</span><span class="rtrack"><span class="rfill" data-w="38%"></span></span><span class="rpct">38%</span></div>
+        <div class="rbar-row"><span class="dlabel">Minimalist</span><span class="rtrack"><span class="rfill" data-w="27%"></span></span><span class="rpct">27%</span></div>
+        <div class="rbar-row"><span class="dlabel">Scandi</span><span class="rtrack"><span class="rfill" data-w="21%"></span></span><span class="rpct">21%</span></div>
+        <div class="rbar-row"><span class="dlabel">Classic</span><span class="rtrack"><span class="rfill" data-w="14%"></span></span><span class="rpct">14%</span></div>
       </div>
-      <p class="rfooter">trace · keep · revisit · 2026</p>
-    </div>
-    <div class="rcpt-actions">
-      <button class="rcpt-btn sec" data-action="retake">retake</button>
-      <button class="rcpt-btn pri" data-go="feed">share trace</button>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="pill" style="flex:1" onclick="closeRcpt()">Retake</button>
+        <button class="pill dark" style="flex:1" onclick="closeRcpt();show('twins')">Keep the trace</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!--  TWINS  -->
+<!-- TWINS — mirrors TwinsScreen: DNA card → wrapped banner → echoes → sponsored picks -->
 <div class="screen" id="s-twins">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah"><span class="logo">outft.</span></div>
+  <div class="sbar"><span>9:41</span><span>22 June</span></div>
   <div class="sc">
-    <div class="twins-hero">
-      <h1>Twins</h1>
-      <p>Outfits from other people that match yours.</p>
-    </div>
-
-    <div style="margin:0 22px 18px;background:#F7F7F7;border-radius:12px;padding:14px 16px;">
-      <p style="font-size:11px;color:#5A5549;line-height:1.65;">When you post a fit, outft. finds similar outfits posted by others. Same silhouette, palette, or vibe. That match is called an <strong style="color:#1A1916;font-weight:500;">echo</strong>. The higher the %, the closer the match.</p>
-    </div>
-
-    <span class="sl" style="margin-bottom:10px;">your fit vs. closest echo</span>
-    <div style="margin:0 22px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <div style="position:relative;border-radius:10px;overflow:hidden;">
-        <div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(26,25,22,.7));border-radius:0 0 10px 10px;">
-          <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:2px;">your fit</p>
-          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:#fff;">22 June</p>
-        </div>
+    <div class="card" data-go="dna" role="button">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--serif);font-size:18px">Your DNA</span>
+        <span class="lbl">View full trace</span>
       </div>
-      <div style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;" data-person="lenav">
-        <div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(26,25,22,.7));border-radius:0 0 10px 10px;">
-          <p style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:2px;">@lenav · Apr 14</p>
-          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:#fff;">a quiet resonance</p>
+      <div class="dna-flex">
+        <svg width="120" height="120" viewBox="0 0 120 120" aria-label="DNA wheel">
+          <g transform="rotate(-90 60 60)" fill="none" stroke-width="16">
+            <circle cx="60" cy="60" r="46" stroke="#2A2820" stroke-dasharray="109.8 289.0"/>
+            <circle cx="60" cy="60" r="46" stroke="#8A7A68" stroke-dasharray="78.0 320.8" stroke-dashoffset="-109.8"/>
+            <circle cx="60" cy="60" r="46" stroke="#B4A898" stroke-dasharray="60.7 338.1" stroke-dashoffset="-187.8"/>
+            <circle cx="60" cy="60" r="46" stroke="#C4B098" stroke-dasharray="40.4 358.4" stroke-dashoffset="-248.5"/>
+          </g>
+        </svg>
+        <div class="dna-rows">
+          <div class="dna-row"><span class="dot" style="background:#2A2820"></span>Quiet luxury<span class="dna-pct">38%</span></div>
+          <div class="dna-row"><span class="dot" style="background:#8A7A68"></span>Minimalist<span class="dna-pct">27%</span></div>
+          <div class="dna-row"><span class="dot" style="background:#B4A898"></span>Scandi<span class="dna-pct">21%</span></div>
         </div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;padding:8px 22px 18px;">
-      <span style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:#1A1916;">94% echo</span>
-      <div style="flex:1;height:1px;background:#E8E8E8;"></div>
-      <span style="font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#B5ADA3;">palette · silhouette · mood</span>
+
+    <div class="wrapped-banner" data-go="wrapped" role="button">
+      <div style="flex:1">
+        <div style="font-family:var(--serif);font-size:18px">Your wrapped</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">June in silhouettes, palettes, and echoes</div>
+      </div>
+      <span style="font-family:var(--serif);font-size:40px">06</span>
     </div>
 
-    <span class="sl" style="margin-bottom:10px;">more outfits that echo yours</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 22px;margin-bottom:20px;">
-      <div style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;" data-echopostidx="0"><div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div><div style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:3px 9px;font-size:9px;font-weight:500;color:#1A1916;">87%</div></div>
-      <div style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;" data-echopostidx="1"><div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div><div style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:3px 9px;font-size:9px;font-weight:500;color:#1A1916;">81%</div></div>
-      <div style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;" data-echopostidx="2"><div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div><div style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:3px 9px;font-size:9px;font-weight:500;color:#1A1916;">79%</div></div>
-      <div style="position:relative;border-radius:10px;overflow:hidden;cursor:pointer;" data-echopostidx="3"><div class="img-ph" style="width:100%;aspect-ratio:3/4;border-radius:10px;"></div><div style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.92);border-radius:999px;padding:3px 9px;font-size:9px;font-weight:500;color:#1A1916;">74%</div></div>
+    <div style="text-align:center;margin-top:32px;font-family:var(--serif);font-size:34px">Your twins</div>
+
+    <div class="lbl" style="margin-top:24px">Echoes</div>
+    <div class="grid">
+      <div class="gitem"><span class="gphoto" style="background:#D8CFC4"></span>
+        <span class="gbadge">Lena V. · 91%</span></div>
+      <div class="gitem"><span class="gphoto" style="background:#C4B098"></span>
+        <span class="gbadge">Ari T. · 84%</span></div>
     </div>
 
-    <div style="border-top:1px solid #E8E8E8;padding-top:16px;">
-      <span class="sl" style="margin-bottom:10px;">people whose fits often echo yours</span>
-      <div class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>search people</div>
-      <div class="friend-row" data-person="maren" style="cursor:pointer;"><div class="ava" style="width:36px;height:36px;background:#B8C4C0;color:#fff;font-size:12px;">M</div><div style="flex:1;"><p style="font-size:13px;font-weight:500;color:#1A1916;">@maren</p><p style="font-size:10px;color:#B5ADA3;margin-top:2px;">8 echoes · quiet luxury</p></div><button class="fl-btn" data-follow="maren">follow</button></div>
-      <div class="friend-row" data-person="ari" style="cursor:pointer;"><div class="ava" style="width:36px;height:36px;background:#B8C4C0;color:#fff;font-size:12px;">A</div><div style="flex:1;"><p style="font-size:13px;font-weight:500;color:#1A1916;">@ari</p><p style="font-size:10px;color:#B5ADA3;margin-top:2px;">5 echoes · scandi</p></div><button class="fl-btn" data-follow="ari">follow</button></div>
-      <div class="friend-row" data-person="noor" style="cursor:pointer;"><div class="ava" style="width:36px;height:36px;background:#9FBBCB;color:#fff;font-size:12px;">N</div><div style="flex:1;"><p style="font-size:13px;font-weight:500;color:#1A1916;">@noor</p><p style="font-size:10px;color:#B5ADA3;margin-top:2px;">3 echoes · old money</p></div><button class="fl-btn" data-follow="noor">follow</button></div>
+    <div class="lbl" style="margin-top:32px">Curated for your DNA</div>
+    <div class="grid">
+      <div class="gitem" onclick="toast('opens the sponsored fit')">
+        <span class="gphoto" style="background-image:url('img/ed5.jpg')"></span>
+        <span class="gbadge">Toteme</span><div class="gsp">Sponsored</div>
+        <div class="gdna">Matched to your palette discipline and long-line silhouette.</div>
+      </div>
+      <div class="gitem" onclick="toast('opens the sponsored fit')">
+        <span class="gphoto" style="background-image:url('img/ed6.jpg')"></span>
+        <span class="gbadge">COS</span><div class="gsp">Sponsored</div>
+        <div class="gdna">Echoes your structured-neutral trace this month.</div>
+      </div>
+      <div class="gitem" onclick="toast('opens the sponsored fit')">
+        <span class="gphoto" style="background-image:url('img/ed7.jpg')"></span>
+        <span class="gbadge">Arket</span><div class="gsp">Sponsored</div>
+        <div class="gdna">Picked for your scandi lean and soft-layer echoes.</div>
+      </div>
     </div>
-    <div style="height:16px;"></div>
-  </div>
-  <div class="bnav">
-    <button class="nb" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
-    <button class="nb" data-go="camera"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2l1-2h8l1 2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/></svg><span>Camera</span></button>
-    <button class="nb-ft active" data-go="twins"><svg viewBox="0 0 24 24" style="pointer-events:none;"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Twins</span></button>
-    <button class="nb" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>Profile</span></button>
   </div>
 </div>
 
-<!--  PROFILE  -->
-<div class="screen" id="s-profile">
-  <div class="sc">
-    <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:5;"><span>9:41</span><span></span></div>
-    <div style="position:absolute;top:12px;right:16px;z-index:6;">
-      <button class="hbtn" data-sheet="settings"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-    </div>
-    <div class="prof-cover">
-      <div class="img-ph" id="prof-hero"></div>
-      <div class="prof-cover-fade"></div>
-    </div>
-    <div class="prof-body">
-      <p class="prof-name">Elena Voss</p>
-      <p class="prof-since">Tracing since 12.03.25</p>
-      <div class="prof-stats">
-        <div class="ps" data-go="profile" style="cursor:pointer;"><strong>87</strong><span>outfits traced</span></div>
-        <div class="ps"><strong>142</strong><span>days captured</span></div>
-        <div class="ps" data-go="twins" style="cursor:pointer;"><strong>31</strong><span>echoes found</span></div>
-        <div class="ps" style="cursor:pointer;" data-go="home"><strong>14</strong><span>day streak</span></div>
-      </div>
-
-      <div class="ptabs">
-        <button class="ptab on" data-tab="trace">Trace</button>
-        <button class="ptab" data-tab="saves">Saves</button>
-        <button class="ptab" data-tab="backlog">Backlog</button>
-        <button class="ptab" data-tab="badges">Badges</button>
-      </div>
-
-      <!-- TRACE tab -->
-      <div class="ptab-panel on" id="pp-trace">
-        <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;margin-bottom:10px;">Your signature trace</p>
-        <div class="sig-words">
-          <span class="sig-word">Quiet luxury</span><span class="sig-word">Old money</span><span class="sig-word">Scandi</span>
-        </div>
-        <div class="cdots">
-          <div class="cdot" style="background:#fff;border:1px solid #D8D0C4;"></div>
-          <div class="cdot" style="background:#F0EBE3;border:1px solid #D8D0C4;"></div>
-          <div class="cdot" style="background:#1A1916;"></div>
-          <div class="cdot" style="background:#3A3830;"></div>
-          <div class="cdot" style="background:#8A7A68;"></div>
-          <div class="cdot" style="background:#C4B098;"></div>
-          <div class="cdot" style="background:#E8D8C4;"></div>
-        </div>
-        <!-- streak block in trace tab -->
-        <div class="streak-bar" style="margin:0 0 14px;" data-go="camera">
-          <div class="streak-num">14</div>
-          <div class="streak-info"><p>Day streak</p><p>capture today to keep it alive</p></div>
-        </div>
-        <button class="prof-arch-btn" data-tab-switch="backlog">Explore full archive</button>
-        <div class="mini" style="padding-left:0;padding-right:0;" data-go="dna"><div class="mini-inf"><p class="mt">Fashion DNA</p><p class="ms">quiet luxury · old money · scandi</p></div><svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-        <div class="mini" style="padding-left:0;padding-right:0;" data-go="premium"><div class="mini-inf"><p class="mt">DNA Premium</p><p class="ms">unlock advanced analytics</p></div><svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-      </div>
-
-      <!-- SAVES tab -->
-      <div class="ptab-panel" id="pp-saves">
-        <div class="board-grid">
-          <div class="board-card" data-collection="Night out" data-count="12 fits saved"><div class="board-card-img"><div class="img-ph" style="width:100%;height:100%;"></div></div><div class="board-card-info"><p class="board-name">Night out</p><p class="board-ct">12 fits saved</p></div></div>
-          <div class="board-card" data-collection="Work" data-count="8 fits saved"><div class="board-card-img"><div class="img-ph" style="width:100%;height:100%;"></div></div><div class="board-card-info"><p class="board-name">Work</p><p class="board-ct">8 fits saved</p></div></div>
-          <div class="board-card" data-collection="Gym" data-count="5 fits saved"><div class="board-card-img"><div class="img-ph" style="width:100%;height:100%;"></div></div><div class="board-card-info"><p class="board-name">Gym</p><p class="board-ct">5 fits saved</p></div></div>
-          <div class="board-card" data-collection="Inspo" data-count="24 fits saved"><div class="board-card-img"><div class="img-ph" style="width:100%;height:100%;"></div></div><div class="board-card-info"><p class="board-name">Inspo</p><p class="board-ct">24 fits saved</p></div></div>
-        </div>
-      </div>
-
-      <!-- BACKLOG tab -->
-      <div class="ptab-panel" id="pp-backlog">
-        <div style="display:flex;gap:6px;margin-bottom:12px;">
-          <span class="rp on" data-rp="weeks" style="font-size:10px;padding:5px 11px;border-radius:999px;background:#1A1916;color:#fff;cursor:pointer;">weeks</span>
-          <span class="rp" data-rp="months" style="font-size:10px;padding:5px 11px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;cursor:pointer;">months</span>
-          <span class="rp" data-rp="years" style="font-size:10px;padding:5px 11px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;cursor:pointer;">years</span>
-        </div>
-        <span class="sl" style="padding:0;margin-bottom:10px;">87 fits traced</span>
-        <div class="pgrid" id="backlog-grid"></div>
-        <div style="margin-top:12px;display:flex;align-items:center;gap:11px;border-top:1px solid #E8E8E8;padding-top:12px;cursor:pointer;" data-go="premium">
-          <div style="flex:1;"><p class="mt">Unlock full archive</p><p class="ms">premium only</p></div>
-          <svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-        </div>
-      </div>
-
-      <!-- BADGES tab -->
-      <div class="ptab-panel" id="pp-badges">
-        <span class="sl" style="padding:0;margin-bottom:14px;">5 of 6 unlocked</span>
-        <div class="badge-grid">
-          <div class="bcard" onclick="openBadgeSheet('Early Bird')" style="cursor:pointer;"><div class="bico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/></svg></div><p class="bnm">Early Bird</p></div>
-          <div class="bcard" onclick="openBadgeSheet('Gym Warrior')" style="cursor:pointer;"><div class="bico"><svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M2 10v4M22 10v4M6 12h12"/></svg></div><p class="bnm">Gym Warrior</p></div>
-          <div class="bcard" onclick="openBadgeSheet('Minimalist Master')" style="cursor:pointer;"><div class="bico"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></div><p class="bnm">Minimalist Master</p></div>
-          <div class="bcard" onclick="openBadgeSheet('Fashion Explorer')" style="cursor:pointer;"><div class="bico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7l2.5 5L20 13l-5 2-2 5-2-5-5-2 5.5-1z"/></svg></div><p class="bnm">Fashion Explorer</p></div>
-          <div class="bcard" onclick="openBadgeSheet('Vintage Collector')" style="cursor:pointer;"><div class="bico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><p class="bnm">Vintage Collector</p></div>
-          <div class="bcard locked" data-go="premium"><div class="bico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div><p class="bnm" style="color:#B5ADA3;">Trend Setter</p></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="bnav">
-    <button class="nb" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
-    <button class="nb" data-go="camera"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2l1-2h8l1 2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/></svg><span>Camera</span></button>
-    <button class="nb-ft" data-go="twins"><svg viewBox="0 0 24 24" style="pointer-events:none;"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Twins</span></button>
-    <button class="nb active" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>Profile</span></button>
-  </div>
-</div>
-
-<!--  DNA  -->
+<!-- DNA — full trace -->
 <div class="screen" id="s-dna">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah"><button class="hbtn" data-go="profile"><svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;"><path d="M15 18l-6-6 6-6"/></svg></button><span class="logo">Fashion DNA</span><div></div></div>
+  <button class="back" data-go="twins">←</button>
+  <div class="sbar"><span>9:41</span><span>22 June</span></div>
   <div class="sc">
-    <div class="dna-wrap">
-      <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="DNA wheel">
+    <div style="text-align:center;margin-top:34px;font-family:var(--serif);font-size:34px">Your fashion DNA</div>
+    <div class="dna-hero">
+      <svg width="180" height="180" viewBox="0 0 180 180" aria-label="DNA wheel">
         <g transform="rotate(-90 90 90)" fill="none" stroke-width="22">
-          <circle cx="90" cy="90" r="68" stroke="#2A2820" stroke-dasharray="174.8 252.8"/>
-          <circle cx="90" cy="90" r="68" stroke="#8A7A68" stroke-dasharray="98.1 329.5" stroke-dashoffset="-174.8"/>
-          <circle cx="90" cy="90" r="68" stroke="#B4A898" stroke-dasharray="76.8 351.4" stroke-dashoffset="-272.9"/>
-          <circle cx="90" cy="90" r="68" stroke="#C4B098" stroke-dasharray="47 381.2" stroke-dashoffset="-349.7"/>
-          <circle cx="90" cy="90" r="68" stroke="#D8CFC4" stroke-dasharray="30 398.2" stroke-dashoffset="-396.7"/>
+          <circle cx="90" cy="90" r="68" stroke="#2A2820" stroke-dasharray="162.4 264.8"/>
+          <circle cx="90" cy="90" r="68" stroke="#8A7A68" stroke-dasharray="115.3 311.9" stroke-dashoffset="-162.4"/>
+          <circle cx="90" cy="90" r="68" stroke="#B4A898" stroke-dasharray="89.7 337.5" stroke-dashoffset="-277.7"/>
+          <circle cx="90" cy="90" r="68" stroke="#C4B098" stroke-dasharray="59.8 367.4" stroke-dashoffset="-367.4"/>
         </g>
-        <text x="90" y="86" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="16" fill="#1A1916">you</text>
-        <text x="90" y="103" text-anchor="middle" font-size="8.5" fill="#8A8278" letter-spacing="1.5">FASHION DNA</text>
       </svg>
     </div>
-    <ul class="dleg">
-      <li><span class="ddot" style="background:#2A2820"></span>Quiet luxury<span class="dpct">41%</span></li>
-      <li><span class="ddot" style="background:#8A7A68"></span>Old money<span class="dpct">23%</span></li>
-      <li><span class="ddot" style="background:#B4A898"></span>Scandi<span class="dpct">18%</span></li>
-      <li><span class="ddot" style="background:#C4B098"></span>Coastal<span class="dpct">11%</span></li>
-      <li><span class="ddot" style="background:#D8CFC4"></span>Eclectic<span class="dpct">7%</span></li>
-    </ul>
-    <div class="mini" data-go="twins"><div class="mini-inf"><p class="mt">ft. twin · @lenav</p><p class="ms">94% echo · closest style match</p></div><svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-    <div class="mini" data-go="wrapped"><div class="mini-inf"><p class="mt">May wrapped</p><p class="ms">your month in fits</p></div><svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
-    <div class="mini" data-go="premium"><div class="mini-inf"><p class="mt">Advanced analytics</p><p class="ms">premium only</p></div><svg class="arr" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+    <div class="dna-list">
+      <div class="dna-item"><span class="dlabel">Quiet luxury</span><span class="dtrack"><span class="dfill" style="width:38%"></span></span><span class="dpct">38%</span></div>
+      <div class="dna-item"><span class="dlabel">Minimalist</span><span class="dtrack"><span class="dfill" style="width:27%"></span></span><span class="dpct">27%</span></div>
+      <div class="dna-item"><span class="dlabel">Scandi</span><span class="dtrack"><span class="dfill" style="width:21%"></span></span><span class="dpct">21%</span></div>
+      <div class="dna-item"><span class="dlabel">Classic</span><span class="dtrack"><span class="dfill" style="width:14%"></span></span><span class="dpct">14%</span></div>
+    </div>
+    <div class="tags" style="margin-top:22px;flex-wrap:wrap">
+      <span class="tag">neutral palette</span><span class="tag">long line</span>
+      <span class="tag">structured</span><span class="tag">tonal</span><span class="tag">soft texture</span>
+    </div>
+    <div class="insight">A record built from 47 traces — palette discipline first, silhouette second, always unhurried.</div>
   </div>
 </div>
 
-<!--  WRAPPED  -->
-<div class="screen" id="s-wrapped">
-  <div style="background:#1A1916;flex:1;display:flex;flex-direction:column;">
-    <div style="display:flex;gap:4px;padding:16px 18px 0;">
-      <div style="flex:1;height:2px;background:#fff;border-radius:2px;" id="wb1"></div><div style="flex:1;height:2px;background:rgba(255,255,255,.2);border-radius:2px;" id="wb2"></div><div style="flex:1;height:2px;background:rgba(255,255,255,.2);border-radius:2px;" id="wb3"></div><div style="flex:1;height:2px;background:rgba(255,255,255,.2);border-radius:2px;" id="wb4"></div><div style="flex:1;height:2px;background:rgba(255,255,255,.2);border-radius:2px;" id="wb5"></div>
-    </div>
-    <button data-go="dna" style="position:absolute;top:14px;right:18px;background:none;border:none;cursor:pointer;z-index:5;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:rgba(255,255,255,.5);fill:none;stroke-width:1.5;stroke-linecap:round;"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    <div style="flex:1;position:relative;">
-      <div class="wpage on" data-pg="1"><p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 18px;">may wrapped</p><p style="font-family:'Cormorant Garamond',serif;font-size:42px;color:#fff;margin:0 0 8px;">26 fits</p><p style="font-size:12px;color:rgba(255,255,255,.55);">your most consistent month yet</p></div>
-      <div class="wpage" data-pg="2"><p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 18px;">top aesthetic</p><p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;color:#fff;margin:0 0 8px;">Quiet luxury</p><p style="font-size:12px;color:rgba(255,255,255,.55);">41% of your fits this month</p></div>
-      <div class="wpage" data-pg="3"><p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 18px;">most active window</p><p style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;margin:0 0 8px;">Afternoon</p><p style="font-size:12px;color:rgba(255,255,255,.55);">64% of fits posted 11–17</p></div>
-      <div class="wpage" data-pg="4"><p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 18px;">fashion confidence</p><p style="font-family:'Cormorant Garamond',serif;font-size:56px;color:#fff;margin:0 0 8px;">87</p><p style="font-size:12px;color:rgba(255,255,255,.55);">up 6 points from april</p></div>
-      <div class="wpage" data-pg="5"><p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 0 22px;">growth this month</p><p style="font-size:13px;color:rgba(255,255,255,.8);margin:0 0 7px;">+4% scandi · +2 echo matches</p><p style="font-size:13px;color:rgba(255,255,255,.8);margin:0 0 26px;"> 14 day streak — keep going</p><button data-go="dna" style="background:#fff;color:#1A1916;border:none;border-radius:999px;padding:12px 28px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-family:'Jost',sans-serif;cursor:pointer;">done</button></div>
-    </div>
-    <div style="position:absolute;inset:0;display:flex;top:48px;"><div data-wtap="prev" style="flex:1;cursor:pointer;z-index:2;"></div><div data-wtap="next" style="flex:1;cursor:pointer;z-index:2;"></div></div>
-  </div>
-</div>
-
-<!--  PREMIUM  -->
-<div class="screen" id="s-premium">
-  <div class="prem-bk">
-    <button data-go="profile" style="position:absolute;top:18px;right:18px;background:none;border:none;cursor:pointer;z-index:5;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:rgba(255,255,255,.5);fill:none;stroke-width:1.5;stroke-linecap:round;"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    <div class="prem-body">
-      <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.2;stroke-linecap:round;margin:0 auto 14px;display:block;"><path d="M12 2l2.5 7H22l-6 4.5L18 22l-6-4.5L6 22l2-7.5L2 9h7.5z"/></svg>
-      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#fff;margin:0 0 5px;">DNA Premium</p>
-      <p style="font-size:12px;color:rgba(255,255,255,.5);margin:0 0 24px;">read deeper into your trace</p>
-      <div style="text-align:left;margin-bottom:24px;">
-        <div class="pfeat"><svg viewBox="0 0 24 24" style="stroke:#fff;"><path d="M20 6L9 17l-5-5"/></svg><span>Unlimited lifetime backlog</span></div>
-        <div class="pfeat"><svg viewBox="0 0 24 24" style="stroke:#fff;"><path d="M20 6L9 17l-5-5"/></svg><span>Advanced DNA analytics</span></div>
-        <div class="pfeat"><svg viewBox="0 0 24 24" style="stroke:#fff;"><path d="M20 6L9 17l-5-5"/></svg><span>Exclusive themes & badge frames</span></div>
-        <div class="pfeat"><svg viewBox="0 0 24 24" style="stroke:#fff;"><path d="M20 6L9 17l-5-5"/></svg><span>Monthly premium reports</span></div>
-        <div class="pfeat"><svg viewBox="0 0 24 24" style="stroke:#fff;"><path d="M20 6L9 17l-5-5"/></svg><span>Streak protection & rare collectibles</span></div>
-      </div>
-      <button data-action="subscribe" style="width:100%;background:#fff;color:#1A1916;border:none;border-radius:999px;padding:15px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-family:'Jost',sans-serif;cursor:pointer;margin-bottom:10px;">start free trial</button>
-      <p style="font-size:10px;color:rgba(255,255,255,.4);">$8.99/mo · cancel anytime</p>
-    </div>
-  </div>
-</div>
-
-<!--  MESSAGES  -->
-<div class="screen" id="s-messages">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah"><span class="logo">messages</span><button class="hbtn" data-go="home"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<!-- WRAPPED -->
+<div class="screen wrap-screen" id="s-wrapped">
+  <button class="back" data-go="twins">←</button>
+  <div class="sbar" style="color:#fff"><span>9:41</span><span>22 June</span></div>
   <div class="sc">
-    <div class="msgr" data-chat="lenav" style="cursor:pointer;"><div class="ava" style="width:40px;height:40px;background:#C4BAAA;color:#fff;font-size:12px;">LV</div><div style="flex:1;"><p class="mn" data-person="lenav" style="cursor:pointer;">@lenav</p><p class="mp">love that trace from today</p></div><span class="mt2">2m</span></div>
-    <div class="msgr" data-chat="maren" style="cursor:pointer;"><div class="ava" style="width:40px;height:40px;background:#B8C4C0;color:#fff;font-size:12px;">M</div><div style="flex:1;"><p class="mn" data-person="maren" style="cursor:pointer;">@maren</p><p class="mp">where's that coat from?</p></div><span class="mt2">1h</span></div>
-    <div class="msgr" data-chat="noor" style="cursor:pointer;"><div class="ava" style="width:40px;height:40px;background:#9FBBCB;color:#fff;font-size:12px;">N</div><div style="flex:1;"><p class="mn" data-person="noor" style="cursor:pointer;">@noor</p><p class="mp">we dress exactly the same lol</p></div><span class="mt2">3h</span></div>
+    <div class="lbl" style="margin-top:40px;color:rgba(255,255,255,.5)">Your wrapped</div>
+    <div class="wrap-big">June.</div>
+    <div style="font-family:var(--serif);font-style:italic;font-size:18px;color:rgba(255,255,255,.7);margin-top:10px">in silhouettes, palettes, and echoes</div>
+    <div class="wrap-line" style="margin-top:40px"><span>Traces kept</span><b>26</b></div>
+    <div class="wrap-line"><span>Longest streak</span><b>12 days</b></div>
+    <div class="wrap-line"><span>Dominant lane</span><b>Quiet luxury</b></div>
+    <div class="wrap-line"><span>Echoes received</span><b>31</b></div>
+    <div class="wrap-line"><span>Closest twin</span><b>Lena V. · 91%</b></div>
   </div>
 </div>
 
-<!--  ACTIVITY  -->
-<div class="screen" id="s-activity">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah"><span class="logo">activity</span><button class="hbtn" data-go="home"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<!-- PROFILE — mirrors ProfileScreen -->
+<div class="screen" id="s-profile">
+  <div class="sbar"><span>9:41</span><span>22 June</span></div>
   <div class="sc">
-    <div class="actr"><svg style="stroke:#1A1916;" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg><p class="actt" data-go="feed"><strong data-person="theo" style="cursor:pointer;">@theo</strong> echoed your trace · <span class="atm">5m</span></p></div>
-    <div class="actr"><svg style="stroke:#8A8278;" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg><p class="actt" data-go="twins"><strong data-person="jude" style="cursor:pointer;">@jude</strong> started following your trace · <span class="atm">2h</span></p></div>
-    <div class="actr"><svg style="stroke:#8A7A68;" viewBox="0 0 24 24"><path d="M12 2l1.5 6L20 10l-6.5 2L12 18l-1.5-6L4 10l6.5-2z"/></svg><p class="actt" data-go="dna">DNA shifted +4% toward <strong>scandi</strong> · <span class="atm">1d</span></p></div>
-    <div class="actr"><svg style="stroke:#5A5549;" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><p class="actt" data-go="profile"><strong>Gym Warrior</strong> badge unlocked · <span class="atm">2d</span></p></div>
-    <div class="actr"><svg style="stroke:#E07840;fill:none;" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><p class="actt" data-go="home"><strong>14-day streak!</strong> keep going · <span class="atm">today</span></p></div>
+    <div class="hdr"><span class="wordmark">outft.</span><span class="glyphs"><span data-go="wrapped" role="button">◎</span><span onclick="toast('settings opens in the app')">⚙</span></span></div>
+    <div class="pf-head">
+      <span class="pf-ava">EV</span>
+      <div>
+        <div style="font-family:var(--serif);font-size:22px">Eva Vance</div>
+        <div style="font-size:11px;color:var(--sand);margin-top:2px">tracing since 12.01.25</div>
+      </div>
+    </div>
+    <div class="pf-stats">
+      <div class="pf-stat"><b>47</b><span>fits</span></div>
+      <div class="pf-stat" style="border-left:1px solid var(--line);border-right:1px solid var(--line)"><b>31</b><span>echoes</span></div>
+      <div class="pf-stat"><b>12</b><span>streak</span></div>
+    </div>
+    <div class="lbl" style="margin-top:26px">Backlog</div>
+    <div class="pgrid">
+      <span class="cell" style="background:#D8CFC4"></span>
+      <span class="cell" style="background:#C4B098"></span>
+      <span class="cell" style="background:#B4A898"></span>
+      <span class="cell" style="background:#8A7A68"></span>
+      <span class="cell" style="background:#CDB89B"></span>
+      <span class="cell" style="background:#E8D8C4"></span>
+      <span class="cell" style="background:#D8CFC4"></span>
+      <span class="cell" style="background:#C4B098"></span>
+      <span class="cell" style="background:#B4A898"></span>
+    </div>
+    <button class="pill" style="width:100%;margin-top:24px" data-go="dna">View your DNA</button>
   </div>
 </div>
 
+<!-- bottom nav — shared, mirrors app ui.tsx BottomNav -->
+<nav class="bnav" id="bnav" aria-label="Primary">
+  <button class="nb" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>HOME</span></button>
+  <button class="nb" data-nav="camera"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M9 6l1.5-2h3L15 6"/></svg><span>CREATE</span></button>
+  <button class="nb" data-nav="twins"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>TWINS</span></button>
+  <button class="nb" data-nav="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>PROFILE</span></button>
+</nav>
 
-<!-- ══ MONTH DETAIL (all fits in a month) ══ -->
-<div class="screen" id="s-month-detail">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah">
-    <button class="hbtn" data-action="go-back" aria-label="Back"><svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;pointer-events:none;"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <span class="logo" style="font-size:15px;" id="month-detail-title">June 2026</span>
-    <div style="width:24px;"></div>
-  </div>
-  <div class="sc">
-    <p id="month-detail-count" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#B5ADA3;padding:0 22px 14px;">22 fits</p>
-    <div id="month-detail-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:0 22px;"></div>
-    <div style="height:20px;"></div>
-  </div>
-</div>
-
-
-<!-- ══ COMMENTS ══ -->
-<div class="screen" id="s-comments">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah" style="border-bottom:1px solid #E8E8E8;padding-bottom:12px;">
-    <button class="hbtn" data-action="go-back" aria-label="Back">
-      <svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;pointer-events:none;"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <span style="font-size:13px;font-weight:500;color:#1A1916;letter-spacing:.02em;">comments</span>
-    <div style="width:24px;"></div>
-  </div>
-  <!-- mini post preview -->
-  <div id="comments-post-preview" style="display:flex;gap:12px;padding:14px 22px;border-bottom:1px solid #E8E8E8;background:#F7F7F7;">
-    <div class="img-ph" style="width:44px;height:54px;border-radius:6px;flex-shrink:0;"></div>
-    <div style="flex:1;">
-      <p id="comments-post-handle" style="font-size:12.5px;font-weight:500;color:#1A1916;">@you</p>
-      <p id="comments-post-caption" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:#5A5549;margin-top:2px;line-height:1.4;">cream knit, wide leg, understated</p>
-    </div>
-  </div>
-  <!-- comment list -->
-  <div class="sc" id="comments-list" style="padding:12px 0;"></div>
-  <!-- input bar -->
-  <div style="display:flex;gap:10px;align-items:center;padding:10px 22px calc(env(safe-area-inset-bottom,0px)+14px);border-top:1px solid #E8E8E8;background:#fff;flex-shrink:0;">
-    <div style="width:30px;height:30px;border-radius:50%;background:#CDB89B;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0;">EV</div>
-    <div id="comment-input" contenteditable="true" placeholder="add a comment…" style="flex:1;border:1px solid #E8E8E8;border-radius:999px;padding:9px 16px;font-size:13px;color:#1A1916;outline:none;min-height:36px;font-family:'Cormorant Garamond',serif;background:#F7F7F7;"></div>
-    <button id="comment-send" style="background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0;">
-      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#1A1916;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-    </button>
-  </div>
-</div>
-
-
-
-<!-- ══ OTHER PROFILE ══ -->
-<div class="screen" id="s-other-profile">
-  <div class="sc">
-    <div class="sbar" style="position:absolute;top:0;left:0;right:0;z-index:5;"><span>9:41</span><span></span></div>
-    <div style="position:absolute;top:14px;left:14px;z-index:6;">
-      <button class="hbtn" data-action="go-back" aria-label="Back" style="width:34px;height:34px;border-radius:50%;background:rgba(26,25,22,.55);display:flex;align-items:center;justify-content:center;">
-        <svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;pointer-events:none;"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-    </div>
-    <div style="position:relative;">
-      <div class="img-ph" style="width:100%;height:240px;display:block;"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,#fff);"></div>
-    </div>
-    <div style="padding:14px 22px 0;">
-      <p id="op-name" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:#1A1916;text-align:center;"></p>
-      <p id="op-since" style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#B5ADA3;text-align:center;margin:3px 0 14px;"></p>
-      <div style="display:flex;gap:10px;margin-bottom:16px;">
-        <button id="op-follow-btn" style="flex:1;border:1px solid #1A1916;border-radius:999px;padding:12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:none;color:#1A1916;cursor:pointer;font-family:'Jost',sans-serif;transition:all .2s;">follow</button>
-        <button id="op-msg-btn" style="flex:1;border:1px solid #E8E8E8;border-radius:999px;padding:12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:none;color:#5A5549;cursor:pointer;font-family:'Jost',sans-serif;">message</button>
-      </div>
-      <div style="display:flex;border-top:1px solid #E8E8E8;border-bottom:1px solid #E8E8E8;padding:13px 0;margin-bottom:16px;">
-        <div class="ps"><strong id="op-fits">42</strong><span>fits traced</span></div>
-        <div class="ps" style="border-left:1px solid #E8E8E8;border-right:1px solid #E8E8E8;"><strong id="op-echoes">18</strong><span>echoes found</span></div>
-        <div class="ps"><strong id="op-streak">9</strong><span>day streak</span></div>
-      </div>
-      <div style="margin-bottom:16px;">
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:#1A1916;margin-bottom:9px;">their trace</p>
-        <div id="op-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;"></div>
-        <div id="op-colors" style="display:flex;gap:7px;"></div>
-      </div>
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;padding-top:4px;border-top:1px solid #E8E8E8;">
-        <p style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#1A1916;">today's trace</p>
-        <span style="font-size:10px;letter-spacing:.1em;color:#B5ADA3;text-transform:uppercase;" id="op-date">22 June</span>
-      </div>
-      <div id="op-posts" style="padding-bottom:20px;"></div>
-    </div>
-  </div>
-  <div class="bnav">
-    <button class="nb" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
-    <button class="nb" data-go="camera"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h2l1-2h8l1 2h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="3"/></svg><span>Camera</span></button>
-    <button class="nb-ft" data-go="twins"><svg viewBox="0 0 24 24" style="pointer-events:none;"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg><span>Twins</span></button>
-    <button class="nb" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg><span>Profile</span></button>
-  </div>
-</div>
-
-<!--  SHEET / MODAL  -->
-<div class="ov" id="ov"><div class="sheet" id="sheet"><div style="height:6px;"></div><span class="sh-pill"></span><p class="sh-ttl" id="sh-ttl"></p><div id="sh-body"></div></div></div>
 <div class="toast" id="toast"></div>
 
-
-<!-- ══ POST DETAIL (full screen outfit post) ══ -->
-<div class="screen" id="s-post-detail">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah" style="padding-bottom:10px;">
-    <button class="hbtn" data-action="go-back" aria-label="Back"><svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;pointer-events:none;"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <span class="logo" style="font-size:15px;" id="post-detail-handle">@lenav</span>
-    <button class="hbtn" data-sheet="post" aria-label="More options"><svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button>
-  </div>
-  <div class="sc">
-    <!-- full width outfit photo -->
-    <div class="img-ph" id="post-detail-img" style="width:100%;aspect-ratio:4/5;display:block;"></div>
-    <!-- post meta -->
-    <div style="padding:18px 24px 0;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-        <div class="ava" id="post-detail-ava" data-action="open-post-person" style="width:36px;height:36px;background:#C4BAAA;color:#fff;font-size:12px;cursor:pointer;">LV</div>
-        <div style="cursor:pointer;" data-action="open-post-person">
-          <p id="post-detail-name" style="font-size:13.5px;font-weight:500;color:#1A1916;">@lenav</p>
-          <p id="post-detail-date" style="font-size:10.5px;color:#B5ADA3;margin-top:2px;letter-spacing:.04em;">afternoon · 14 Jun 2026</p>
-        </div>
-      </div>
-      <!-- caption -->
-      <p id="post-detail-caption" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#1A1916;line-height:1.5;margin-bottom:12px;">tailored trousers, no logo</p>
-      <!-- tags -->
-      <div id="post-detail-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
-        <span style="font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;">solo date</span>
-        <span style="font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;background:#1A1916;color:#fff;border:1px solid #1A1916;">quiet luxury</span>
-      </div>
-      <!-- divider -->
-      <div style="height:1px;background:#E8E8E8;margin-bottom:14px;"></div>
-      <!-- actions -->
-      <div style="display:flex;align-items:center;gap:18px;margin-bottom:16px;">
-        <svg viewBox="0 0 24 24" data-heart="detail" style="width:20px;height:20px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-        <svg viewBox="0 0 24 24" data-comment="current" style="width:20px;height:20px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-        <svg data-bookmark="1" viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></svg>
-        <span style="font-size:10px;color:#B5ADA3;margin-left:auto;" id="post-detail-likes">24 likes</span>
-      </div>
-      <!-- DNA insight -->
-      <div style="background:#F7F7F7;border-radius:10px;padding:13px 14px;margin-bottom:8px;">
-        <p style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#B5ADA3;margin-bottom:5px;">outfit DNA</p>
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:#5A5549;line-height:1.5;" id="post-detail-dna">Quiet luxury · intentional · timeless. Predominantly neutral palette with structured silhouette.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ COLLECTION DETAIL (saved board view) ══ -->
-<div class="screen" id="s-collection">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah">
-    <button class="hbtn" data-action="go-back" aria-label="Back"><svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;pointer-events:none;"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <span class="logo" style="font-size:15px;" id="coll-title">Night out</span>
-    <div style="width:24px;"></div>
-  </div>
-  <div class="sc">
-    <p id="coll-count" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#B5ADA3;padding:0 24px 14px;">12 fits saved</p>
-    <!-- grid of saved posts - same editorial side-by-side style as feed -->
-    <div id="coll-posts">
-      <!-- post 1 -->
-      <div style="display:flex;gap:14px;padding:0 24px 16px;cursor:pointer;" data-collpostidx="0">
-        <div class="img-ph" style="width:90px;height:115px;border-radius:8px;flex-shrink:0;"></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;">
-          <div>
-            <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;" data-person="maya">@maya</p>
-            <p style="font-size:10.5px;color:#8A8278;margin:3px 0 7px;">Night out · 20 Jun</p>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;">party</span>
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;background:#1A1916;color:#fff;border:1px solid #1A1916;">solo</span>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <svg viewBox="0 0 24 24" data-heart="c1" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="coll-0" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            
-          </div>
-        </div>
-      </div>
-      <div style="height:1px;background:#E8E8E8;margin:0 22px 16px;"></div>
-      <!-- post 2 -->
-      <div style="display:flex;gap:14px;padding:0 24px 16px;cursor:pointer;" data-collpostidx="1">
-        <div class="img-ph" style="width:90px;height:115px;border-radius:8px;flex-shrink:0;"></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;">
-          <div>
-            <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;" data-person="lila">@lila</p>
-            <p style="font-size:10.5px;color:#8A8278;margin:3px 0 7px;">Night out · 18 Jun</p>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;">date</span>
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;">dinner</span>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <svg viewBox="0 0 24 24" data-heart="c2" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="coll-1" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            
-          </div>
-        </div>
-      </div>
-      <div style="height:1px;background:#E8E8E8;margin:0 22px 16px;"></div>
-      <!-- post 3 -->
-      <div style="display:flex;gap:14px;padding:0 24px 16px;cursor:pointer;" data-collpostidx="2">
-        <div class="img-ph" style="width:90px;height:115px;border-radius:8px;flex-shrink:0;"></div>
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;">
-          <div>
-            <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;" data-person="lila">@jade</p>
-            <p style="font-size:10.5px;color:#8A8278;margin:3px 0 7px;">Night out · 15 Jun</p>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;border:1px solid #E0D8CB;color:#8A8278;">concert</span>
-              <span style="font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;background:#1A1916;color:#fff;border:1px solid #1A1916;">minimal</span>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <svg viewBox="0 0 24 24" data-heart="c3" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z"/></svg>
-            <svg viewBox="0 0 24 24" data-comment="coll-2" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CHAT (DM conversation) ══ -->
-<div class="screen" id="s-chat">
-  <div class="sbar"><span>9:41</span><span></span></div>
-  <div class="ah" style="padding-bottom:10px;border-bottom:1px solid #E8E8E8;">
-    <button class="hbtn" data-go="messages" aria-label="Back"><svg class="ic" viewBox="0 0 24 24" style="width:17px;height:17px;"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="ava" id="chat-ava" style="width:28px;height:28px;background:#C4BAAA;color:#fff;font-size:10px;">LV</div>
-      <span id="chat-name" style="font-size:14px;font-weight:500;color:#1A1916;">@lenav</span>
-    </div>
-    <button class="hbtn" data-action="chat-profile" aria-label="View profile"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg></button>
-  </div>
-  <!-- message history -->
-  <div class="sc" id="chat-history" style="padding:16px 22px;display:flex;flex-direction:column;gap:10px;">
-    <!-- messages populated by JS based on who you clicked -->
-  </div>
-  <!-- input bar -->
-  <div style="display:flex;gap:12px;padding:12px 26px calc(env(safe-area-inset-bottom,0px)+18px);border-top:1px solid #E8E8E8;background:#fff;flex-shrink:0;">
-    <div id="dm-input" contenteditable="true" style="flex:1;border:1px solid #E8E8E8;border-radius:999px;padding:11px 18px;font-size:13px;color:#1A1916;outline:none;min-height:38px;font-family:'Cormorant Garamond',serif;background:#F7F7F7;"></div>
-    <button id="dm-send" style="width:36px;height:36px;border-radius:50%;background:#1A1916;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;">
-      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-    </button>
-  </div>
-</div>
-
-</div><!-- .app -->
-</div><!-- .shell -->
 <script>
-(function(){
-// Chat conversations data
-var CHATS = {
-  lenav: {
-    name: '@lenav',
-    ava: 'LV',
-    color: '#C4BAAA',
-    msgs: [
-      {from:'them', text:'omg your trace today was everything', time:'yesterday'},
-      {from:'me',   text:'thank you!! i was going for quiet luxury vibes', time:'yesterday'},
-      {from:'them', text:'you nailed it, the palette was so intentional', time:'yesterday'},
-      {from:'me',   text:'yes!! been tracking neutrals all month', time:'yesterday'},
-      {from:'them', text:'love that trace from today', time:'2m ago'},
-    ]
-  },
-  maren: {
-    name: '@maren',
-    ava: 'M',
-    color: '#B8C4C0',
-    msgs: [
-      {from:'them', text:'hey! your gym fit yesterday was so good', time:'2 days ago'},
-      {from:'me',   text:'the alo set? its a whole thing', time:'2 days ago'},
-      {from:'them', text:'where is that coat from?', time:'1h ago'},
-    ]
-  },
-  noor: {
-    name: '@noor',
-    ava: 'N',
-    color: '#9FBBCB',
-    msgs: [
-      {from:'them', text:'our DNA overlap is actually wild', time:'3 days ago'},
-      {from:'me',   text:'ikr!! 74% echo is so high', time:'3 days ago'},
-      {from:'them', text:'we should collab on a trace post', time:'3 days ago'},
-      {from:'me',   text:'yes omg lets do it', time:'3 days ago'},
-      {from:'them', text:'we dress exactly the same lol', time:'3h ago'},
-    ]
-  }
-};
-
-// Post detail data (for backlog taps)
-// ── Generate full backlog POSTS array with correct dates per month ──
-var CAPTION_POOL = [
-  {caption:'cream knit, wide leg, understated', tags:['daily','quiet luxury'], dna:'Quiet luxury · 94% match. Neutral palette, relaxed silhouette \u2014 right at the center of your trace.'},
-  {caption:'linen everything, again', tags:['daily','coastal'], dna:'Quiet luxury · coastal lean. Still neutral, slightly more relaxed than your average fit.'},
-  {caption:'the dinner fit \u2014 always the trousers', tags:['dinner','old money'], dna:'Old money · 89% match. Elevated basics, your second most common aesthetic.'},
-  {caption:'soft day, soft outfit', tags:['daily','coastal'], dna:'Quiet luxury · coastal lean. Airier than usual but still on-palette.'},
-  {caption:'gym and nothing else', tags:['gym','athletic'], dna:'Quiet luxury · functional day. A rare departure from your usual silhouette.'},
-  {caption:'monochrome again. always.', tags:['night out','minimal'], dna:'Old money · monochrome. One of your most consistent looks.'},
-  {caption:'all black, always', tags:['daily','minimal'], dna:'Quiet luxury · dark neutral. Structured, on-brand for your trace.'},
-  {caption:'linen jacket day', tags:['daily','coastal'], dna:'Coastal · 11% of your trace. Natural fabric, loose fit.'},
-  {caption:'trench coat season', tags:['daily','classic'], dna:'Old money · classic. Tailored outerwear, signature silhouette.'},
-  {caption:'minimal sunday', tags:['daily','minimal'], dna:'Quiet luxury · quiet day. Slow morning energy, still intentional.'},
-  {caption:'grey everything', tags:['daily','scandi'], dna:'Scandi · 18% of your trace. Monochrome grey palette.'},
-  {caption:'oversized knit era', tags:['daily','cozy'], dna:'Quiet luxury · relaxed. Soft oversized silhouette.'},
-  {caption:'tuesday minimal', tags:['work','minimal'], dna:'Quiet luxury · office basics. Clean, functional, on-palette.'},
-  {caption:'the blazer again', tags:['work','classic'], dna:'Old money · structured. Tailored blazer, repeat favorite.'},
-  {caption:'trench and wide leg', tags:['daily','classic'], dna:'Old money · elevated. Outerwear-forward, signature fit.'},
-  {caption:'spring minimal', tags:['daily','scandi'], dna:'Scandi · light. Spring transitional palette.'},
-  {caption:'neutral tones only', tags:['daily','quiet luxury'], dna:'Quiet luxury · 94% match. Tonal dressing, core to your trace.'},
-  {caption:'old money april', tags:['daily','old money'], dna:'Old money · refined. Elevated separates.'},
-  {caption:'first trace. cream knit.', tags:['daily','quiet luxury'], dna:'Quiet luxury · where it all started. Your signature from day one.'},
-  {caption:'quiet luxury from day one', tags:['daily','quiet luxury'], dna:'Quiet luxury · consistent. Early signature emerging.'},
-  {caption:'march monochrome', tags:['daily','minimal'], dna:'Old money · early monochrome. Foundational palette choice.'},
-  {caption:'the dark neutral phase', tags:['daily','minimal'], dna:'Quiet luxury · dark neutral. Early exploration of your trace.'},
-  {caption:'cream on cream', tags:['daily','quiet luxury'], dna:'Quiet luxury · tonal. Soft layered cream.'},
-  {caption:'wide leg everyday', tags:['daily','scandi'], dna:'Scandi · structured. Wide leg silhouette begins.'},
-];
-
-function buildFullPosts(){
-  // Today is 22 June 2026. Walk backward through real dates, but some days
-  // get 2-3 fits (e.g. an outfit change) while most days get exactly 1.
-  // The day only steps backward between "day groups", never within one.
-  var arr = [];
-  var windows = ['morning','afternoon','evening'];
-  var cursor = new Date(2026, 5, 22); // start: today
-  var monAbbrs = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var totalPosts = 87;
-  var i = 0;
-  var dayCounter = 0;
-  while(i < totalPosts){
-    // Decide how many fits land on this calendar day.
-    // Roughly 1 in 5 days gets 2 fits, 1 in 15 days gets 3 fits, rest get 1.
-    var roll = dayCounter % 15;
-    var fitsToday = (roll === 14) ? 3 : (roll % 5 === 2) ? 2 : 1;
-    fitsToday = Math.min(fitsToday, totalPosts - i);
-    for(var f=0; f<fitsToday; f++){
-      var y = cursor.getFullYear();
-      var mIdx = cursor.getMonth();
-      var d = cursor.getDate();
-      var pool = CAPTION_POOL[i % CAPTION_POOL.length];
-      var win = windows[f % 3];
-      arr[i] = {
-        handle:'@you', ava:'EV', color:'#CDB89B',
-        date: win+' \u00b7 '+d+' '+monAbbrs[mIdx]+' '+y,
-        caption: pool.caption, tags: pool.tags,
-        likes: (8 + (i*7 % 40)) + ' likes',
-        dna: pool.dna,
-        _jsDate: new Date(y, mIdx, d)
-      };
-      i++;
-    }
-    cursor.setDate(cursor.getDate() - 1); // move to the next older day
-    dayCounter++;
-  }
-  return arr;
-}
-var POSTS = buildFullPosts();
-
-
-// Collection posts (other people's saved fits)
-var ECHO_POSTS = [
-  {handle:'@lenav', ava:'LV', color:'#C4BAAA', date:'morning · 14 Apr 2026', caption:'a quiet resonance', tags:['daily','quiet luxury'], likes:'31 likes', dna:'Quiet luxury · intentional. Near-identical silhouette and palette to your 22 Jun trace.', person:'lenav'},
-  {handle:'@maren', ava:'M',  color:'#B8C4C0', date:'afternoon · 18 May 2026', caption:'grey scale week', tags:['work','clean'], likes:'22 likes', dna:'Scandi · minimal. 81% palette match. Structured silhouette echo.', person:'maren'},
-  {handle:'@noor',  ava:'N',  color:'#9FBBCB', date:'evening · 2 Jun 2026', caption:'the coat again. obviously.', tags:['daily','old money'], likes:'19 likes', dna:'Old money · coastal. 79% mood match with your recent trace.', person:'noor'},
-  {handle:'@ari',   ava:'A',  color:'#B8C4C0', date:'morning · 10 Jun 2026', caption:'always the blazer', tags:['event','classic'], likes:'14 likes', dna:'Old money · classic. 74% silhouette echo.', person:'ari'},
-];
-var COLL_POSTS = [
-  {handle:'@maya', ava:'MT', color:'#B8A898', date:'evening · 22 Jun 2026', caption:'leather season forever', tags:['night out','solo'], likes:'47 likes', dna:'Bold · eclectic. Dark palette, strong silhouette. 81% echo with your night-out trace.', person:'maya'},
-  {handle:'@lila', ava:'LC', color:'#A8B8C0', date:'afternoon · 20 Jun 2026', caption:'silk and nothing else', tags:['date','uni'], likes:'34 likes', dna:'Coastal · romantic. Soft neutral, fluid silhouette. 79% echo with your recent traces.', person:'lila'},
-  {handle:'@jade', ava:'JO', color:'#8AA898', date:'morning · 19 Jun 2026', caption:'office core day three', tags:['work','minimal'], likes:'28 likes', dna:'Minimal · structured. Clean lines, monochrome. 87% echo with your work-day DNA.', person:'jade'},
-];
-
-function openChat(person) {
-  var data = CHATS[person];
-  if (!data) return;
-  document.getElementById('chat-ava').textContent = data.ava;
-  document.getElementById('chat-ava').style.background = data.color;
-  var chatNameEl = document.getElementById('chat-name');
-  chatNameEl.textContent = data.name;
-  chatNameEl.setAttribute('data-person', person);
-  chatNameEl.style.cursor = 'pointer';
-  var hist = document.getElementById('chat-history');
-  hist.innerHTML = '';
-  data.msgs.forEach(function(m) {
-    var isMe = m.from === 'me';
-    var div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.flexDirection = 'column';
-    div.style.alignItems = isMe ? 'flex-end' : 'flex-start';
-    var bubble = document.createElement('div');
-    bubble.style.maxWidth = '78%';
-    bubble.style.padding = '10px 14px';
-    bubble.style.fontSize = '13px';
-    bubble.style.lineHeight = '1.5';
-    bubble.style.marginBottom = '2px';
-    bubble.style.fontFamily = 'Cormorant Garamond, serif';
-    if (isMe) {
-      bubble.style.background = '#1A1916';
-      bubble.style.color = '#fff';
-      bubble.style.borderRadius = '16px 16px 4px 16px';
-    } else {
-      bubble.style.background = '#F7F7F7';
-      bubble.style.color = '#1A1916';
-      bubble.style.borderRadius = '16px 16px 16px 4px';
-    }
-    bubble.textContent = m.text;
-    var time = document.createElement('span');
-    time.style.fontSize = '9.5px';
-    time.style.color = '#B5ADA3';
-    time.style.marginBottom = '6px';
-    time.style.letterSpacing = '.04em';
-    time.textContent = m.time;
-    div.appendChild(bubble);
-    div.appendChild(time);
-    hist.appendChild(div);
-  });
-  hist.scrollTop = hist.scrollHeight;
-  show('chat');
-}
-
-function openEchoPost(idx) {
-  var post = ECHO_POSTS[idx % ECHO_POSTS.length];
-  var handleEl = document.getElementById('post-detail-handle');
-  handleEl.textContent = post.handle;
-  handleEl.setAttribute('data-person', post.person);
-  handleEl.style.cursor = 'pointer';
-  var nameEl = document.getElementById('post-detail-name');
-  nameEl.textContent = post.handle;
-  nameEl.parentElement.setAttribute('data-action','open-post-person');
-  nameEl.parentElement.style.cursor = 'pointer';
-  document.getElementById('post-detail-ava').textContent = post.ava;
-  document.getElementById('post-detail-ava').style.background = post.color;
-  document.getElementById('post-detail-date').textContent = post.date;
-  document.getElementById('post-detail-caption').textContent = post.caption;
-  document.getElementById('post-detail-likes').textContent = post.likes;
-  document.getElementById('post-detail-dna').textContent = post.dna;
-  var tagsEl = document.getElementById('post-detail-tags');
-  tagsEl.innerHTML = '';
-  post.tags.forEach(function(t,i){
-    var sp=document.createElement('span');
-    sp.style.cssText='font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;'+(i===0?'border:1px solid #E0D8CB;color:#8A8278;':'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-    sp.textContent=t; tagsEl.appendChild(sp);
-  });
-  currentCommentKey = 'post-' + idx;
-  currentCommentKey = 'echo-' + idx;
-  show('post-detail');
-}
-
-function openPostDetail(idx) {
-  var post = POSTS[idx] || POSTS[idx % POSTS.length];
-  var handleEl = document.getElementById('post-detail-handle');
-  handleEl.textContent = post.handle;
-  if (post.person) {
-    handleEl.setAttribute('data-person', post.person);
-    handleEl.style.cursor = 'pointer';
-  } else {
-    handleEl.removeAttribute('data-person');
-    handleEl.style.cursor = 'default';
-  }
-  document.getElementById('post-detail-name').textContent = post.handle;
-  document.getElementById('post-detail-ava').textContent = post.ava;
-  document.getElementById('post-detail-ava').style.background = post.color;
-  document.getElementById('post-detail-date').textContent = post.date;
-  document.getElementById('post-detail-caption').textContent = post.caption;
-  document.getElementById('post-detail-likes').textContent = post.likes;
-  document.getElementById('post-detail-dna').textContent = post.dna;
-  var tagsEl = document.getElementById('post-detail-tags');
-  tagsEl.innerHTML = '';
-  post.tags.forEach(function(t, i) {
-    var span = document.createElement('span');
-    span.style.cssText = 'font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;'
-      + (i===0 ? 'border:1px solid #E0D8CB;color:#8A8278;' : 'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-    span.textContent = t;
-    tagsEl.appendChild(span);
-  });
-  currentCommentKey = 'post-' + idx;
-  show('post-detail');
-}
-
-function openCollPostDetail(idx) {
-  var post = COLL_POSTS[idx % COLL_POSTS.length];
-  if (!post) return;
-  var handleEl = document.getElementById('post-detail-handle');
-  handleEl.textContent = post.handle;
-  if (post.person) {
-    handleEl.setAttribute('data-person', post.person);
-    handleEl.style.cursor = 'pointer';
-  } else {
-    handleEl.removeAttribute('data-person');
-  }
-  document.getElementById('post-detail-name').textContent = post.handle;
-  var nameEl = document.getElementById('post-detail-name');
-  nameEl.parentElement.setAttribute('data-action', 'open-post-person');
-  nameEl.parentElement.style.cursor = 'pointer';
-  document.getElementById('post-detail-ava').textContent = post.ava;
-  document.getElementById('post-detail-ava').style.background = post.color;
-  document.getElementById('post-detail-date').textContent = post.date;
-  document.getElementById('post-detail-caption').textContent = post.caption;
-  document.getElementById('post-detail-likes').textContent = post.likes;
-  document.getElementById('post-detail-dna').textContent = post.dna;
-  var tagsEl = document.getElementById('post-detail-tags');
-  tagsEl.innerHTML = '';
-  post.tags.forEach(function(t, i) {
-    var span = document.createElement('span');
-    span.style.cssText = 'font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;' + (i===0?'border:1px solid #E0D8CB;color:#8A8278;':'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-    span.textContent = t;
-    tagsEl.appendChild(span);
-  });
-  currentCommentKey = 'coll-' + idx;
-  show('post-detail');
-}
-
-
-
-// Per-collection post data
-var COLLECTION_DATA = {
-  'Night out': { posts: [
-    {name:'@maya', date:'22 Jun', tags:['party','solo'],      caption:'leather and nothing else'},
-    {name:'@lila', date:'20 Jun', tags:['date','dinner'],     caption:'silk slip for a tuesday'},
-    {name:'@jade', date:'19 Jun', tags:['concert','minimal'], caption:'all black for the show'},
-    {name:'@noor', date:'15 Jun', tags:['night out','dark'],  caption:'the coat made the whole fit'},
-    {name:'@lenav',date:'10 Jun', tags:['event','minimal'],   caption:'quiet luxury after dark'},
-    {name:'@maren',date:'8 Jun',  tags:['party'],             caption:'sequins, finally'},
-    {name:'@ari',  date:'5 Jun',  tags:['dinner','elegant'],  caption:'the blazer dress again'},
-    {name:'@maya', date:'1 Jun',  tags:['night out','bold'],  caption:'red lip, leather pants'},
-    {name:'@lila', date:'28 May', tags:['date'],              caption:'first date fit, soft and easy'},
-    {name:'@jade', date:'22 May', tags:['concert'],           caption:'denim on denim for the pit'},
-    {name:'@noor', date:'18 May', tags:['party'],             caption:'metallics for a rooftop party'},
-    {name:'@lenav',date:'12 May', tags:['event'],             caption:'minimal black tie'},
-  ]},
-  'Work': { posts: [
-    {name:'@jade', date:'19 Jun', tags:['work','minimal'],    caption:'office core day three'},
-    {name:'@maren',date:'14 Jun', tags:['office','clean'],    caption:'grey scale week, day two'},
-    {name:'@ari',  date:'9 Jun',  tags:['work','classic'],    caption:'the navy blazer rotation'},
-    {name:'@lenav',date:'5 Jun',  tags:['office','minimal'],  caption:'cream trousers, presentation day'},
-    {name:'@noor', date:'2 Jun',  tags:['work','structured'], caption:'structured shoulders, board meeting'},
-    {name:'@maya', date:'28 May', tags:['office'],            caption:'monday motivation fit'},
-    {name:'@jade', date:'22 May', tags:['work','minimal'],    caption:'minimal monday again'},
-    {name:'@maren',date:'16 May', tags:['office','clean'],    caption:'grey scale week, day one'},
-  ]},
-  'Gym': { posts: [
-    {name:'@maren',date:'20 Jun', tags:['gym','athletic'],    caption:'leg day fit'},
-    {name:'@noor', date:'16 Jun', tags:['active','clean'],    caption:'matching set, finally'},
-    {name:'@ari',  date:'12 Jun', tags:['gym'],               caption:'5am gym fit'},
-    {name:'@maya', date:'8 Jun',  tags:['active'],            caption:'post-run cooldown fit'},
-    {name:'@jade', date:'4 Jun',  tags:['gym','minimal'],     caption:'all black gym fit'},
-  ]},
-  'Inspo': { posts: [
-    {name:'@lenav',date:'21 Jun', tags:['quiet luxury','scandi'], caption:'the look that started my trace'},
-    {name:'@noor', date:'20 Jun', tags:['old money'],             caption:'old money but make it casual'},
-    {name:'@maya', date:'18 Jun', tags:['bold','night out'],      caption:'leather jacket inspiration'},
-    {name:'@ari',  date:'17 Jun', tags:['classic'],               caption:'the blazer fit i keep saving'},
-    {name:'@lila', date:'15 Jun', tags:['coastal','soft'],        caption:'silk slip dress, coastal mood'},
-    {name:'@maren',date:'14 Jun', tags:['scandi','clean'],        caption:'grey on grey perfection'},
-    {name:'@jade', date:'12 Jun', tags:['minimal'],               caption:'minimalist office reference'},
-    {name:'@lenav',date:'10 Jun', tags:['quiet luxury'],          caption:'cream knit, my favorite of hers'},
-    {name:'@noor', date:'8 Jun',  tags:['old money','coastal'],   caption:'the coat collection continues'},
-    {name:'@maya', date:'6 Jun',  tags:['bold'],                  caption:'red lip reference fit'},
-    {name:'@ari',  date:'4 Jun',  tags:['classic','layered'],     caption:'layering masterclass'},
-    {name:'@lila', date:'2 Jun',  tags:['romantic','soft'],       caption:'romantic soft girl fit'},
-    {name:'@maren',date:'30 May', tags:['scandi'],                caption:'scandi minimalism reference'},
-    {name:'@jade', date:'28 May', tags:['minimal','structured'],  caption:'structured shoulders inspo'},
-    {name:'@lenav',date:'26 May', tags:['quiet luxury'],          caption:'another cream knit moment'},
-    {name:'@noor', date:'24 May', tags:['old money'],             caption:'old money color palette study'},
-    {name:'@maya', date:'22 May', tags:['bold','night out'],      caption:'bold color reference'},
-    {name:'@ari',  date:'20 May', tags:['classic'],               caption:'timeless blazer cut'},
-    {name:'@lila', date:'18 May', tags:['coastal'],               caption:'coastal grandmother energy'},
-    {name:'@maren',date:'16 May', tags:['scandi','clean'],        caption:'clean lines reference'},
-    {name:'@jade', date:'14 May', tags:['minimal'],               caption:'minimal capsule wardrobe idea'},
-    {name:'@lenav',date:'12 May', tags:['quiet luxury','scandi'], caption:'quiet luxury starter pack'},
-    {name:'@noor', date:'10 May', tags:['old money','eclectic'],  caption:'eclectic old money mashup'},
-    {name:'@maya', date:'8 May',  tags:['bold'],                  caption:'bold accessory inspiration'},
-  ]}
-};
-
-
-function openCollection(name, count) {
-  document.getElementById('coll-title').textContent = name;
-  var data = COLLECTION_DATA[name];
-  var numFits = data ? data.posts.length : 3;
-  document.getElementById('coll-count').textContent = numFits + ' fits saved';
-  var postsEl = document.getElementById('coll-posts');
-  postsEl.innerHTML = '';
-  var posts = data ? data.posts : [];
-  posts.forEach(function(p, i) {
-    if(i > 0){
-      var div=document.createElement('div');
-      div.style.cssText='height:1px;background:#E8E8E8;margin:0 24px 16px;';
-      postsEl.appendChild(div);
-    }
-    var row=document.createElement('div');
-    row.style.cssText='display:flex;gap:14px;padding:0 24px 16px;cursor:pointer;';
-    row.setAttribute('data-savedpost', 'true');
-    row.setAttribute('data-savedidx', String(i));
-    var ph=document.createElement('div');
-    ph.className='img-ph';
-    ph.style.cssText='width:90px;height:115px;border-radius:8px;flex-shrink:0;';
-    var right=document.createElement('div');
-    right.style.cssText='flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;';
-    var nameEl=document.createElement('p');
-    nameEl.style.cssText="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;cursor:pointer;";
-    var personKey = p.name.replace('@','');
-    nameEl.setAttribute('data-person', personKey);
-    nameEl.textContent = p.name;
-    var dateEl=document.createElement('p');
-    dateEl.style.cssText='font-size:10.5px;color:#8A8278;margin:3px 0 7px;';
-    dateEl.textContent = p.date;
-    var tagsDiv=document.createElement('div');
-    tagsDiv.style.cssText='display:flex;gap:5px;flex-wrap:wrap;';
-    p.tags.forEach(function(t,ti){
-      var sp=document.createElement('span');
-      sp.style.cssText='font-size:9.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;'+(ti===0?'border:1px solid #E0D8CB;color:#8A8278;':'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-      sp.textContent=t; tagsDiv.appendChild(sp);
-    });
-    var acts=document.createElement('div');
-    acts.style.cssText='display:flex;align-items:center;gap:12px;';
-    acts.innerHTML='<svg viewBox="0 0 24 24" data-heart="coll'+i+'" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z" style="pointer-events:none;"/></svg><svg viewBox="0 0 24 24" data-comment="coll-'+( i%3)+'" style="width:16px;height:16px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg>';
-    right.appendChild(nameEl);
-    right.appendChild(dateEl);
-    right.appendChild(tagsDiv);
-    right.appendChild(acts);
-    row.appendChild(ph);
-    row.appendChild(right);
-    postsEl.appendChild(row);
-  });
-  show('collection');
-}
-
-function openMonthDetail(name, count, startIdx) {
-  document.getElementById('month-detail-title').textContent = name;
-  document.getElementById('month-detail-count').textContent = count + ' fits';
-  var grid = document.getElementById('month-detail-grid');
-  grid.innerHTML = '';
-  for (var i = 0; i < count; i++) {
-    var p = pol(startIdx + i, false);
-    p.setAttribute('data-postidx', String(startIdx + i));
-    grid.appendChild(p);
-  }
-  show('month-detail');
-}
-function openMonthDetailByIndices(name, count, indices) {
-  document.getElementById('month-detail-title').textContent = name;
-  document.getElementById('month-detail-count').textContent = count + ' fits';
-  var grid = document.getElementById('month-detail-grid');
-  grid.innerHTML = '';
-  indices.forEach(function(idx){
-    var p = pol(idx, false);
-    p.setAttribute('data-postidx', String(idx));
-    grid.appendChild(p);
-  });
-  show('month-detail');
-}
-
-
-// ── OTHER PROFILES DATA ──
-var PEOPLE = {
-  maya:  {name:'Maya Torres',  ava:'MT', color:'#B8A898', since:'tracing since 04.01.25', fits:67, echoes:24, streak:11,
-           tags:['Night out','Party','Bold'],   colors:['#1A1916','#3A3830','#8A2020','#C4A060','#F0E8D8'],
-           caption:'leather season forever',  postTags:['night out','solo']},
-  lila:  {name:'Lila Chen',    ava:'LC', color:'#A8B8C0', since:'tracing since 09.11.24', fits:112, echoes:31, streak:5,
-           tags:['Coastal','Romantic','Soft'], colors:['#F5F0E8','#E8D8C4','#C4B8A8','#8AACB8','#5A8090'],
-           caption:'silk and nothing else',   postTags:['date','uni']},
-  jade:  {name:'Jade Osei',    ava:'JO', color:'#8AA898', since:'tracing since 01.03.25', fits:54, echoes:19, streak:14,
-           tags:['Work','Minimal','Structured'], colors:['#1A1916','#F5F0E8','#8A8278','#C4C4C4','#3A3830'],
-           caption:'office core day three',  postTags:['work','minimal']},
-  lenav: {name:'Lena Voss',    ava:'LV', color:'#C4BAAA', since:'tracing since 12.03.25', fits:89, echoes:31, streak:14,
-           tags:['Quiet luxury','Scandi','Intentional'], colors:['#1A1916','#F5F0E8','#8A7A68','#C4B098','#E8D8C4'],
-           caption:'a quiet resonance',      postTags:['daily','quiet luxury']},
-  maren: {name:'Maren Koch',   ava:'M',  color:'#B8C4C0', since:'tracing since 06.06.25', fits:43, echoes:12, streak:7,
-           tags:['Scandi','Clean','Neutral'], colors:['#F5F0E8','#E0D8CB','#B8C4C0','#8A9890','#3A3830'],
-           caption:'grey scale week',        postTags:['work','clean']},
-  ari:   {name:'Ari James',    ava:'A',  color:'#B8C4C0', since:'tracing since 08.02.25', fits:61, echoes:22, streak:3,
-           tags:['Old money','Classic','Layered'], colors:['#C4B098','#8A7A68','#3A3020','#1A1916','#F0E8D8'],
-           caption:'always the blazer',      postTags:['event','classic']},
-  noor:  {name:'Noor Khalil',  ava:'N',  color:'#9FBBCB', since:'tracing since 03.09.24', fits:134, echoes:38, streak:21,
-           tags:['Old money','Coastal','Eclectic'], colors:['#9FBBCB','#C4B098','#8A7A68','#1A1916','#F5F0E8'],
-           caption:'the coat again. obviously.', postTags:['daily','old money']},
-  theo:  {name:'Theo Martin',  ava:'TM', color:'#A8A8B8', since:'tracing since 11.04.25', fits:38, echoes:9, streak:4,
-           tags:['Minimal','Dark','Structured'], colors:['#1A1916','#2A2820','#3A3830','#5A5549','#8A8278'],
-           caption:'all black everything',   postTags:['daily','minimal']},
-  jude:  {name:'Jude Park',    ava:'JP', color:'#B8A8C4', since:'tracing since 07.07.25', fits:29, echoes:6, streak:2,
-           tags:['Eclectic','Vintage','Expressive'], colors:['#B8A8C4','#C4A060','#8A2020','#1A1916','#F0E8D8'],
-           caption:'found in a thrift store', postTags:['daily','vintage']},
-};
-
-var currentPersonKey = null;
-
-function openOtherProfile(key) {
-  var p = PEOPLE[key];
-  if (!p) return;
-  currentPersonKey = key;
-
-  document.getElementById('op-name').textContent   = p.name;
-  document.getElementById('op-since').textContent  = p.since;
-  document.getElementById('op-fits').textContent   = p.fits;
-  document.getElementById('op-echoes').textContent = p.echoes;
-  document.getElementById('op-streak').textContent = p.streak;
-  document.getElementById('op-date').textContent   = '22 June';
-
-  // follow button state - sync with FOLLOWING set
-  var fb = document.getElementById('op-follow-btn');
-  var alreadyFollowing = FOLLOWING.has(key);
-  fb.textContent = alreadyFollowing ? 'following' : 'follow';
-  fb.style.background = alreadyFollowing ? '#1A1916' : 'none';
-  fb.style.color = alreadyFollowing ? '#fff' : '#1A1916';
-  fb.style.borderColor = '#1A1916';
-
-  // message button
-  var mb = document.getElementById('op-msg-btn');
-  mb.onclick = function() {
-    var chatKey = key === 'lenav' ? 'lenav' : key === 'maren' ? 'maren' : 'noor';
-    openChat(CHATS[chatKey] ? chatKey : 'lenav');
-  };
-
-  // style tags
-  var tagsEl = document.getElementById('op-tags');
-  tagsEl.innerHTML = '';
-  p.tags.forEach(function(t) {
-    var span = document.createElement('span');
-    span.style.cssText = 'font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#5A5549;padding:6px 14px;border-radius:999px;border:1px solid #D8D0C4;';
-    span.textContent = t;
-    tagsEl.appendChild(span);
-  });
-
-  // color dots
-  var colorsEl = document.getElementById('op-colors');
-  colorsEl.innerHTML = '';
-  p.colors.forEach(function(c, i) {
-    var dot = document.createElement('div');
-    dot.style.cssText = 'width:22px;height:22px;border-radius:50%;background:' + c + ';' + (c === '#F5F0E8' || c === '#F0E8D8' ? 'border:1px solid #D8D0C4;' : '');
-    colorsEl.appendChild(dot);
-  });
-
-  // today's post - one editorial post card
-  var postsEl = document.getElementById('op-posts');
-  postsEl.innerHTML = '';
-  var card = document.createElement('div');
-  card.style.cssText = 'display:flex;gap:14px;cursor:pointer;';
-  card.setAttribute('data-go', 'post-detail');
-
-  var ph = document.createElement('div');
-  ph.className = 'img-ph';
-  ph.style.cssText = 'width:110px;height:140px;border-radius:8px;flex-shrink:0;';
-
-  var right = document.createElement('div');
-  right.style.cssText = 'flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0;';
-
-  var nameP = document.createElement('p');
-  nameP.style.cssText = "font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#1A1916;";
-  nameP.textContent = '@' + key;
-
-  var capP = document.createElement('p');
-  capP.style.cssText = "font-style:italic;font-size:11px;color:#8A8278;margin:4px 0 8px;font-family:'Cormorant Garamond',serif;";
-  capP.textContent = p.caption;
-
-  var tagsD = document.createElement('div');
-  tagsD.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;';
-  p.postTags.forEach(function(t, i) {
-    var sp = document.createElement('span');
-    sp.style.cssText = 'font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;' + (i === 0 ? 'border:1px solid #E0D8CB;color:#8A8278;' : 'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-    sp.textContent = t;
-    tagsD.appendChild(sp);
-  });
-
-  var acts = document.createElement('div');
-  acts.style.cssText = 'display:flex;align-items:center;gap:14px;margin-top:8px;';
-  acts.innerHTML = '<svg viewBox="0 0 24 24" data-heart="op" style="width:17px;height:17px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z" style="pointer-events:none;"/></svg><svg viewBox="0 0 24 24" data-comment="detail" style="width:17px;height:17px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M4 4h16v12H9l-5 4V4z" style="pointer-events:none;"/></svg><svg viewBox="0 0 24 24" data-save-to-collection="op" style="width:17px;height:17px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;cursor:pointer;"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z" style="pointer-events:none;"/></svg>';
-
-  right.appendChild(nameP);
-  right.appendChild(capP);
-  right.appendChild(tagsD);
-  right.appendChild(acts);
-  card.appendChild(ph);
-  card.appendChild(right);
-  postsEl.appendChild(card);
-
-  show('other-profile');
-}
-
-
-// ── COMMENTS DATA ──
-var COMMENTS = {
-  'feed-1': { handle:'@maya', caption:'Night out.', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'obsessed with this',                     time:'2m',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'the leather jacket is giving everything', time:'5m',  liked:true},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'where is this from??',                    time:'12m', liked:false},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'this is literally your DNA',              time:'18m', liked:true},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'classic maya fr',                         time:'1h',  liked:false},
-  ]},
-  'feed-2': { handle:'@lila', caption:'20 June', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'silk slip era',                           time:'1h',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'the way she styles this every time',      time:'2h',  liked:true},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'echo — 87% match with my april trace',   time:'3h',  liked:false},
-  ]},
-  'feed-3': { handle:'@jade', caption:'19 June', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'work fit of the year',                    time:'6h',  liked:true},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'quiet luxury personified',                time:'7h',  liked:false},
-  ]},
-  'detail': { handle:'@you', caption:'tailored trousers, no logo', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'love that trace from today',              time:'2m',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'the trousers!! where from',               time:'8m',  liked:true},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'this is so your vibe',                    time:'22m', liked:false},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'intentional as always',                   time:'45m', liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'echo to mine from last week',             time:'1h',  liked:true},
-  ]},
-  'collection': { handle:'@saved', caption:'saved fit', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'saving this for reference',               time:'2d',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'good save',                               time:'2d',  liked:false},
-  ]},
-  'post-0': { handle:'@you', caption:'cream knit, wide leg, understated', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'the wide leg is everything',              time:'2m',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'so quiet luxury of you',                  time:'15m', liked:true},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'where is the knit from??',                time:'1h',  liked:false},
-  ]},
-  'post-1': { handle:'@you', caption:'linen everything, again', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'love a linen moment',                     time:'1d',  liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'this and the cream knit are twins',       time:'1d',  liked:true},
-  ]},
-  'post-2': { handle:'@you', caption:'the dinner fit — always the trousers', comments:[
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'THE trousers!!!',                         time:'2d',  liked:true},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'31 likes says it all',                    time:'2d',  liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'your most iconic fit this month',         time:'2d',  liked:false},
-  ]},
-  'post-3': { handle:'@you', caption:'soft day, soft outfit', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'coastal era',                             time:'3d',  liked:false},
-  ]},
-  'post-4': { handle:'@you', caption:'gym and nothing else', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'gym fit check passed',                    time:'4d',  liked:false},
-  ]},
-  'post-5': { handle:'@you', caption:'monochrome again. always.', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'this is the one. all time.',              time:'5d',  liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'44 likes and counting',                   time:'5d',  liked:false},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'monochrome forever',                      time:'5d',  liked:false},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'most liked fit of the month fr',          time:'5d',  liked:false},
-  ]},
-  'echo-0': { handle:'@lenav', caption:'a quiet resonance', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'94% echo is crazy',                       time:'1h',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'you two literally dress the same',        time:'2h',  liked:true},
-  ]},
-  'echo-1': { handle:'@maren', caption:'grey scale week', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'81% echo — i see it',                     time:'3h',  liked:false},
-  ]},
-  'echo-2': { handle:'@noor', caption:'the coat again. obviously.', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'79% match makes sense',                   time:'4d',  liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'noor always delivers',                    time:'4d',  liked:true},
-  ]},
-  'echo-3': { handle:'@ari', caption:'always the blazer', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'classic ari',                             time:'5d',  liked:false},
-  ]},
-  'coll-0': { handle:'@maya', caption:'leather season forever', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'this is so your energy',                  time:'2d',  liked:false},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'saved this immediately',                  time:'2d',  liked:true},
-  ]},
-  'coll-1': { handle:'@lila', caption:'silk and nothing else', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'the slip dress era',                      time:'4d',  liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'almost identical to mine from april',     time:'4d',  liked:true},
-  ]},
-  'coll-2': { handle:'@jade', caption:'office core day three', comments:[
-    {ava:'EV',color:'#CDB89B',name:'@you',  text:'studying this for work fits',             time:'6d',  liked:false},
-  ]},
-  // May 2026 posts
-  'post-22': {handle:'@you', caption:'all black, always', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'the all black era was everything', time:'4w', liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'this started a trend',            time:'4w', liked:false},
-  ]},
-  'post-23': {handle:'@you', caption:'linen jacket day', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'the linen jacket!!',              time:'4w', liked:false},
-  ]},
-  'post-24': {handle:'@you', caption:'trench coat season', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'classic trench moment',           time:'5w', liked:true},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'this echoed mine from march',     time:'5w', liked:false},
-  ]},
-  'post-25': {handle:'@you', caption:'minimal sunday', comments:[
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'sunday fits hit different',        time:'5w', liked:false},
-  ]},
-  'post-26': {handle:'@you', caption:'grey everything', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'the grey palette is so you',     time:'5w', liked:true},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'intentional as always',           time:'5w', liked:false},
-  ]},
-  'post-27': {handle:'@you', caption:'oversized knit era', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'the oversized knit!!',            time:'6w', liked:true},
-  ]},
-  // April 2026 posts
-  'post-48': {handle:'@you', caption:'spring minimal', comments:[
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'spring fitted perfectly',          time:'8w', liked:false},
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'scandi spring energy',            time:'8w', liked:true},
-  ]},
-  'post-49': {handle:'@you', caption:'neutral tones only', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'the neutral palette is peak you', time:'8w', liked:false},
-  ]},
-  'post-50': {handle:'@you', caption:'old money april', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'old money era',                   time:'9w', liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'this fit got 3 echoes',            time:'9w', liked:false},
-  ]},
-  // March 2026 posts
-  'post-67': {handle:'@you', caption:'first trace. cream knit.', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'the OG. this started it all',    time:'3mo', liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'love that you started in march', time:'3mo', liked:false},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'first trace and already iconic', time:'3mo', liked:true},
-  ]},
-  'post-68': {handle:'@you', caption:'quiet luxury from day one', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'day two and already committed', time:'3mo', liked:false},
-  ]},
-  // April 2026 remaining
-  'post-51': {handle:'@you', caption:'tuesday minimal', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'april fits were so consistent', time:'9w', liked:false},
-  ]},
-  'post-52': {handle:'@you', caption:'the blazer again', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'you and the blazer',            time:'9w', liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'iconic at this point',          time:'9w', liked:false},
-  ]},
-  'post-53': {handle:'@you', caption:'trench and wide leg', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'the combo!!',                   time:'10w', liked:true},
-  ]},
-  // March 2026 remaining
-  'post-69': {handle:'@you', caption:'march monochrome', comments:[
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'tracing from day one',          time:'3mo', liked:false},
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'early march fits were so good', time:'3mo', liked:true},
-  ]},
-  'post-70': {handle:'@you', caption:'the dark neutral phase', comments:[
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'dark neutrals era',             time:'3mo', liked:false},
-  ]},
-  'post-71': {handle:'@you', caption:'cream on cream', comments:[
-    {ava:'LV',color:'#C4BAAA',name:'@lenav',text:'cream palette was everything', time:'3mo', liked:true},
-    {ava:'N', color:'#9FBBCB',name:'@noor', text:'quiet luxury from the start',  time:'3mo', liked:false},
-  ]},
-  'post-72': {handle:'@you', caption:'wide leg everyday', comments:[
-    {ava:'M', color:'#B8C4C0',name:'@maren',text:'the wide leg phase began here', time:'3mo', liked:false},
-    {ava:'A', color:'#B8C4C0',name:'@ari',  text:'this look got so many echoes', time:'3mo', liked:true},
-  ]},
-
-};
-
-var currentCommentKey = 'detail';
-var currentCommentHandle = '@you';
-var currentCommentCaption = '';
-
-// ── Generate unique, deterministic comments for any post ──
-var COMMENT_PEOPLE = [
-  {ava:'LV', color:'#C4BAAA', name:'@lenav'},
-  {ava:'N',  color:'#9FBBCB', name:'@noor'},
-  {ava:'M',  color:'#B8C4C0', name:'@maren'},
-  {ava:'A',  color:'#B8C4C0', name:'@ari'},
-];
-var COMMENT_TEXTS = [
-  'this is so your DNA', 'obsessed with this fit', 'where is this from??',
-  'the silhouette on this!!', 'echo vibes for sure', 'this aged so well',
-  'quiet luxury done right', 'need this in my closet', 'the palette is perfect',
-  'so intentional as always', 'this got me thinking about my own trace',
-  'underrated fit honestly', 'the consistency here is wild', 'iconic at this point',
-  'this started a whole mood', 'love the restraint in this one',
-];
-function simpleHash(str){
-  var h=0;
-  for(var i=0;i<str.length;i++){ h=((h<<5)-h)+str.charCodeAt(i); h|=0; }
-  return Math.abs(h);
-}
-function relativeTimeFor(post){
-  var today = new Date(2026, 5, 22);
-  var postDate;
-  if(post && post._jsDate){
-    postDate = post._jsDate;
-  } else if(post && post.date){
-    var m = post.date.match(/(\d+)\s+(\w+)\s+(\d{4})/);
-    if(!m) return '1d';
-    var monIdx = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11}[m[2]];
-    if(monIdx===undefined) return '1d';
-    postDate = new Date(parseInt(m[3],10), monIdx, parseInt(m[1],10));
-  } else {
-    return '1d';
-  }
-  var diffMs = today - postDate;
-  var diffH = Math.floor(diffMs/3600000);
-  var diffD = Math.floor(diffH/24);
-  var diffW = Math.floor(diffD/7);
-  var diffMo = Math.floor(diffD/30);
-  if(diffH < 1) return 'just now';
-  if(diffH < 24) return diffH+'h';
-  if(diffD < 7) return diffD+'d';
-  if(diffW < 5) return diffW+'w';
-  return diffMo+'mo';
-}
-
-function generateComments(key, post){
-  var seed = simpleHash(key);
-  var n = 1 + (seed % 4); // 1-4 comments
-  var baseTime = relativeTimeFor(post);
-  var out = [];
-  for(var i=0;i<n;i++){
-    var p = COMMENT_PEOPLE[(seed+i*7) % COMMENT_PEOPLE.length];
-    var t = COMMENT_TEXTS[(seed+i*13) % COMMENT_TEXTS.length];
-    out.push({ava:p.ava, color:p.color, name:p.name, text:t, time: baseTime, liked: (seed+i)%3===0});
-  }
-  return out;
-}
-
-function openComments(key, handle, caption) {
-  currentCommentKey = key || 'detail';
-  currentCommentHandle = handle || '@you';
-  currentCommentCaption = caption || '';
-
-  // Update mini preview
-  var h = document.getElementById('comments-post-handle');
-  var c = document.getElementById('comments-post-caption');
-  if (h) h.textContent = currentCommentHandle;
-  if (c) c.textContent = currentCommentCaption || COMMENTS[currentCommentKey] && COMMENTS[currentCommentKey].caption || '';
-
-  // Build comment list
-  var list = document.getElementById('comments-list');
-  list.innerHTML = '';
-  var data = COMMENTS[currentCommentKey];
-  if(!data){
-    var relatedPost = (typeof POSTS !== 'undefined') ? POSTS[parseInt((currentCommentKey||'').replace(/\D/g,''),10)] : null;
-    data = { comments: generateComments(currentCommentKey, relatedPost) };
-  }
-
-  data.comments.forEach(function(cm, idx) {
-    var row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:10px;padding:10px 22px;align-items:flex-start;';
-
-    var ava = document.createElement('div');
-    ava.style.cssText = 'width:32px;height:32px;border-radius:50%;background:' + cm.color + ';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0;font-family:Jost,sans-serif;';
-    ava.textContent = cm.ava;
-
-    var body = document.createElement('div');
-    body.style.cssText = 'flex:1;';
-
-    var top = document.createElement('div');
-    top.style.cssText = 'display:flex;align-items:baseline;gap:6px;margin-bottom:3px;';
-    top.innerHTML = '<span style="font-size:12px;font-weight:500;color:#1A1916;">' + cm.name + '</span><span style="font-size:10px;color:#B5ADA3;">' + cm.time + '</span>';
-
-    var txt = document.createElement('p');
-    txt.style.fontFamily = "'Cormorant Garamond', serif";
-    txt.style.fontSize = '14px';
-    txt.style.color = '#3A3830';
-    txt.style.lineHeight = '1.5';
-    txt.textContent = cm.text;
-
-    // Like button on comment
-    var likeRow = document.createElement('div');
-    likeRow.style.cssText = 'display:flex;align-items:center;gap:4px;margin-top:5px;cursor:pointer;';
-    var heartSvg = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;"><path d="M12 20.5s-7.5-4.7-9.5-9C1.2 8.1 2.6 4.7 6 4.2c2-.3 3.7.7 6 3 2.3-2.3 4-3.3 6-3 3.4.5 4.8 3.9 3.5 7.3-2 4.3-9.5 9-9.5 9z" style="pointer-events:none;"/></svg>';
-    likeRow.innerHTML = heartSvg;
-    likeRow.setAttribute('data-comment-like', idx);
-    if (cm.liked) {
-      likeRow.querySelector('svg').style.stroke = '#D94F4F';
-      likeRow.querySelector('svg').style.fill = '#D94F4F';
-    }
-    likeRow.addEventListener('click', function() {
-      var svg = this.querySelector('svg');
-      cm.liked = !cm.liked;
-      svg.style.stroke = cm.liked ? '#D94F4F' : '#B5ADA3';
-      svg.style.fill = cm.liked ? '#D94F4F' : 'none';
-    });
-
-    body.appendChild(top);
-    body.appendChild(txt);
-    body.appendChild(likeRow);
-    row.appendChild(ava);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    // Divider
-    if (idx < data.comments.length - 1) {
-      var div = document.createElement('div');
-      div.style.cssText = 'height:1px;background:#F0EBE3;margin:0 22px;';
-      list.appendChild(div);
-    }
-  });
-
-  show('comments');
-}
-
-// Comment send handler
-document.getElementById('comment-send').addEventListener('click', function() {
-  var inp = document.getElementById('comment-input');
-  var msg = (inp.textContent || inp.innerText || '').trim();
-  if (!msg) return;
-
-  if (!COMMENTS[currentCommentKey]) COMMENTS[currentCommentKey] = { comments: [] };
-  var newCm = {ava:'EV', color:'#CDB89B', name:'@you', text:msg, time:'just now', liked:false};
-  COMMENTS[currentCommentKey].comments.push(newCm);
-  inp.textContent = '';
-
-  var list = document.getElementById('comments-list');
-  // Divider before new comment
-  if (COMMENTS[currentCommentKey].comments.length > 1) {
-    var div = document.createElement('div');
-    div.style.cssText = 'height:1px;background:#F0EBE3;margin:0 22px;';
-    list.appendChild(div);
-  }
-  var row = document.createElement('div');
-  row.style.cssText = 'display:flex;gap:10px;padding:10px 22px;align-items:flex-start;';
-  var ava = document.createElement('div');
-  ava.style.cssText = 'width:32px;height:32px;border-radius:50%;background:#CDB89B;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;flex-shrink:0;font-family:Jost,sans-serif;';
-  ava.textContent = 'EV';
-  var body = document.createElement('div');
-  body.style.cssText = 'flex:1;';
-  var top = document.createElement('div');
-  top.style.cssText = 'display:flex;align-items:baseline;gap:6px;margin-bottom:3px;';
-  top.innerHTML = '<span style="font-size:12px;font-weight:500;color:#1A1916;">@you</span><span style="font-size:10px;color:#B5ADA3;">just now</span>';
-  var txt = document.createElement('p');
-  txt.style.fontFamily = "'Cormorant Garamond', serif";
-  txt.style.fontSize = '14px';
-  txt.style.color = '#3A3830';
-  txt.style.lineHeight = '1.5';
-  txt.textContent = msg;
-  body.appendChild(top);
-  body.appendChild(txt);
-  row.appendChild(ava);
-  row.appendChild(body);
-  list.appendChild(row);
-  list.scrollTop = list.scrollHeight;
-}, false);
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'comment-input') {
-    e.preventDefault();
-    document.getElementById('comment-send').click();
-  }
-}, false);
-
-
-var ALL=['home','feed','camera','twins','profile','dna','wrapped','premium','messages','activity','post-detail','collection','chat','month-detail','comments','other-profile'];
-var cur='home';
-var FOLLOWING=new Set(); // tracks who we follow
-function syncFollowBtns(person){
-  document.querySelectorAll('[data-follow="'+person+'"]').forEach(function(btn){
-    var following=FOLLOWING.has(person);
-    btn.textContent=following?'following':'follow';
-    btn.style.background=following?'#1A1916':'none';
-    btn.style.color=following?'#fff':'#5A5549';
-    btn.style.borderColor=following?'#1A1916':'#D8D0C4';
-  });
-  // also sync the op-follow-btn if we're viewing this person's profile
-  var opf=document.getElementById('op-follow-btn');
-  if(opf && typeof currentPersonKey!=='undefined' && currentPersonKey===person){
-    var following=FOLLOWING.has(person);
-    opf.textContent=following?'following':'follow';
-    opf.style.background=following?'#1A1916':'none';
-    opf.style.color=following?'#fff':'#1A1916';
-    opf.style.borderColor=following?'#1A1916':'#1A1916';
-  }
-}
-var lastSheetSource=null;
-var wIdx=1,wTotal=5;
-var fitNo=143;
-
-
-function inject(){
-  var er=document.getElementById('echo-row');
-  if(er){
-    var echoHandles=[['0','@lenav'],['1','@maren'],['2','@noor'],['3','@ari']];
-    echoHandles.forEach(function(ep){ var d=document.createElement('div'); d.className='echo-th'; d.setAttribute('data-echopostidx',ep[0]); d.innerHTML='<div class="echo-ph"></div><span class="echo-badge">'+ep[1]+'</span>'; er.appendChild(d); });
-  }
-  buildBacklog('weeks');
-}
-
-function pol(idx,faded){
-  var p=document.createElement('div');
-  p.className='pol';
-  p.setAttribute('data-postidx',String(idx));
-  if(faded) p.style.opacity='.28';
-  p.innerHTML='<div class="pol-ph"></div>';
-  return p;
-}
-
-function weekSection(label, dayItems){
-  var sec=document.createElement('div');
-  sec.style.cssText='margin-bottom:22px;';
-  var hdr=document.createElement('p');
-  hdr.style.cssText='font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#B5ADA3;margin-bottom:12px;';
-  hdr.textContent=label;
-  sec.appendChild(hdr);
-  var grid=document.createElement('div');
-  grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:9px;';
-  dayItems.forEach(function(p){ grid.appendChild(p); });
-  sec.appendChild(grid);
-  return sec;
-}
-
-function buildBacklog(mode){
-  var bg=document.getElementById('backlog-grid');
-  if(!bg) return;
-  bg.innerHTML='';
-  var note=document.getElementById('bl-note');
-
-  if(mode==='weeks'){
-    if(note) note.textContent='87 fits traced';
-    var dayAbbrs=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    // Group post indices by their real calendar date (so multiple fits on
-    // the same real day land under the same day label).
-    var dayGroups={}; // key: 'Y-M-D' -> {label, indices:[]}
-    POSTS.forEach(function(p, idx){
-      if(!p._jsDate) return;
-      var d=p._jsDate;
-      var key=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
-      if(!dayGroups[key]){
-        dayGroups[key]={ y:d.getFullYear(), m:d.getMonth(), day:d.getDate(), dow:dayAbbrs[d.getDay()], indices:[] };
-      }
-      dayGroups[key].indices.push(idx);
-    });
-    var orderedDayKeys=Object.keys(dayGroups).sort(function(a,b){
-      var ga=dayGroups[a], gb=dayGroups[b];
-      return (gb.y*372+gb.m*31+gb.day)-(ga.y*372+ga.m*31+ga.day);
-    });
-    // Only show the most recent 7 days that actually have fits
-    var recentKeys=orderedDayKeys.slice(0,7);
-    recentKeys.forEach(function(key){
-      var g=dayGroups[key];
-      var dayBlock=document.createElement('div');
-      dayBlock.style.cssText='margin-bottom:16px;';
-      var label=document.createElement('div');
-      label.style.cssText='display:flex;align-items:baseline;gap:6px;margin-bottom:6px;';
-      var dayLabel=g.dow+' '+g.day;
-      label.innerHTML='<span style="font-size:12px;font-weight:500;color:#1A1916;">'+dayLabel+'</span><span style="font-size:9px;color:#B5ADA3;letter-spacing:.08em;text-transform:uppercase;">'+g.indices.length+' fit'+(g.indices.length>1?'s':'')+'</span>';
-      dayBlock.appendChild(label);
-      var grid=document.createElement('div');
-      grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;';
-      g.indices.forEach(function(idx){
-        grid.appendChild(pol(idx,false));
-      });
-      dayBlock.appendChild(grid);
-      bg.appendChild(dayBlock);
-    });
-    var lock=document.createElement('div');
-    lock.style.cssText='display:flex;align-items:center;gap:9px;margin-top:4px;padding-top:12px;border-top:1px solid #E8E8E8;cursor:pointer;';
-    lock.setAttribute('data-go','premium');
-    lock.innerHTML='<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><p style="font-size:11px;color:#B5ADA3;letter-spacing:.04em;">view older weeks</p>';
-    bg.appendChild(lock);
-
-  } else if(mode==='months'){
-    if(note) note.textContent=POSTS.length+' fits \u00b7 2026';
-    var monNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    // Group post indices by their real calendar month (derived from _jsDate)
-    var groups={}; // key: 'YYYY-M' -> {label, indices:[]}
-    POSTS.forEach(function(p, idx){
-      if(!p._jsDate) return;
-      var y=p._jsDate.getFullYear(), m=p._jsDate.getMonth();
-      var key=y+'-'+m;
-      if(!groups[key]) groups[key]={label:monNames[m], year:y, indices:[]};
-      groups[key].indices.push(idx);
-    });
-    // Build ordered list: present months (most recent first) then upcoming empty months of 2026 (Jan/Feb if not present)
-    var orderedKeys=Object.keys(groups).sort(function(a,b){
-      var ay=parseInt(a.split('-')[0],10), am=parseInt(a.split('-')[1],10);
-      var by=parseInt(b.split('-')[0],10), bm=parseInt(b.split('-')[1],10);
-      return (by*12+bm)-(ay*12+am);
-    });
-    // Add empty months back to January of the earliest year present, if not already included
-    var earliestKey=orderedKeys[orderedKeys.length-1];
-    var earliestYear=parseInt(earliestKey.split('-')[0],10);
-    var earliestMonth=parseInt(earliestKey.split('-')[1],10);
-    for(var mm=earliestMonth-1; mm>=0; mm--){
-      var k=earliestYear+'-'+mm;
-      if(!groups[k]){ groups[k]={label:monNames[mm], year:earliestYear, indices:[]}; orderedKeys.push(k); }
-    }
-    orderedKeys.forEach(function(key){
-      var g=groups[key];
-      var block=document.createElement('div');
-      block.style.cssText='margin-bottom:20px;';
-      var hdr=document.createElement('div');
-      hdr.style.cssText='display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px;';
-      hdr.innerHTML='<p class="bl-month-hdr">'+g.label+'</p><span style="font-size:10px;color:#B5ADA3;letter-spacing:.08em;">'+(g.indices.length>0 ? g.indices.length+' fits' : '0 fits')+'</span>';
-      block.appendChild(hdr);
-      if(g.indices.length===0){
-        var zeroEl=document.createElement('p');
-        zeroEl.style.cssText='font-size:11px;color:#C5BEB3;margin:0;';
-        zeroEl.textContent='0 fits';
-        block.appendChild(zeroEl);
-        bg.appendChild(block);
-        return;
-      }
-      var grid=document.createElement('div');
-      grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;';
-      var showCount=Math.min(6, g.indices.length);
-      for(var f=0;f<showCount;f++){
-        var p=pol(g.indices[f], false);
-        grid.appendChild(p);
-      }
-      if(g.indices.length>6){
-        var more=document.createElement('div');
-        more.style.cssText='display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;background:#F7F7F7;border-radius:3px;border:1px dashed #D8D0C4;cursor:pointer;';
-        more.innerHTML='<span style="font-size:10px;color:#B5ADA3;letter-spacing:.06em;text-align:center;">+'+(g.indices.length-6)+'<br>more</span>';
-        (function(label,count,indices){ more.addEventListener('click',function(){ openMonthDetailByIndices(label,count,indices); }); })(g.label,g.indices.length,g.indices);
-        grid.appendChild(more);
-      }
-      block.appendChild(grid);
-      bg.appendChild(block);
-    });
-
-  } else if(mode==='years'){
-    if(note) note.textContent='87 fits since march 2026';
-    // 2026 summary
-    var yHdr=document.createElement('div');
-    yHdr.style.cssText='margin-bottom:12px;';
-    yHdr.innerHTML='<p class="bl-year-hdr">2026</p><p style="font-size:10px;color:#B5ADA3;letter-spacing:.08em;">Jun · May · Apr · Mar · 87 fits</p>';
-    bg.appendChild(yHdr);
-    var grid2026=document.createElement('div');
-    grid2026.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:24px;';
-    for(var f=0;f<6;f++){ grid2026.appendChild(pol(f,false)); }
-    bg.appendChild(grid2026);
-    // 2025 — premium locked
-    var lock=document.createElement('div');
-    lock.style.cssText='display:flex;align-items:center;gap:12px;padding:10px 0 0;cursor:pointer;';
-    lock.setAttribute('data-go','premium');
-    lock.innerHTML='<p class="bl-year-hdr" style="opacity:.35;">2025</p><div style="flex:1;"><p style="font-size:11px;color:#B5ADA3;">your 2025 archive is locked</p><p style="font-size:10px;color:#C5BEB3;margin-top:2px;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:#B5ADA3;fill:none;stroke-width:1.5;stroke-linecap:round;display:inline;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg> premium only</p></div><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#C5BEB3;fill:none;stroke-width:1.5;stroke-linecap:round;flex-shrink:0;"><path d="M9 6l6 6-6 6"/></svg>';
-    bg.appendChild(lock);
-  }
-}
-
-
-
-var navHistory=['home'];
-function goBack(){
-  if(navHistory.length>1) navHistory.pop();
-  show(navHistory[navHistory.length-1], true);
-}
-function show(k, isBack){
-  if(!k||ALL.indexOf(k)<0) return;
-  ALL.forEach(function(x){ document.getElementById('s-'+x).classList.toggle('vis',x===k); });
-  if(!isBack) navHistory.push(k);
-  cur=k;
-  document.querySelectorAll('.pk').forEach(function(p){ p.classList.toggle('active',p.getAttribute('data-s')===k); });
-  var ap=document.querySelector('.pk.active');
-  if(ap) ap.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
-  updateNav(k);
-  document.querySelectorAll('.sc').forEach(function(s){ s.scrollTop=0; });
-  if(k==='wrapped') resetWrapped();
-  if(k!=='camera'){ var ro=document.getElementById('rcpt-ov'); if(ro) ro.classList.remove('show'); }
-}
-
-function updateNav(k){
+var NAV_MAP={home:'home',feed:'home',camera:'camera',twins:'twins',dna:'profile',wrapped:'profile',profile:'profile'};
+function show(k){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  var el=document.getElementById('s-'+k);
+  if(!el){k='home';el=document.getElementById('s-home');}
+  el.classList.add('on');
+  var navKey=NAV_MAP[k]||'home';
   document.querySelectorAll('.nb').forEach(function(b){
-    var g=b.getAttribute('data-go');
-    var act=(g===k)||(g==='home'&&(k==='home'||k==='feed'||k==='messages'||k==='activity'))
-            ||(g==='camera'&&k==='camera')
-            ||(g==='profile'&&(k==='profile'||k==='dna'||k==='premium'||k==='wrapped'));
-    b.classList.toggle('active',act);
-    var sv=b.querySelector('svg'); if(sv) sv.style.stroke=act?'#1A1916':'#C5BEB3';
-    var sp=b.querySelector('span'); if(sp) sp.style.color=act?'#1A1916':'#C5BEB3';
+    b.classList.toggle('on',b.getAttribute('data-nav')===navKey);
   });
-  document.querySelectorAll('.nb-ft').forEach(function(b){
-    var act=(k==='twins'||k==='other-profile'); b.classList.toggle('active',act);
-    var sv=b.querySelector('svg'); if(sv) sv.style.stroke=act?'#1A1916':'#C5BEB3';
-    var sp=b.querySelector('span'); if(sp) sp.style.color=act?'#1A1916':'#C5BEB3';
-  });
+  document.getElementById('bnav').style.display=(k==='wrapped')?'none':'flex';
+  closeRcpt();
 }
-
-// profile tabs
-function switchTab(name){
-  document.querySelectorAll('.ptab').forEach(function(t){ t.classList.toggle('on',t.getAttribute('data-tab')===name); });
-  document.querySelectorAll('.ptab-panel').forEach(function(p){ p.classList.toggle('on',p.id==='pp-'+name); });
-}
-
-// wrapped
-function resetWrapped(){ wIdx=1; renderWrapped(); }
-function renderWrapped(){
-  for(var i=1;i<=wTotal;i++){
-    var pg=document.querySelector('.wpage[data-pg="'+i+'"]'); if(pg){ pg.style.display=pg.classList.contains('on')?'flex':'none'; pg.classList.toggle('on',i===wIdx); pg.style.display=(i===wIdx)?'flex':'none'; }
-    var b=document.getElementById('wb'+i); if(b) b.style.background=i<=wIdx?'#fff':'rgba(255,255,255,.2)';
-  }
-}
-function wNext(){ if(wIdx<wTotal){ wIdx++; renderWrapped(); } else show('dna'); }
-function wPrev(){ if(wIdx>1){ wIdx--; renderWrapped(); } }
-
-// capture
-function doCapture(){
-  var vf=document.getElementById('cam-img');
-  if(vf){ vf.style.transition='opacity .1s'; vf.style.opacity='0'; setTimeout(function(){ vf.style.opacity='1'; var cat=document.querySelector('.cat-btn.sel'); var catName=cat?cat.getAttribute('data-cat'):'Daily'; document.getElementById('rcpt-cat').textContent=catName; fitNo++; document.getElementById('rcpt-no').textContent='0'+fitNo; document.getElementById('rcpt-ov').classList.add('show'); },120); }
-}
-
-// toast
-var tt;
-function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); },1800); }
-
-// sheets
-var sheets={
-  post:{title:'trace options',rows:[
-    {i:'M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z',l:'save to profile',fn:function(){ if(lastSheetSource){ var post=lastSheetSource.closest('.trace-post'); if(post){ var bm=post.querySelector('[data-save-to-collection],[data-bookmark]'); if(bm) bm.classList.add('saved'); } } openSheet('saveto'); }},
-    {i:'M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13',l:'share trace',fn:function(){closeSheet();toast('link copied');}},
-    {i:'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',l:'find their echo',fn:function(){closeSheet();show('twins');}},
-    {i:'M18 6L6 18M6 6l12 12',l:'not for me',fn:function(){closeSheet();}}
-  ]},
-  settings:{title:'settings',rows:[
-    {i:'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z',l:'edit profile',fn:function(){closeSheet();toast('edit profile');}},
-    {i:'M12 2l2.5 7H22l-6 4.5L18 22l-6-4.5L6 22l2-7.5L2 9h7.5z',l:'DNA premium',fn:function(){closeSheet();show('premium');}},
-    {i:'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9',l:'sign out',fn:function(){closeSheet();show('home');}}
-  ]},
-  saveto:{title:'save to collection',rows:[
-    {i:'M4 7h16M4 12h8',l:'Night out',fn:function(){closeSheet();toast('saved to Night out');}},
-    {i:'M4 7h16M4 12h8',l:'Work',fn:function(){closeSheet();toast('saved to Work');}},
-    {i:'M4 7h16M4 12h8',l:'Gym',fn:function(){closeSheet();toast('saved to Gym');}},
-    {i:'M4 7h16M4 12h8',l:'Inspo',fn:function(){closeSheet();toast('saved to Inspo');}},
-    {i:'M12 5v14M5 12h14',l:'New collection',fn:function(){closeSheet();toast('new collection created');}}
-  ]},
-  badge:{title:'badge',rows:[
-    {i:'M20 6L9 17l-5-5',l:'loading...',fn:function(){closeSheet();}}
-  ]}
-};
-function openSheet(k){ var d=sheets[k]; if(!d) return; document.getElementById('sh-ttl').textContent=d.title; var b=document.getElementById('sh-body'); b.innerHTML=''; d.rows.forEach(function(r){ var row=document.createElement('div'); row.className='sh-row'; row.innerHTML='<svg viewBox="0 0 24 24"><path d="'+r.i+'"/></svg><p>'+r.l+'</p>'; row.addEventListener('click',r.fn); b.appendChild(row); }); document.getElementById('ov').classList.add('show'); }
-function closeSheet(){ document.getElementById('ov').classList.remove('show'); }
-
 document.addEventListener('click',function(e){
-  var gb=e.target.closest('[data-action="go-back"]'); if(gb){ goBack(); return; }
-  if(e.target.id==='ov'||e.target.classList.contains('sh-pill')){ closeSheet(); return; }
-  var ht=e.target.closest('[data-heart]'); if(ht){ ht.classList.toggle('liked'); return; }
-  var bm=e.target.closest('[data-bookmark]'); if(bm){ bm.classList.add('saved'); openSheet('saveto'); return; }
-  var stc=e.target.closest('[data-save-to-collection]'); if(stc){ stc.classList.add('saved'); openSheet('saveto'); return; }
-  var sh=e.target.closest('[data-sheet]'); if(sh){ lastSheetSource=sh; openSheet(sh.getAttribute('data-sheet')); return; }
-  // open comments — must be before data-go so comment icon wins over post wrapper
-  var cmEl=e.target.closest('[data-comment]'); if(cmEl){
-    var key=cmEl.getAttribute('data-comment');
-    var handle='@you', caption='';
-    var post=cmEl.closest('.trace-post');
-    if(post){
-      var nm=post.querySelector('.tp-name'); if(nm) handle='@'+nm.textContent;
-      var sub=post.querySelector('.tp-sub'); if(sub) caption=sub.textContent;
-    }
-    if(key==='detail'||key==='current'){
-      key = currentCommentKey || 'detail';
-      var dh=document.getElementById('post-detail-name'); if(dh) handle=dh.textContent;
-      var dc=document.getElementById('post-detail-caption'); if(dc) caption=dc.textContent;
-    }
-    openComments(key, handle, caption);
-    return;
-  }
-  // open other profile
-  var epEl=e.target.closest('[data-echopostidx]');
-  if(epEl){ var ei=parseInt(epEl.getAttribute('data-echopostidx'))||0; openEchoPost(ei); return; }
-  var personEl=e.target.closest('[data-person]');
-  if(personEl && !personEl.closest('[data-chat]') && !e.target.closest('[data-follow]') && !e.target.closest('.fl-btn')){
-    openOtherProfile(personEl.getAttribute('data-person'));
-    return;
-  }
-  var oppa=e.target.closest('[data-action="open-post-person"]');
-  if(oppa){
-    var currentPost = document.getElementById('post-detail-name');
-    var nm = currentPost ? currentPost.textContent : '';
-    var personKey = nm.replace('@','').toLowerCase();
-    if(personKey && personKey !== 'you' && PEOPLE[personKey]) { openOtherProfile(personKey); return; }
-  }
-  var cpBtn=e.target.closest('[data-action="chat-profile"]'); if(cpBtn){ var k=document.getElementById('chat-name').getAttribute('data-person'); if(k && PEOPLE[k]) openOtherProfile(k); return; }
-  var go=e.target.closest('[data-go]'); if(go){ show(go.getAttribute('data-go')); return; }
-  var pk=e.target.closest('.pk'); if(pk){ show(pk.getAttribute('data-s')); return; }
-  var ca=e.target.closest('[data-action="capture"]'); if(ca){ doCapture(); return; }
-  var su=e.target.closest('[data-action="subscribe"]'); if(su){ toast('welcome to DNA premium '); return; }
-  var ret=e.target.closest('[data-action="retake"]'); if(ret){ document.getElementById('rcpt-ov').classList.remove('show'); return; }
-  var wt=e.target.closest('[data-wtap]'); if(wt){ wt.getAttribute('data-wtap')==='next'?wNext():wPrev(); return; }
-  var fl=e.target.closest('[data-follow]'); if(fl){
-    var person=fl.getAttribute('data-follow');
-    var isFollowing=FOLLOWING.has(person);
-    if(isFollowing){ FOLLOWING.delete(person); } else { FOLLOWING.add(person); toast('following @'+person); }
-    syncFollowBtns(person);
-    return;
-  }
-  var rp=e.target.closest('[data-rp]'); if(rp){
-    var r=rp.getAttribute('data-rp');
-    document.querySelectorAll('.rp').forEach(function(x){
-      x.classList.toggle('on',x.getAttribute('data-rp')===r);
-      x.style.background=x.getAttribute('data-rp')===r?'#1A1916':'none';
-      x.style.color=x.getAttribute('data-rp')===r?'#fff':'#8A8278';
-      x.style.border=x.getAttribute('data-rp')===r?'none':'1px solid #E0D8CB';
-    });
-
-    buildBacklog(r);
-    return;
-  }
-    var cat=e.target.closest('[data-cat]'); if(cat){ document.querySelectorAll('.cat-btn').forEach(function(c){ c.classList.remove('sel'); }); cat.classList.add('sel'); return; }
-
-  // open chat from message list
-  var chatEl=e.target.closest('[data-chat]'); if(chatEl){ openChat(chatEl.getAttribute('data-chat')); return; }
-
-  // open collection from board card
-  var collEl=e.target.closest('[data-collection]'); if(collEl){ openCollection(collEl.getAttribute('data-collection'), collEl.getAttribute('data-count')); return; }
-
-  // open post detail from backlog polaroid
-  var collPost=e.target.closest('[data-savedpost]');
-  if(collPost && !e.target.closest('[data-person]') && !e.target.closest('[data-comment]') && !e.target.closest('[data-heart]')){
-    var si=parseInt(collPost.getAttribute('data-savedidx'))||0;
-    var collName=document.getElementById('coll-title') && document.getElementById('coll-title').textContent;
-    var cData=COLLECTION_DATA[collName];
-    if(cData && cData.posts[si]){
-      var cp=cData.posts[si];
-      var personKey=cp.name.replace('@','');
-      document.getElementById('post-detail-handle').textContent=cp.name;
-      document.getElementById('post-detail-handle').setAttribute('data-person', personKey);
-      document.getElementById('post-detail-handle').style.cursor='pointer';
-      document.getElementById('post-detail-name').textContent=cp.name;
-      document.getElementById('post-detail-name').parentElement.setAttribute('data-action','open-post-person');
-      document.getElementById('post-detail-ava').textContent=cp.name.slice(1,3).toUpperCase();
-      document.getElementById('post-detail-ava').style.background=PEOPLE[personKey]?PEOPLE[personKey].color:'#C4BAAA';
-      document.getElementById('post-detail-date').textContent=cp.date;
-      var capt=cp.caption;
-      document.getElementById('post-detail-caption').textContent=capt;
-      document.getElementById('post-detail-likes').textContent=Math.floor(10+si*3)+' likes';
-      document.getElementById('post-detail-dna').textContent='Saved to your '+collName+' collection.';
-      var tagsEl=document.getElementById('post-detail-tags'); tagsEl.innerHTML='';
-      cp.tags.forEach(function(t,ti){
-        var sp=document.createElement('span');
-        sp.style.cssText='font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;'+(ti===0?'border:1px solid #E0D8CB;color:#8A8278;':'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-        sp.textContent=t; tagsEl.appendChild(sp);
-      });
-      currentCommentKey='savedpost-'+collName.replace(/\s+/g,'')+'-'+si;
-      show('post-detail');
-    }
-    return;
-  }
-  var collPost=e.target.closest('[data-savedpost]');
-  if(collPost && !e.target.closest('[data-person]') && !e.target.closest('[data-comment]') && !e.target.closest('[data-heart]')){
-    var si=parseInt(collPost.getAttribute('data-savedidx'))||0;
-    var collName=document.getElementById('coll-title') && document.getElementById('coll-title').textContent;
-    var cData=COLLECTION_DATA[collName];
-    if(cData && cData.posts[si]){
-      var cp=cData.posts[si];
-      var personKey=cp.name.replace('@','');
-      document.getElementById('post-detail-handle').textContent=cp.name;
-      document.getElementById('post-detail-handle').setAttribute('data-person', personKey);
-      document.getElementById('post-detail-handle').style.cursor='pointer';
-      document.getElementById('post-detail-name').textContent=cp.name;
-      document.getElementById('post-detail-name').parentElement.setAttribute('data-action','open-post-person');
-      document.getElementById('post-detail-ava').textContent=cp.name.slice(1,3).toUpperCase();
-      document.getElementById('post-detail-ava').style.background=PEOPLE[personKey]?PEOPLE[personKey].color:'#C4BAAA';
-      document.getElementById('post-detail-date').textContent=cp.date;
-      var capt=cp.caption;
-      document.getElementById('post-detail-caption').textContent=capt;
-      document.getElementById('post-detail-likes').textContent=Math.floor(10+si*3)+' likes';
-      document.getElementById('post-detail-dna').textContent='Saved to your '+collName+' collection.';
-      var tagsEl=document.getElementById('post-detail-tags'); tagsEl.innerHTML='';
-      cp.tags.forEach(function(t,ti){
-        var sp=document.createElement('span');
-        sp.style.cssText='font-size:9.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;cursor:pointer;'+(ti===0?'border:1px solid #E0D8CB;color:#8A8278;':'background:#1A1916;color:#fff;border:1px solid #1A1916;');
-        sp.textContent=t; tagsEl.appendChild(sp);
-      });
-      currentCommentKey='savedpost-'+collName.replace(/\s+/g,'')+'-'+si;
-      show('post-detail');
-    }
-    return;
-  }
-  var polEl=e.target.closest('[data-postidx]'); if(polEl){ openPostDetail(parseInt(polEl.getAttribute('data-postidx'))||0); return; }
-
-  var pt=e.target.closest('.ptab[data-tab]'); if(pt){ switchTab(pt.getAttribute('data-tab')); return; }
-  var pts=e.target.closest('[data-tab-switch]'); if(pts){ switchTab(pts.getAttribute('data-tab-switch')); return; }
-  var tabsi=e.target.closest('[data-tab]'); if(tabsi&&!tabsi.classList.contains('ptab')){ switchTab(tabsi.getAttribute('data-tab')); return; }
-},false);
-
-var swX=null;
-document.addEventListener('touchstart',function(e){ swX=e.touches[0].clientX; },{passive:true});
-document.addEventListener('touchend',function(e){ if(swX===null) return; var dx=e.changedTouches[0].clientX-swX; swX=null; if(cur==='wrapped'){ if(dx<-40) wNext(); else if(dx>40) wPrev(); } },{passive:true});
-
-inject();
-show('home');
-
-// Other profile follow button
-document.getElementById('op-follow-btn').addEventListener('click', function() {
-  if(!currentPersonKey) return;
-  var isFollowing=FOLLOWING.has(currentPersonKey);
-  if(isFollowing){ FOLLOWING.delete(currentPersonKey); } else { FOLLOWING.add(currentPersonKey); toast('following @'+currentPersonKey); }
-  syncFollowBtns(currentPersonKey);
-}, false);
-
-// Other profile message button
-document.getElementById('op-msg-btn').addEventListener('click', function() {
-  var chatKey = currentPersonKey;
-  if (CHATS[chatKey]) {
-    openChat(chatKey);
-  } else {
-    // create empty chat for this person
-    var p = PEOPLE[chatKey] || {};
-    CHATS[chatKey] = { name: '@'+chatKey, ava: p.ava||chatKey.slice(0,2).toUpperCase(), color: p.color||'#C4BAAA', msgs: [] };
-    openChat(chatKey);
-  }
-}, false);
-
-// DM send
-document.getElementById('dm-send').addEventListener('click', function() {
-  var inp = document.getElementById('dm-input');
-  var msg = (inp.textContent || inp.innerText || '').trim();
-  if (!msg) return;
-  var hist = document.getElementById('chat-history');
-  var div = document.createElement('div');
-  div.style.display = 'flex';
-  div.style.flexDirection = 'column';
-  div.style.alignItems = 'flex-end';
-  var bubble = document.createElement('div');
-  bubble.style.maxWidth = '78%';
-  bubble.style.borderRadius = '16px 16px 4px 16px';
-  bubble.style.padding = '10px 14px';
-  bubble.style.fontSize = '13px';
-  bubble.style.lineHeight = '1.5';
-  bubble.style.marginBottom = '2px';
-  bubble.style.background = '#1A1916';
-  bubble.style.color = '#fff';
-  bubble.style.fontFamily = 'Cormorant Garamond, serif';
-  bubble.textContent = msg;
-  var time = document.createElement('span');
-  time.style.fontSize = '9.5px';
-  time.style.color = '#B5ADA3';
-  time.style.marginBottom = '6px';
-  time.textContent = 'just now';
-  div.appendChild(bubble);
-  div.appendChild(time);
-  hist.appendChild(div);
-  inp.textContent = '';
-  hist.scrollTop = hist.scrollHeight;
-}, false);
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'dm-input') {
-    e.preventDefault();
-    document.getElementById('dm-send').click();
-  }
-}, false);
-
-
-function openSaveSheet() {
-  openSheet('saveto');
-}
-
-// ── bridge for the marketing-site demo ──
-window.addEventListener('message', function(e){
-  var d = e.data || {};
-  if (d.type === 'outft-nav' && d.screen) { show(d.screen); }
-  if (d.type === 'outft-capture') { show('camera'); }
-}, false);
-var _emit = function(k){ try { parent.postMessage({type:'outft-screen', screen:k}, '*'); } catch(_){} };
-var _show = show;
-show = function(k, isBack){ _show(k, isBack); _emit(cur); };
-// open on a specific screen when embedded (?s=camera)
-try {
-  var _init = new URLSearchParams(location.search).get('s') || location.hash.replace('#','');
-  if (_init) show(_init);
-} catch(_e){}
-parent.postMessage({type:'outft-ready'}, '*');
-
-// wheel: scroll the current screen's own content first; only hand the gesture
-// to the page (to flip phones) when that content is at its top/bottom edge —
-// or whenever the scroll is horizontal.
-window.addEventListener('wheel', function(e){
-  var vis = document.querySelector('.screen.vis');
-  var sc = vis && (vis.querySelector('.sc') || vis.querySelector('.prem-body') || vis.querySelector('#chat-history'));
-  var horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-  if (!horizontal && sc && sc.scrollHeight > sc.clientHeight + 1) {
-    var down = e.deltaY > 0;
-    var atTop = sc.scrollTop <= 0;
-    var atBottom = sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 1;
-    if ((down && !atBottom) || (!down && !atTop)) {
-      return; // let the screen scroll its own content
-    }
-  }
-  e.preventDefault();
-  try { parent.postMessage({type:'outft-wheel', dx:e.deltaX, dy:e.deltaY}, '*'); } catch(_){}
-}, {passive:false});
-
-})();
-
-// Global badge sheet (called from onclick)
-window.BADGE_DEFS = {
-  'Early Bird':       {icon:'M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2', desc:'Posted a fit in the morning window (7–11am) 5 times. Early risers, intentional dressers.'},
-  'Gym Warrior':      {icon:'M6 7v10M18 7v10M2 10v4M22 10v4M6 12h12',                           desc:'Logged 10 gym fits. Your active trace is consistent and intentional.'},
-  'Minimalist Master':{icon:'M5 12h14',                                                           desc:'Posted 15 fits with a minimal or monochrome palette. Less is your signature.'},
-  'Fashion Explorer': {icon:'M12 2l1.5 6L20 10l-6.5 2L12 18l-1.5-6L4 10l6.5-2z',              desc:'Worn fits from 5 different aesthetic categories. Your trace spans genres.'},
-  'Vintage Collector':{icon:'M12 7v5l3 3',                                                        desc:'Tagged 8 fits as vintage or thrifted. Time is part of your style DNA.'},
-  'Trend Setter':     {icon:'M5 11l7-7 7 7M5 19l7-7 7 7',                                       desc:'Unlocks when 3 people echo your fit within 24 hours of posting. Coming soon.'},
-};
-window.openBadgeSheet = function(name){
-  var def=BADGE_DEFS[name]||{icon:'M20 6L9 17l-5-5',desc:'Keep tracing to unlock this badge.'};
-  var unlocked=name!=='Trend Setter';
-  document.getElementById('sh-ttl').textContent=name;
-  var b=document.getElementById('sh-body'); b.innerHTML='';
-  var descRow=document.createElement('div');
-  descRow.style.cssText='padding:4px 24px 14px;';
-  descRow.innerHTML='<p style="font-family:\'Cormorant Garamond\',serif;font-size:15px;color:#5A5549;line-height:1.65;">'+def.desc+'</p>';
-  b.appendChild(descRow);
-  if(!unlocked){
-    var lockRow=document.createElement('div');
-    lockRow.className='sh-row';
-    lockRow.innerHTML='<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><p>premium only</p>';
-    lockRow.onclick=function(){closeSheet();show('premium');};
-    b.appendChild(lockRow);
-  }
-  document.getElementById('ov').classList.add('show');
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-<script>
-/* fill Friends' Traces placeholders with the editorial image set — leave
-   Today's Trace (#home-hero) and everything else as the plain placeholder */
-(function(){
-  var IMGS=['/demo/img/ed1.jpg','/demo/img/ed2.jpg','/demo/img/ed3.jpg','/demo/img/ed4.jpg','/demo/img/ed5.jpg'];
-  var i=0;
-  function fill(){
-    document.querySelectorAll('#s-feed .trace-post-inner .img-ph:not([data-ed])').forEach(function(el){
-      el.setAttribute('data-ed','1');
-      if(!el.style.backgroundImage){ el.style.backgroundImage='url("'+IMGS[i%IMGS.length]+'")'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; el.style.backgroundColor='#e8e4dd'; i++; }
-    });
-  }
-  fill();
-  var t; var mo=new MutationObserver(function(){ clearTimeout(t); t=setTimeout(fill,30); });
-  try{ mo.observe(document.body,{childList:true,subtree:true}); }catch(e){}
-})();
+  var nav=e.target.closest('[data-nav]');
+  if(nav){show(nav.getAttribute('data-nav'));return;}
+  var go=e.target.closest('[data-go]');
+  if(go){e.stopPropagation();show(go.getAttribute('data-go'));}
+});
+document.getElementById('shutter').addEventListener('click',function(){
+  var r=document.getElementById('rcpt');
+  var ins=document.getElementById('r-insight');
+  var bars=document.getElementById('r-bars');
+  ins.textContent='Reading your style DNA…';
+  bars.hidden=true;
+  document.querySelectorAll('.rfill').forEach(function(f){f.style.width='0';});
+  r.classList.add('show');
+  setTimeout(function(){
+    ins.textContent='Tonal layering with palette discipline — quiet luxury leads today’s trace.';
+    bars.hidden=false;
+    setTimeout(function(){
+      document.querySelectorAll('.rfill').forEach(function(f){f.style.width=f.getAttribute('data-w');});
+    },50);
+  },1400);
+});
+function closeRcpt(){var r=document.getElementById('rcpt');if(r)r.classList.remove('show');}
+var tt;function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},1600);}
+var start=(new URLSearchParams(location.search).get('s')||'home');
+show(start);
 </script>
 </body>
 </html>
