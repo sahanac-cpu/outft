@@ -7,10 +7,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+const PHONES: { s: string; label: string; dark?: boolean }[] = [
+  { s: "dna", label: "Style DNA · reading" },
+  { s: "wrapped", label: "outft. wrapped", dark: true },
+  { s: "home", label: "The daily ritual" },
+];
+
 const PROPS: { h: string; p: string }[] = [
   {
     h: "Native sponsored fits",
-    p: "Brand placements live inside the product — a sponsored fit in the feed, a curated pick on Twins — in the app's own visual language, never a banner.",
+    p: "Brand placements live inside the product — in the app's own visual language, never a banner.",
   },
   {
     h: "Style-DNA targeting",
@@ -18,77 +24,42 @@ const PROPS: { h: string; p: string }[] = [
   },
   {
     h: "No engagement theater",
-    p: "No public like counts, no follower leaderboards. Attention isn't gamed here — when a fit resonates, it's because the clothes did the work.",
+    p: "No public like counts, no follower leaderboards. When a fit resonates, it's because the clothes did the work.",
   },
   {
     h: "A daily ritual",
-    p: "outft. opens three windows a day. Users come back to log the fit they actually wore — daily attention, earned by habit rather than bought by feed algorithms.",
+    p: "outft. opens three windows a day. Users come back to log the fit they actually wore — daily attention, earned by habit.",
   },
-];
-
-const DNA = [
-  { label: "Quiet luxury", pct: 38 },
-  { label: "Minimalist", pct: 27 },
-  { label: "Scandi", pct: 21 },
-  { label: "Classic", pct: 14 },
 ];
 
 export default function DemoPage() {
   return (
     <main>
-      {/* Hero — brand + the live phone, first viewport */}
+      {/* Three live screens, straight in — like the site's own demo language */}
       <section className="border-b border-line2">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 pb-16 pt-10 md:grid-cols-2 md:items-center md:gap-16">
-          <div>
-            <Reveal>
-              <p className="lbl">A private demo — for partners</p>
-            </Reveal>
-            <Reveal delay={0.06}>
-              <h1 className="mt-4 font-display text-[clamp(4rem,10vw,7.5rem)] leading-none">
-                outft.
-              </h1>
-            </Reveal>
-            <Reveal delay={0.12}>
-              <p className="mt-5 max-w-[42ch] font-serif text-[clamp(1.05rem,1.6vw,1.3rem)] font-light italic leading-snug text-ink2">
-                The daily fit ritual. People log the outfit they actually wore;
-                an AI reads their wardrobe into a fashion DNA. This phone runs
-                the real app — tap <em>explore as guest</em>, then find the
-                brand placements on Twins, curated for each user&rsquo;s DNA.
-              </p>
-            </Reveal>
-            <Reveal delay={0.18}>
-              <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-grey">
-                native sponsored fits · style-DNA targeting · no like counts
-              </p>
-            </Reveal>
-            <Reveal delay={0.24}>
-              <div className="mt-8 flex items-center gap-6">
-                <a
-                  href="mailto:sahanalydiachandra@gmail.com?subject=Partnering%20with%20outft."
-                  className="inline-block bg-ink px-8 py-4 text-[11px] uppercase tracking-[0.25em] text-bg"
-                >
-                  Partner with us
-                </a>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-grey">
-                  ● live — tap and scroll the screen
-                </span>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* The real app, embedded */}
-          <Reveal delay={0.15} className="flex justify-center md:justify-end">
-            <div
-              className="relative overflow-hidden rounded-[46px] border-[10px] border-ink bg-ink shadow-2xl"
-              style={{ width: 320, height: 660 }}
-            >
-              <iframe
-                src="/demo/app/index.html"
-                title="outft. — the real app, live"
-                className="h-full w-full border-0 bg-ink"
-              />
-            </div>
+        <div className="mx-auto w-full max-w-6xl px-6 pt-8">
+          <Reveal>
+            <p className="lbl">A private demo — for partners · every screen is live, tap and scroll</p>
           </Reveal>
+        </div>
+        <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-16 pt-8 md:grid-cols-3">
+          {PHONES.map((p, i) => (
+            <Reveal key={p.s} delay={0.08 * i} className="flex flex-col items-center">
+              <div
+                className={`w-full overflow-hidden rounded-[36px] shadow-xl ${
+                  p.dark ? "bg-ink" : "bg-bg"
+                }`}
+                style={{ maxWidth: 400, height: 780 }}
+              >
+                <iframe
+                  src={`/demo/outft-app.html?s=${p.s}`}
+                  title={`outft. — ${p.label}`}
+                  className="h-full w-full border-0"
+                />
+              </div>
+              <p className="lbl mt-5">{p.label}</p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
@@ -113,47 +84,36 @@ export default function DemoPage() {
         </div>
       </section>
 
-      {/* DNA proof */}
+      {/* The real app */}
       <section className="border-b border-line2">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center">
           <div>
             <Reveal>
-              <p className="lbl">The targeting layer</p>
+              <p className="lbl">Not a mockup</p>
             </Reveal>
             <Reveal delay={0.08}>
               <h2 className="mt-4 font-display text-[clamp(1.8rem,3.4vw,2.8rem)] leading-tight">
-                Every wardrobe, read as an aesthetic.
+                This phone runs the real app.
               </h2>
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-5 max-w-[44ch] font-serif text-[clamp(1rem,1.5vw,1.2rem)] font-light italic leading-snug text-ink2">
-                Each posted fit folds into the user&apos;s running DNA. Your
-                brand appears where the aesthetic already matches — matched to
-                taste, not demographics.
+                The same code that ships to iPhones. Tap{" "}
+                <em>explore as guest</em> and walk the product yourself —
+                the ritual, the DNA, the twins.
               </p>
             </Reveal>
           </div>
-          <Reveal delay={0.1}>
-            <div className="border border-line2 bg-panel p-8">
-              <p className="lbl lbl-ink">A sample reading</p>
-              <div className="mt-6 flex flex-col gap-4">
-                {DNA.map((d) => (
-                  <div key={d.label} className="flex items-center gap-4">
-                    <span className="w-28 text-[13px] text-ink2">{d.label}</span>
-                    <span className="h-px flex-1 bg-line2">
-                      <span
-                        className="block h-px bg-ink"
-                        style={{ width: `${d.pct}%` }}
-                      />
-                    </span>
-                    <span className="font-serif text-lg">{d.pct}%</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-6 text-[13px] leading-relaxed text-grey">
-                A quiet-luxury lead means Toteme-adjacent placements land here
-                first — sponsored fits the user reads as taste, not ads.
-              </p>
+          <Reveal delay={0.1} className="flex justify-center md:justify-end">
+            <div
+              className="overflow-hidden rounded-[42px] border-[10px] border-ink bg-ink shadow-2xl"
+              style={{ width: 300, height: 630 }}
+            >
+              <iframe
+                src="/demo/app/index.html"
+                title="outft. — the real app, live"
+                className="h-full w-full border-0 bg-ink"
+              />
             </div>
           </Reveal>
         </div>
