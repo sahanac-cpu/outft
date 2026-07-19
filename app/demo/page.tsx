@@ -27,7 +27,7 @@ export default function DemoPage() {
     <main>
       {/* Everything on one screen: the whole app in one phone + why partners win */}
       <section className="border-b border-line2">
-        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 pb-14 pt-8 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+        <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 pb-14 pt-28 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
           <div>
             <Reveal>
               <p className="lbl">A private demo — for partners</p>
@@ -72,7 +72,7 @@ export default function DemoPage() {
           <Reveal delay={0.12} className="flex justify-center md:justify-end">
             <div
               className="overflow-hidden rounded-[40px] bg-bg shadow-2xl ring-1 ring-line2"
-              style={{ width: 375, height: "min(812px, calc(100vh - 150px))" }}
+              style={{ width: 375, height: "min(812px, calc(100vh - 190px))" }}
             >
               <iframe
                 src="/demo/outft-app.html?s=home"
