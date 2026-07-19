@@ -72,7 +72,7 @@ export default function DemoPage() {
           <Reveal delay={0.12} className="flex justify-center md:justify-end">
             <div
               className="overflow-hidden rounded-[40px] bg-bg shadow-2xl ring-1 ring-line2"
-              style={{ width: 375, height: 812, maxHeight: "calc(100vh - 140px)" }}
+              style={{ width: 375, height: "min(812px, calc(100vh - 150px))" }}
             >
               <iframe
                 src="/demo/outft-app.html?s=home"

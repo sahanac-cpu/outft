@@ -2568,5 +2568,34 @@ window.openBadgeSheet = function(name){
   try{ mo.observe(document.body,{childList:true,subtree:true}); }catch(e){}
 })();
 </script>
+
+<script>
+(function(){
+  var IMGS=['img/ed1.jpg','img/ed2.jpg','img/ed3.jpg','img/ed4.jpg','img/ed5.jpg','img/ed6.jpg','img/ed7.jpg'];
+  var POS=['center top','center','center bottom','left top','right top','center 20%'];
+  var n=0;
+  function fill(el){
+    if(el.getAttribute('data-filled')||el.style.backgroundImage) return;
+    el.style.backgroundImage="url('"+IMGS[n%IMGS.length]+"')";
+    el.style.backgroundSize='cover';
+    el.style.backgroundPosition=POS[n%POS.length];
+    el.setAttribute('data-filled','1');
+    n++;
+  }
+  function sweep(root){
+    (root.querySelectorAll?root:document).querySelectorAll('.img-ph,.echo-ph,.pol-ph').forEach(fill);
+  }
+  sweep(document);
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(node){
+        if(node.nodeType!==1) return;
+        if(node.matches&&node.matches('.img-ph,.echo-ph,.pol-ph')) fill(node);
+        if(node.querySelectorAll) sweep(node);
+      });
+    });
+  }).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body>
 </html>

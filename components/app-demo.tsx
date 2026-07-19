@@ -89,7 +89,7 @@ export function AppDemo() {
     const now = performance.now();
     // after a flip, swallow the trackpad's momentum tail so one gesture moves
     // exactly one screen (never skips past DNA etc.)
-    if (now - lastFlip.current < 420) { wheelAcc.current = 0; return true; }
+    if (now - lastFlip.current < 650) { wheelAcc.current = 0; return true; }
 
     // reset the running total if the gesture pauses or reverses
     if (endTimer.current) window.clearTimeout(endTimer.current);
@@ -98,7 +98,7 @@ export function AppDemo() {
     // needs a deliberate scroll to flip, so a glance-scroll won't yank you off a screen
     if (Math.sign(wheelAcc.current) !== dir) wheelAcc.current = 0;
     wheelAcc.current += d;
-    if (Math.abs(wheelAcc.current) > 90) {
+    if (Math.abs(wheelAcc.current) > 180) {
       move(dir);
       lastFlip.current = now;
       wheelAcc.current = 0;
