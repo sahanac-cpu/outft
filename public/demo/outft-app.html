@@ -533,7 +533,7 @@ html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-f
       <div class="cat-btn" data-cat="Event"><p class="cat-name">Event</p><p class="cat-desc">occasion ft.</p></div>
     </div>
     <div class="cam-vf-area" data-action="capture">
-      <div class="img-ph" id="cam-img"></div>
+      <div class="img-ph" id="cam-img" data-filled="1" style="background:linear-gradient(160deg,#E8E4DC,#CFC8BC 55%,#B8B0A2);"></div>
       <div class="cam-vf-corners">
         <div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div>
       </div>
@@ -553,7 +553,13 @@ html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-f
     <div class="rcpt-paper">
       <p class="rt">OUTFT.</p>
       <p class="rno">fit of record · no. <span id="rcpt-no">0143</span></p>
+      <div id="rcpt-photo" style="width:100%;aspect-ratio:3/4;max-height:230px;border-radius:10px;background:#DFDFDF center top/cover;margin:10px 0 4px;"></div>
       <div class="rdiv"></div>
+      <p id="rcpt-status" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#5A5549;margin:2px 0 6px;">reading your style DNA…</p>
+      <div id="rcpt-dna" hidden>
+        <div style="display:flex;flex-direction:column;gap:7px;margin:4px 0 8px;" id="rcpt-bars"></div>
+        <p id="rcpt-insight" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;line-height:1.5;color:#1A1916;"></p>
+      </div>
       <p class="rrow"><span id="rcpt-cat">Daily</span> · 22 June 2026</p>
       <p class="rrow">14:32 · afternoon window</p>
       <div class="rdiv"></div>
@@ -566,7 +572,7 @@ html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-f
     </div>
     <div class="rcpt-actions">
       <button class="rcpt-btn sec" data-action="retake">retake</button>
-      <button class="rcpt-btn pri" data-go="feed">share trace</button>
+      <button class="rcpt-btn pri" data-action="share-trace">share trace</button>
     </div>
   </div>
 </div>
@@ -2211,9 +2217,93 @@ function wNext(){ if(wIdx<wTotal){ wIdx++; renderWrapped(); } else show('dna'); 
 function wPrev(){ if(wIdx>1){ wIdx--; renderWrapped(); } }
 
 // capture
+var CAPTURE_IMGS=['img/ed2.jpg','img/ed3.jpg','img/ed4.jpg','img/ed6.jpg','img/ed7.jpg'];
+var capN=0, capImg=null, capCat='Daily', capTimer=null;
+var DNA_BY_CAT={
+  'Daily':      {a:[['Minimalist',38],['Quiet luxury',27],['Scandi',22],['Classic',13]], i:'Soft neutrals, clean lines — an unhurried everyday trace.'},
+  'Night out':  {a:[['Bold',34],['Eclectic',28],['Quiet luxury',21],['Classic',17]],     i:'Sharper silhouette after dark — the palette holds its nerve.'},
+  'Work':       {a:[['Classic',36],['Minimalist',30],['Quiet luxury',20],['Scandi',14]], i:'Structured and softened — office lines with palette discipline.'},
+  'Gym':        {a:[['Athleisure',44],['Minimalist',26],['Scandi',18],['Bold',12]],      i:'Function first, tone-matched — movement in your own palette.'},
+  'Travel':     {a:[['Coastal',33],['Scandi',27],['Minimalist',23],['Classic',17]],      i:'Layers built to move — a trace that packs light.'},
+  'Event':      {a:[['Quiet luxury',37],['Old money',26],['Classic',22],['Bold',15]],    i:'Occasion-ready restraint — the quiet kind of arrival.'}
+};
 function doCapture(){
   var vf=document.getElementById('cam-img');
-  if(vf){ vf.style.transition='opacity .1s'; vf.style.opacity='0'; setTimeout(function(){ vf.style.opacity='1'; var cat=document.querySelector('.cat-btn.sel'); var catName=cat?cat.getAttribute('data-cat'):'Daily'; document.getElementById('rcpt-cat').textContent=catName; fitNo++; document.getElementById('rcpt-no').textContent='0'+fitNo; document.getElementById('rcpt-ov').classList.add('show'); },120); }
+  if(!vf) return;
+  var cat=document.querySelector('.cat-btn.sel');
+  capCat=cat?cat.getAttribute('data-cat'):'Daily';
+  capImg=CAPTURE_IMGS[capN%CAPTURE_IMGS.length]; capN++;
+  // flash, then open the receipt with the captured photo
+  vf.style.transition='opacity .1s'; vf.style.opacity='0';
+  setTimeout(function(){
+    vf.style.opacity='1';
+    fitNo++;
+    document.getElementById('rcpt-cat').textContent=capCat;
+    document.getElementById('rcpt-no').textContent='0'+fitNo;
+    var ph=document.getElementById('rcpt-photo');
+    ph.style.background="url('"+capImg+"') center top/cover";
+    var st=document.getElementById('rcpt-status');
+    var dna=document.getElementById('rcpt-dna');
+    st.hidden=false; st.textContent='reading your style DNA…';
+    dna.hidden=true;
+    document.getElementById('rcpt-ov').classList.add('show');
+    var lines=['reading your palette…','tracing the silhouette…','finding your lane…'];
+    var li=0; clearInterval(capTimer);
+    capTimer=setInterval(function(){ st.textContent=lines[li%lines.length]; li++; },900);
+    setTimeout(function(){
+      clearInterval(capTimer);
+      var d=DNA_BY_CAT[capCat]||DNA_BY_CAT['Daily'];
+      st.hidden=true;
+      var bars=document.getElementById('rcpt-bars'); bars.innerHTML='';
+      d.a.forEach(function(row,idx){
+        var el=document.createElement('div');
+        el.style.cssText='display:flex;align-items:center;gap:8px;font-size:11px;color:#5A5549;';
+        el.innerHTML='<span style="width:86px;">'+row[0]+'</span>'+
+          '<span style="flex:1;height:3px;background:#F0EBE3;border-radius:2px;overflow:hidden;display:block;">'+
+          '<span style="display:block;height:100%;width:0;background:#1A1916;transition:width .7s ease '+(idx*90)+'ms;" data-w="'+row[1]+'%"></span></span>'+
+          '<span style="font-family:\'Cormorant Garamond\',serif;font-size:14px;color:#1A1916;width:34px;text-align:right;">'+row[1]+'%</span>';
+        bars.appendChild(el);
+      });
+      document.getElementById('rcpt-insight').textContent=d.i;
+      dna.hidden=false;
+      setTimeout(function(){
+        bars.querySelectorAll('[data-w]').forEach(function(f){ f.style.width=f.getAttribute('data-w'); });
+      },60);
+    },2600);
+  },120);
+}
+// share trace: the capture becomes a real post on the feed + today's trace on home
+function shareTrace(){
+  if(!capImg){ document.getElementById('rcpt-ov').classList.remove('show'); show('feed'); return; }
+  document.getElementById('rcpt-ov').classList.remove('show');
+  // prepend @you post to the friends feed
+  var feedSc=document.querySelector('#s-feed .sc');
+  if(feedSc){
+    var anchor=feedSc.querySelector('.trace-post');
+    if(anchor){
+      var d=DNA_BY_CAT[capCat]||DNA_BY_CAT['Daily'];
+      var post=document.createElement('div');
+      post.className='trace-post';
+      post.style.paddingTop='16px';
+      post.innerHTML='<div class="trace-post-inner">'+
+        '<div class="img-ph" data-filled="1" style="background:url(\''+capImg+'\') center top/cover;"></div>'+
+        '<div class="trace-post-right"><div>'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">'+
+        '<p class="tp-name">you</p>'+
+        '<span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#B5ADA3;border:1px solid #E0D8CB;border-radius:999px;padding:3px 8px;">just now</span></div>'+
+        '<p class="tp-sub">'+capCat+'</p>'+
+        '<p style="font-size:10px;color:#8A8278;margin-top:6px;line-height:1.5;">'+d.i+'</p>'+
+        '</div></div></div>';
+      anchor.parentNode.insertBefore(post,anchor);
+      var rule=document.createElement('div'); rule.className='feed-rule';
+      anchor.parentNode.insertBefore(rule,anchor);
+    }
+  }
+  // today's trace on home
+  var homePhotos=document.querySelectorAll('#s-home .img-ph');
+  if(homePhotos.length){ homePhotos[0].setAttribute('data-filled','1'); homePhotos[0].style.background="url('"+capImg+"') center top/cover"; }
+  toast('trace shared');
+  show('feed');
 }
 
 // toast
@@ -2292,6 +2382,7 @@ document.addEventListener('click',function(e){
   var ca=e.target.closest('[data-action="capture"]'); if(ca){ doCapture(); return; }
   var su=e.target.closest('[data-action="subscribe"]'); if(su){ toast('welcome to DNA premium '); return; }
   var ret=e.target.closest('[data-action="retake"]'); if(ret){ document.getElementById('rcpt-ov').classList.remove('show'); return; }
+  var shr=e.target.closest('[data-action="share-trace"]'); if(shr){ shareTrace(); return; }
   var wt=e.target.closest('[data-wtap]'); if(wt){ wt.getAttribute('data-wtap')==='next'?wNext():wPrev(); return; }
   var fl=e.target.closest('[data-follow]'); if(fl){
     var person=fl.getAttribute('data-follow');
