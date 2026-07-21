@@ -67,9 +67,14 @@ export async function POST(request: Request) {
     const data = await res.json();
     if (!res.ok) {
       console.error("Anthropic API error", data);
+      const detail = data?.error?.message || data?.error?.type || "";
       return NextResponse.json(
-        { error: "We could not analyze this outfit. Please try again." },
-        { status: 500 }
+        {
+          error: detail
+            ? `We could not analyze this outfit: ${detail}`
+            : "We could not analyze this outfit. Please try again.",
+        },
+        { status: res.status }
       );
     }
 
