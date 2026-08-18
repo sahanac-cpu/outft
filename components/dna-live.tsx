@@ -9,30 +9,34 @@ type Reading = {
   insight: string;
 };
 
+// Real labels straight from our 478-label aesthetic-taxonomy-v2 (see the
+// app's worker/src/aestheticDefinitions.ts) — deliberately specific rather
+// than broad catch-alls like "Eclectic" or "Classic", to represent what the
+// live analysis actually returns.
 const READINGS: Reading[] = [
   {
-    top: "Quiet luxury",
-    bars: [["Quiet luxury", 41], ["Old money", 23], ["Scandi", 18], ["Coastal", 11], ["Eclectic", 7]],
-    tags: ["neutral palette", "structured", "understated", "wide leg"],
+    top: "Stealth wealth",
+    bars: [["Stealth wealth", 38], ["Old money", 26], ["Classic minimalist", 21], ["Capsule wardrobe", 15]],
+    tags: ["unbranded", "tailored", "neutral palette", "understated"],
     insight: "Deliberate lines and a quiet, unbranded confidence.",
   },
   {
-    top: "Old money",
-    bars: [["Old money", 44], ["Classic", 26], ["Quiet luxury", 20], ["Coastal", 10]],
-    tags: ["tailored", "timeless", "elevated basics", "muted tones"],
-    insight: "Heritage tailoring — nothing loud, everything considered.",
+    top: "Coastal grandmother",
+    bars: [["Coastal grandmother", 35], ["New England casual", 27], ["Nantucket red", 22], ["Preppy", 16]],
+    tags: ["linen", "relaxed", "heritage color", "breezy"],
+    insight: "Breezy linen and heritage color, worn without trying.",
   },
   {
-    top: "Streetwear",
-    bars: [["Streetwear", 37], ["Minimalist", 28], ["Bold", 21], ["Vintage", 14]],
-    tags: ["relaxed fit", "monochrome", "statement", "layered"],
-    insight: "Effortless edge riding on a clean, minimal backbone.",
+    top: "Techwear",
+    bars: [["Techwear", 33], ["Gorpcore", 26], ["Utilitarian", 24], ["Cargo", 17]],
+    tags: ["technical fabric", "utility", "monochrome", "layered"],
+    insight: "Function-first layering built for movement, not for show.",
   },
   {
-    top: "Scandi",
-    bars: [["Scandi", 39], ["Minimalist", 31], ["Coastal", 18], ["Classic", 12]],
-    tags: ["soft neutrals", "clean silhouette", "functional", "cozy"],
-    insight: "Calm, considered, and quietly modern.",
+    top: "Balletcore",
+    bars: [["Balletcore", 34], ["Coquette", 25], ["Soft girl", 23], ["Bow aesthetic", 18]],
+    tags: ["satin ribbon", "soft", "feminine", "rehearsal-room"],
+    insight: "Rehearsal-room softness with a ribboned, delicate edge.",
   },
 ];
 
