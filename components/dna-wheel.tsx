@@ -3,12 +3,14 @@
 import { motion } from "motion/react";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
+// Specific aesthetic-taxonomy-v2 labels (worker/src/aestheticDefinitions.ts)
+// rather than broad catch-alls, to represent what the real analysis returns.
 const FACETS = [
-  { label: "Quiet luxury", p: 41, sw: "sw3", angle: -90 },
-  { label: "Old money", p: 23, sw: "sw5", angle: -18 },
-  { label: "Scandi", p: 18, sw: "sw2", angle: 54 },
-  { label: "Coastal", p: 11, sw: "sw6", angle: 126 },
-  { label: "Eclectic", p: 7, sw: "sw4", angle: 198 },
+  { label: "Old Hollywood glam", p: 32, sw: "sw3", angle: -90 },
+  { label: "Power dressing", p: 24, sw: "sw5", angle: -18 },
+  { label: "Archive fashion", p: 19, sw: "sw2", angle: 54 },
+  { label: "Sculptural", p: 15, sw: "sw6", angle: 126 },
+  { label: "Editorial", p: 10, sw: "sw4", angle: 198 },
 ];
 
 const SIZE = 380;

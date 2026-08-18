@@ -2219,13 +2219,15 @@ function wPrev(){ if(wIdx>1){ wIdx--; renderWrapped(); } }
 // capture
 var CAPTURE_IMGS=['img/ed2.jpg','img/ed3.jpg','img/ed4.jpg','img/ed6.jpg','img/ed7.jpg'];
 var capN=0, capImg=null, capCat='Daily', capTimer=null;
+// Specific aesthetic-taxonomy-v2 labels (worker/src/aestheticDefinitions.ts)
+// rather than broad catch-alls, to represent what the real analysis returns.
 var DNA_BY_CAT={
-  'Daily':      {a:[['Minimalist',38],['Quiet luxury',27],['Scandi',22],['Classic',13]], i:'Soft neutrals, clean lines — an unhurried everyday trace.'},
-  'Night out':  {a:[['Bold',34],['Eclectic',28],['Quiet luxury',21],['Classic',17]],     i:'Sharper silhouette after dark — the palette holds its nerve.'},
-  'Work':       {a:[['Classic',36],['Minimalist',30],['Quiet luxury',20],['Scandi',14]], i:'Structured and softened — office lines with palette discipline.'},
-  'Gym':        {a:[['Athleisure',44],['Minimalist',26],['Scandi',18],['Bold',12]],      i:'Function first, tone-matched — movement in your own palette.'},
-  'Travel':     {a:[['Coastal',33],['Scandi',27],['Minimalist',23],['Classic',17]],      i:'Layers built to move — a trace that packs light.'},
-  'Event':      {a:[['Quiet luxury',37],['Old money',26],['Classic',22],['Bold',15]],    i:'Occasion-ready restraint — the quiet kind of arrival.'}
+  'Daily':      {a:[['Classic minimalist',35],['Capsule wardrobe',27],['Clean girl',23],['Quiet cool',15]],    i:'Soft neutrals, clean lines — an unhurried everyday trace.'},
+  'Night out':  {a:[['Femme fatale',33],['Club kid',26],['Vogue aesthetic',22],['Bombshell',19]],              i:'Sharper silhouette after dark — the palette holds its nerve.'},
+  'Work':       {a:[['Corporate baddie',34],['Business formal',27],['Office siren',22],['Smart casual',17]],   i:'Structured and softened — office lines with palette discipline.'},
+  'Gym':        {a:[['Athleisure',40],['Pilates girl',28],['Running aesthetic',20],['Lux sport',12]],          i:'Function first, tone-matched — movement in your own palette.'},
+  'Travel':     {a:[['Airport fit',34],['Travel casual',27],['California casual',22],['Resort wear',17]],      i:'Layers built to move — a trace that packs light.'},
+  'Event':      {a:[['Black tie',35],['Cocktail',27],['Regencycore',22],['Couture gown',16]],                  i:'Occasion-ready restraint — the quiet kind of arrival.'}
 };
 function doCapture(){
   var vf=document.getElementById('cam-img');
