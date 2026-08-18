@@ -2218,7 +2218,7 @@ function wPrev(){ if(wIdx>1){ wIdx--; renderWrapped(); } }
 
 // capture
 var CAPTURE_IMGS=['img/ed2.jpg','img/ed3.jpg','img/ed4.jpg','img/ed6.jpg','img/ed7.jpg'];
-var capN=0, capImg=null, capCat='Daily', capTimer=null;
+var capN=0, capImg=null, capCat='Daily', capTimer=null, capInsight=null;
 // Specific aesthetic-taxonomy-v2 labels (worker/src/aestheticDefinitions.ts)
 // rather than broad catch-alls, to represent what the real analysis returns.
 var DNA_BY_CAT={
@@ -2229,7 +2229,40 @@ var DNA_BY_CAT={
   'Travel':     {a:[['Airport fit',34],['Travel casual',27],['California casual',22],['Resort wear',17]],      i:'Layers built to move — a trace that packs light.'},
   'Event':      {a:[['Black tie',35],['Cocktail',27],['Regencycore',22],['Couture gown',16]],                  i:'Occasion-ready restraint — the quiet kind of arrival.'}
 };
-function doCapture(){
+function renderCaptureDNA(aesthetics,insight){
+  var bars=document.getElementById('rcpt-bars'); bars.innerHTML='';
+  aesthetics.forEach(function(item,idx){
+    var el=document.createElement('div');
+    el.style.cssText='display:flex;align-items:center;gap:8px;font-size:11px;color:#5A5549;';
+    el.innerHTML='<span style="width:86px;">'+item.label+'</span>'+
+      '<span style="flex:1;height:3px;background:#F0EBE3;border-radius:2px;overflow:hidden;display:block;">'+
+      '<span style="display:block;height:100%;width:0;background:#1A1916;transition:width .7s ease '+(idx*90)+'ms;" data-w="'+item.pct+'%"></span></span>'+
+      '<span style="font-family:\'Cormorant Garamond\',serif;font-size:14px;color:#1A1916;width:34px;text-align:right;">'+item.pct+'%</span>';
+    bars.appendChild(el);
+  });
+  document.getElementById('rcpt-insight').textContent=insight;
+  setTimeout(function(){
+    bars.querySelectorAll('[data-w]').forEach(function(f){ f.style.width=f.getAttribute('data-w'); });
+  },60);
+}
+
+// Fetches a local demo image and converts it to a base64 payload suitable
+// for /api/analyze — same endpoint and shape outft-dna.html's live camera
+// panel uses (real Claude vision call, not a canned lookup).
+function imageToBase64(url){
+  return fetch(url)
+    .then(function(res){ return res.blob(); })
+    .then(function(blob){
+      return new Promise(function(resolve,reject){
+        var reader=new FileReader();
+        reader.onload=function(){ resolve({dataUrl:reader.result,mediaType:blob.type||'image/jpeg'}); };
+        reader.onerror=reject;
+        reader.readAsDataURL(blob);
+      });
+    });
+}
+
+async function doCapture(){
   var vf=document.getElementById('cam-img');
   if(!vf) return;
   var cat=document.querySelector('.cat-btn.sel');
@@ -2237,7 +2270,7 @@ function doCapture(){
   capImg=CAPTURE_IMGS[capN%CAPTURE_IMGS.length]; capN++;
   // flash, then open the receipt with the captured photo
   vf.style.transition='opacity .1s'; vf.style.opacity='0';
-  setTimeout(function(){
+  setTimeout(async function(){
     vf.style.opacity='1';
     fitNo++;
     document.getElementById('rcpt-cat').textContent=capCat;
@@ -2252,26 +2285,28 @@ function doCapture(){
     var lines=['reading your palette…','tracing the silhouette…','finding your lane…'];
     var li=0; clearInterval(capTimer);
     capTimer=setInterval(function(){ st.textContent=lines[li%lines.length]; li++; },900);
-    setTimeout(function(){
+
+    try{
+      var img=await imageToBase64(capImg);
+      var parts=img.dataUrl.split(',');
+      var response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:parts[1],mediaType:img.mediaType})});
+      var payload=await response.json();
+      if(!response.ok) throw new Error(payload.error||'Analysis failed');
+      clearInterval(capTimer);
+      st.hidden=true;
+      capInsight=payload.insight||'Your style trace is ready.';
+      renderCaptureDNA(payload.aesthetics,capInsight);
+      dna.hidden=false;
+    }catch(error){
+      // Fail soft to the local table only if the real analysis call fails
+      // (offline, no API key configured, etc.) — never a broken demo.
       clearInterval(capTimer);
       var d=DNA_BY_CAT[capCat]||DNA_BY_CAT['Daily'];
       st.hidden=true;
-      var bars=document.getElementById('rcpt-bars'); bars.innerHTML='';
-      d.a.forEach(function(row,idx){
-        var el=document.createElement('div');
-        el.style.cssText='display:flex;align-items:center;gap:8px;font-size:11px;color:#5A5549;';
-        el.innerHTML='<span style="width:86px;">'+row[0]+'</span>'+
-          '<span style="flex:1;height:3px;background:#F0EBE3;border-radius:2px;overflow:hidden;display:block;">'+
-          '<span style="display:block;height:100%;width:0;background:#1A1916;transition:width .7s ease '+(idx*90)+'ms;" data-w="'+row[1]+'%"></span></span>'+
-          '<span style="font-family:\'Cormorant Garamond\',serif;font-size:14px;color:#1A1916;width:34px;text-align:right;">'+row[1]+'%</span>';
-        bars.appendChild(el);
-      });
-      document.getElementById('rcpt-insight').textContent=d.i;
+      capInsight=d.i;
+      renderCaptureDNA(d.a.map(function(row){ return {label:row[0],pct:row[1]}; }),capInsight);
       dna.hidden=false;
-      setTimeout(function(){
-        bars.querySelectorAll('[data-w]').forEach(function(f){ f.style.width=f.getAttribute('data-w'); });
-      },60);
-    },2600);
+    }
   },120);
 }
 // share trace: the capture becomes a real post on the feed + today's trace on home
@@ -2283,7 +2318,7 @@ function shareTrace(){
   if(feedSc){
     var anchor=feedSc.querySelector('.trace-post');
     if(anchor){
-      var d=DNA_BY_CAT[capCat]||DNA_BY_CAT['Daily'];
+      var shareInsight=capInsight||(DNA_BY_CAT[capCat]||DNA_BY_CAT['Daily']).i;
       var post=document.createElement('div');
       post.className='trace-post';
       post.style.paddingTop='16px';
@@ -2294,7 +2329,7 @@ function shareTrace(){
         '<p class="tp-name">you</p>'+
         '<span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#B5ADA3;border:1px solid #E0D8CB;border-radius:999px;padding:3px 8px;">just now</span></div>'+
         '<p class="tp-sub">'+capCat+'</p>'+
-        '<p style="font-size:10px;color:#8A8278;margin-top:6px;line-height:1.5;">'+d.i+'</p>'+
+        '<p style="font-size:10px;color:#8A8278;margin-top:6px;line-height:1.5;">'+shareInsight+'</p>'+
         '</div></div></div>';
       anchor.parentNode.insertBefore(post,anchor);
       var rule=document.createElement('div'); rule.className='feed-rule';
