@@ -179,6 +179,8 @@ html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-f
 .rcpt-btn{flex:1;padding:12px;border-radius:999px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
 .rcpt-btn.sec{border:1px solid #E8E8E8;background:none;color:#5A5549;}
 .rcpt-btn.pri{background:#1A1916;border:none;color:#fff;}
+.rcpt-save{display:block;width:100%;background:none;border:0;margin-top:12px;padding:4px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A8278;text-decoration:underline;cursor:pointer;}
+.rcpt-save:disabled{opacity:.5;cursor:default;}
 
 /*  TWINS  */
 .twins-hero{padding:6px 22px 6px;text-align:center;border-bottom:1px solid #E8E8E8;}
@@ -695,6 +697,7 @@ html,body{height:100%;background:#1A1916;font-family:'Jost',sans-serif;-webkit-f
       <button class="rcpt-btn sec" data-action="retake">retake</button>
       <button class="rcpt-btn pri" data-action="home-friends">share trace</button>
     </div>
+    <button class="rcpt-save" id="rcpt-save-btn" data-action="save-receipt">save receipt to camera roll</button>
   </div>
   <nav class="bnav camera-bottom-nav" aria-label="Primary navigation">
     <button class="nb" data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span></button>
@@ -2696,6 +2699,45 @@ function doCapture(){
 var tt;
 function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ t.classList.remove('show'); },1800); }
 
+// save receipt — lazy-loads html2canvas on first use, snapshots the receipt
+// card exactly as shown (photo, DNA read, barcode), and downloads it as a PNG.
+var html2canvasLoad;
+function loadHtml2Canvas(){
+  if(window.html2canvas) return Promise.resolve();
+  if(html2canvasLoad) return html2canvasLoad;
+  html2canvasLoad=new Promise(function(resolve,reject){
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload=function(){ resolve(); };
+    s.onerror=function(){ reject(new Error('failed to load html2canvas')); };
+    document.head.appendChild(s);
+  });
+  return html2canvasLoad;
+}
+function saveReceiptImage(){
+  var btn=document.getElementById('rcpt-save-btn');
+  var paper=document.querySelector('#rcpt-ov .rcpt-paper');
+  if(!paper) return;
+  var prevText=btn?btn.textContent:'';
+  if(btn){ btn.disabled=true; btn.textContent='saving…'; }
+  loadHtml2Canvas().then(function(){
+    return window.html2canvas(paper,{backgroundColor:'#ffffff',scale:2,useCORS:true});
+  }).then(function(canvas){
+    var link=document.createElement('a');
+    link.download='outft-receipt-'+Date.now()+'.png';
+    link.href=canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    toast('receipt saved');
+  }).catch(function(err){
+    console.error('outft: save receipt failed:',err);
+    toast('could not save receipt');
+  }).finally(function(){
+    if(btn){ btn.disabled=false; btn.textContent=prevText; }
+  });
+}
+
 // sheets
 var sheets={
   post:{title:'trace options',rows:[
@@ -2803,6 +2845,7 @@ document.addEventListener('click',function(e){
   var ca=e.target.closest('[data-action="capture"]'); if(ca){ doCapture(); return; }
   var su=e.target.closest('[data-action="subscribe"]'); if(su){ APP_STATE.isPremium=true;persistAppState();su.textContent='premium active';su.disabled=true;toast('premium demo activated'); return; }
   var ret=e.target.closest('[data-action="retake"]'); if(ret){ document.getElementById('rcpt-ov').classList.remove('show'); return; }
+  var sr=e.target.closest('[data-action="save-receipt"]'); if(sr){ saveReceiptImage(); return; }
   var wt=e.target.closest('[data-wtap]'); if(wt){ wt.getAttribute('data-wtap')==='next'?wNext():wPrev(); return; }
   var fl=e.target.closest('[data-follow]'); if(fl){
     var person=fl.getAttribute('data-follow');
