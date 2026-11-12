@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CrumpledBg } from "@/components/crumpled-bg";
 import {
   ComesInGoesOutUnderline,
@@ -20,13 +21,13 @@ export function Footer() {
             </p>
           </div>
 
-          {/* contact — same edits as the founders page */}
-          <div className="flex flex-row items-start gap-8 font-sans text-[clamp(0.95rem,1.6vw,1.25rem)] uppercase tracking-tight text-ink md:justify-end">
+          {/* contact and legal, same edits as the founders page */}
+          <div className="flex flex-row flex-wrap items-start gap-8 font-sans text-[clamp(0.95rem,1.6vw,1.25rem)] uppercase tracking-tight text-ink md:justify-end">
             <div className="text-[#808080]">Contact</div>
             <ul className="flex flex-col space-y-1.5">
               <li>
                 <a href="https://instagram.com/outft.co" target="_blank" rel="noopener noreferrer">
-                  <ComesInGoesOutUnderline label="Instagram — outft.co" direction="right" />
+                  <ComesInGoesOutUnderline label="Instagram: outft.co" direction="right" />
                 </a>
               </li>
               <li className="pt-8">
@@ -38,6 +39,19 @@ export function Footer() {
                 <a href="mailto:victoria@outft.app">
                   <GoesOutComesInUnderline label="victoria@outft.app" direction="right" />
                 </a>
+              </li>
+            </ul>
+            <div className="text-[#808080]">Legal</div>
+            <ul className="flex flex-col space-y-1.5">
+              <li>
+                <Link href="/terms">
+                  <ComesInGoesOutUnderline label="Terms" direction="right" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy">
+                  <ComesInGoesOutUnderline label="Privacy" direction="left" />
+                </Link>
               </li>
             </ul>
           </div>
