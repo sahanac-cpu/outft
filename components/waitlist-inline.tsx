@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
@@ -97,6 +98,19 @@ export function WaitlistInline() {
           "Opening in small rooms"
         )}
       </p>
+      {status !== "success" && (
+        <p className="mt-2 text-center text-[11px] leading-relaxed text-grey">
+          By joining you agree to our{" "}
+          <Link href="/terms" className="underline underline-offset-2 hover:text-ink">
+            Terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-ink">
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      )}
     </div>
   );
 }

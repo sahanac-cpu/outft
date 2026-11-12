@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
+import Link from "next/link";
 import { Logo } from "./logo";
 
 type Kind = "waitlist" | "creator";
@@ -217,6 +218,17 @@ export function JoinFlow() {
             "Request access"
           )}
         </button>
+        <p className="text-center text-[11px] leading-relaxed text-grey">
+          By joining you agree to our{" "}
+          <Link href="/terms" className="underline underline-offset-2 hover:text-ink">
+            Terms
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-ink">
+            Privacy Policy
+          </Link>
+          .
+        </p>
       </form>
 
       {/* quick options */}

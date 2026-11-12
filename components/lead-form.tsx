@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 /**
@@ -36,14 +37,14 @@ export function LeadForm({
       const data = await res.json();
       if (res.ok || data.already) {
         setStatus("done");
-        setMessage(data.already ? "You're already on the list — we'll be in touch." : "Sent. We'll be in touch shortly.");
+        setMessage(data.already ? "You're already on the list. We'll be in touch." : "Sent. We'll be in touch shortly.");
       } else {
         setStatus("error");
         setMessage(data.error ?? "Something went wrong.");
       }
     } catch {
       setStatus("error");
-      setMessage("Network error — try again.");
+      setMessage("Network error. Try again.");
     }
   }
 
@@ -103,6 +104,18 @@ export function LeadForm({
       >
         {status === "loading" ? "Sending…" : cta}
       </button>
+
+      <p className="text-[12px] leading-relaxed text-grey">
+        By joining you agree to our{" "}
+        <Link href="/terms" className="underline underline-offset-2 hover:text-ink">
+          Terms
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy" className="underline underline-offset-2 hover:text-ink">
+          Privacy Policy
+        </Link>
+        .
+      </p>
 
       {status === "error" && <p className="lbl lbl-ink">{message}</p>}
     </form>
