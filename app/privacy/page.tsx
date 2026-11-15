@@ -1,130 +1,178 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  LEGAL_DRAFT_NOTE,
-  LEGAL_LAST_UPDATED,
+  LEGAL_CONTACT,
+  LEGAL_EFFECTIVE_DATE,
   PRIVACY_VERSION,
 } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "Privacy. OUTFT.",
+  title: "Privacy Policy. OUTFT.",
   description:
-    "What outft collects, how outfit photos are analyzed by AI, what we share, and how to delete your data.",
+    "What outft collects, how outfit photos are analysed by AI, who we share information with, and how to access or delete your data.",
 };
 
 const SECTIONS: { h: string; p: string[] }[] = [
   {
-    h: "Who we are",
+    h: "1. Who we are",
     p: [
-      "outft is an outfit journal app. You capture or upload photos of what you wore, and we read your style back to you. In this policy, \"outft\", \"we\" and \"us\" mean the team that runs the app and this website. You can reach us at sahana@outft.app.",
+      `outft ("outft", "we", "us" or "our") runs the outft mobile app and the website at outft.app (together, the "Service"). outft is based in New York, United States. We are responsible for the personal information described in this policy. You can contact us at ${LEGAL_CONTACT}.`,
+      "This policy explains what we collect, why, who we share it with, how long we keep it, and the choices and rights you have. It should be read with our Terms of Service.",
     ],
   },
   {
-    h: "What we collect",
+    h: "2. Information you give us",
     p: [
-      "Account details: your email address, username, and any profile details you add.",
-      "Your outfits: the photos you capture or upload, plus any caption or category you add.",
-      "Style analysis: the Style DNA we create from your photos. That means aesthetic percentages, tags, and a short written insight.",
-      "Referral and discount-code activity: referral codes you use or share, and counts of when a brand discount code was shown, clicked, or redeemed through outft.",
-      "Basic technical and usage information, such as device type, app version, and which screens you use, so we can run the service and fix problems.",
-      "If you join the waitlist or contact us on this website, the email, name, and message you send.",
+      "Account information: your name, email address and password when you create an account. Passwords are handled by our authentication provider and stored in hashed form; we cannot see them.",
+      "Outfit photos and details: the photos you capture or upload, and any caption or category you add.",
+      "Onboarding and settings: the version of these documents you accepted and when, your notification choices, and a referral code if you enter one.",
+      "Messages: anything you send us, for example by email.",
+      "Website forms: if you join the waitlist or creator list on outft.app, your email address and, if you give it, your name, handle or note.",
     ],
   },
   {
-    h: "How your photos are analyzed",
+    h: "3. Information we create or collect automatically",
     p: [
-      "When you capture or upload a photo, it is sent to our server. From there, we send it to a third-party AI model, Claude, made by Anthropic. The model looks at the outfit and returns aesthetic percentages, tags, and a short insight. That result becomes part of your Style DNA.",
-      "The analysis is automated. It is an opinion about style, not a fact about you, and it can be wrong.",
+      "Style analysis: the aesthetic percentages, tags and short insight produced from your photos, and the Style DNA we build from them.",
+      "App activity: events such as signing up, accepting the terms, uploading a photo, an analysis finishing or failing, viewing your Style DNA, and tapping share. Each event has a timestamp, your account identifier if you are signed in, and a few details about the event, such as which screen it came from. These events are stored in our own database and are not sent to advertising or analytics companies.",
+      "Service records: for each AI analysis we record how many processing units (tokens) it used, its estimated cost, whether it succeeded, and how long it took. These records do not include your photo.",
+      "Device information for notifications: if you allow notifications, a push token that lets us send them to your device.",
+      "Referral and campaign records: when a referral code is redeemed, and counts of when a brand discount code is shown, tapped or redeemed.",
+      "Website analytics: our website uses Vercel Web Analytics and Speed Insights, which measure page views and performance in aggregate without using cookies. Like any website, our hosting provider receives technical information such as your IP address and browser type to deliver pages and protect the site.",
     ],
   },
   {
-    h: "How we use your information",
+    h: "4. What we do not collect",
     p: [
-      "To run the app: store your photos, build your Style DNA, and show your journal back to you.",
-      "Twin matching: we compare your Style DNA with other users' Style DNA to suggest people who dress like you, and to suggest you to them.",
-      "Wrapped: we put together a yearly summary of your style as an image card.",
-      "To send reminders and emails you have opted into. Every email has an unsubscribe link.",
-      "To keep records of referrals and brand discount-code attribution, so we know how many times a code was shown, clicked, or redeemed.",
-      "To keep outft safe, fix bugs, and improve the product.",
+      "We do not collect your precise location. Photos are resized and re-encoded on your device before upload, which removes embedded location data from the photo file.",
+      "We do not access your contacts, and we only access your camera or photo library when you choose to take or pick a photo. We only save to your photo library when you ask us to, for example to save a Style DNA card.",
+      "We do not use third-party advertising trackers, and we do not sell your personal information.",
     ],
   },
   {
-    h: "What is public, and what is not",
+    h: "5. How your photos are analysed",
     p: [
-      "Your photos and analyses are private to your account by default.",
-      "You can choose to share a Wrapped card or an individual look to other platforms, such as Instagram. When you do, whatever you share becomes public on that platform and follows that platform's rules. We cannot remove it from another platform once it is posted there.",
-      "If you use twin matching, other users may be shown your profile as a style match.",
+      "When you analyse a photo, the app sends it to our server, which sends it to Anthropic's Claude AI model. The model returns a reading of the outfit's style. Our server does not keep a copy of the photo after the analysis is returned, and we do not write photos to our server logs.",
+      "Anthropic processes the photo on our behalf as a service provider under its commercial terms, which do not permit it to use our customers' content to train its models. Anthropic may keep data for a limited time for safety and abuse monitoring, as described in its own policies.",
+      "The analysis is automated. It is an opinion about clothing style, not a fact about you, and it is not used to make decisions that have legal or similarly significant effects on you.",
     ],
   },
   {
-    h: "Who we share information with",
+    h: "6. Where your photos are stored",
     p: [
-      "Service providers that help us run outft, such as hosting, storage, email delivery, and AI analysis (Anthropic). They get what they need to do that job.",
-      "Brands, but only aggregated and anonymous trend insights, for example \"wide-leg trousers are up this month\". We never share your individual photos or your identity with brands.",
-      "We do not sell your personal data. Referral and discount-code records are kept to count results, not to sell your information.",
-      "Authorities, if the law requires it or to protect people from harm.",
-      "A new owner, if outft is ever sold or merged. This policy would continue to apply to your information until you are told otherwise.",
+      "If you use the app as a guest, or without an account, your photos and results are stored only on your device.",
+      "If you have an account, your photos and results are stored in private storage at our database provider, linked to your account. They are not publicly accessible; they can only be viewed through your signed-in account, or by our team where needed to provide support, keep the Service safe, or meet legal obligations.",
     ],
   },
   {
-    h: "How long we keep things",
+    h: "7. How we use information",
     p: [
-      "We keep your photos and analyses for as long as your account exists.",
-      "When you delete your account, we delete your photos, analyses, and profile within 30 days. Copies in our backups are purged within 90 days.",
+      "To provide the Service: create and secure your account, store your photos, run style analysis, build and show your Style DNA, and create share cards when you ask.",
+      "To keep the Service working and safe: diagnose errors, prevent abuse, enforce our Terms, and protect our users.",
+      "To understand and improve the Service: measure things like how many people finish onboarding or how often analyses fail, and track what the AI analysis costs us to run.",
+      "To communicate with you: send account and service messages, and send reminders or updates only if you opt in.",
+      "To measure referrals and brand campaigns: count referral redemptions and how often discount codes are shown, tapped or redeemed.",
+      "To meet legal obligations, and to respond to lawful requests.",
     ],
   },
   {
-    h: "Your controls",
+    h: "8. Legal bases (EEA, Switzerland and UK)",
     p: [
-      "Delete a single photo: open the capture and delete it from the capture view.",
-      "Delete your whole account: in the app, go to Settings, then Delete account. You can also email sahana@outft.app and ask us to do it.",
-      "Get a copy of your data: available on request by email to sahana@outft.app.",
-      "Stop emails: use the unsubscribe link in any email.",
-      "Depending on where you live, you may have other rights, such as correcting your data or objecting to how we use it. Email us and we will help.",
+      "If you are in the European Economic Area, Switzerland or the UK, we rely on these legal bases: performing our contract with you (running your account and style analysis); our legitimate interests (keeping the Service secure, understanding how it is used, measuring campaigns in aggregate, and improving it), balanced against your rights; your consent (optional notifications and emails, which you can withdraw at any time); and legal obligations.",
     ],
   },
   {
-    h: "Age",
+    h: "9. Who we share information with",
     p: [
-      "You must be at least 13 to use outft, or at least 16 if you live in the European Economic Area or the UK. If we learn that someone younger has an account, we will delete it.",
+      "Service providers who process information on our behalf, under contracts that limit how they can use it:",
+      "Anthropic (AI style analysis of your photos);",
+      "Supabase (account sign-in, database and private photo storage);",
+      "Railway (hosting our app server);",
+      "Vercel (hosting our website, and aggregate website analytics);",
+      "Expo (delivering app updates and push notifications);",
+      "an email delivery provider, such as Resend, if you opt in to emails.",
+      "Brands: only aggregated and anonymous trend insights, such as which styles are rising. We never share your photos, your Style DNA or your identity with brands.",
+      "People you choose to share with: when you share a Style DNA card or a look, it goes where you send it.",
+      "Legal and safety: when required by law, or when we believe in good faith it is necessary to protect the rights, property or safety of our users, the public or outft.",
+      "Business transfers: if outft is involved in a merger, acquisition or sale of assets, information may transfer as part of that deal, and this policy will continue to apply to it until you are told otherwise.",
+      "We do not sell personal information, and we do not share it for cross-context behavioural advertising.",
     ],
   },
   {
-    h: "Payments",
+    h: "10. How long we keep information",
     p: [
-      "outft does not take payments today. We may introduce premium pricing later. If we do, the price will be shown before you buy, and we will update this policy to explain any payment information we handle.",
+      "Account information, photos and Style DNA: for as long as your account exists. If you delete a photo, we delete it and its analysis.",
+      "When you delete your account, it stops working right away, and we delete your photos, analyses and profile within 30 days. Copies in backups are overwritten on our normal backup cycle, within 90 days.",
+      "App activity events and service records: up to 24 months, then deleted or made anonymous.",
+      "Waitlist emails: until you ask us to remove you, or until we launch and no longer need the list.",
+      "We may keep some information longer where the law requires it, or to resolve disputes and enforce our agreements.",
     ],
   },
   {
-    h: "Changes to this policy",
+    h: "11. Your choices and rights",
     p: [
-      "If we change this policy, we will update the date and version on this page. If a change is significant, we will tell you in the app or by email before it takes effect.",
+      "Delete a photo: open it in the app and choose delete.",
+      `Delete your account: in the app, go to Settings, then Delete account, or email ${LEGAL_CONTACT}.`,
+      "Notifications: turn reminders and updates on or off in Settings. Every reminder or update email includes an unsubscribe link.",
+      "Sharing: nothing is shared outside outft unless you choose to share it.",
+      `Access, correction, copies and other rights: email ${LEGAL_CONTACT}. Depending on where you live, you may have the right to know what personal information we hold about you, to get a copy of it, to correct it, to delete it, to restrict or object to how we use it, and to withdraw consent. We will not treat you differently for using these rights.`,
+      "We will respond within the time the law requires, usually within 30 days in Europe and 45 days in US states with privacy laws. We may need to confirm your identity first. You may use an authorised agent where the law allows. If we decline your request, you can ask us to reconsider; residents of some US states can then appeal by replying to our decision.",
+      "If you are in the EEA, Switzerland or the UK, you may also complain to your local data protection authority.",
+      "Global Privacy Control: we do not sell or share personal information for targeted advertising, so there is nothing for these signals to opt out of, but we treat them as a valid request where the law requires.",
     ],
   },
   {
-    h: "Contact",
-    p: ["Questions about privacy or your data: email sahana@outft.app."],
+    h: "12. Children",
+    p: [
+      "outft is not for children under 13, and not for anyone under 16 in the EEA, Switzerland or the UK. We do not knowingly collect personal information from children below these ages. If you believe a child has given us information, email us and we will delete it.",
+    ],
+  },
+  {
+    h: "13. Security",
+    p: [
+      "We protect information with measures such as encrypted connections, private photo storage that only your account can access, database rules that keep each person's data separate, and keeping secret keys on our servers rather than in the app. No system is perfectly secure, so we cannot guarantee security. If we learn of a breach that affects your information, we will notify you and the authorities as the law requires.",
+    ],
+  },
+  {
+    h: "14. International transfers",
+    p: [
+      "We are based in the United States, and our service providers may process information in the United States and other countries. If you use outft from outside the United States, your information will be transferred there. Where the law requires, we use appropriate safeguards for these transfers, such as the European Commission's Standard Contractual Clauses.",
+    ],
+  },
+  {
+    h: "15. Payments",
+    p: [
+      "outft does not take payments today, so we do not collect payment information. If we introduce paid plans, we will update this policy before we do.",
+    ],
+  },
+  {
+    h: "16. Changes to this policy",
+    p: [
+      "We may update this policy as the Service changes or the law requires. We will update the effective date and version on this page. If a change is significant, we will tell you in the app or by email before it takes effect.",
+    ],
+  },
+  {
+    h: "17. Contact",
+    p: [
+      `Questions, requests or complaints about privacy: email ${LEGAL_CONTACT}.`,
+    ],
   },
 ];
 
 export default function PrivacyPage() {
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-24">
-      <p
-        role="note"
-        className="mb-10 rounded-md border border-current px-4 py-3 text-sm font-medium"
-      >
-        {LEGAL_DRAFT_NOTE}
-      </p>
-      <h1 className="font-serif text-4xl italic">privacy.</h1>
+      <h1 className="font-serif text-4xl italic">privacy policy.</h1>
       <p className="mt-4 text-sm opacity-70">
-        Last updated {LEGAL_LAST_UPDATED}. Version {PRIVACY_VERSION}.
+        Effective {LEGAL_EFFECTIVE_DATE}. Version {PRIVACY_VERSION}.
       </p>
       <p className="mt-4 text-[15px] leading-relaxed opacity-80">
         The short version: your photos are private by default. They are
-        analyzed by AI to build your Style DNA. You decide what gets shared
-        publicly. Brands only ever see anonymous, aggregated trends. You can
-        delete any photo, or your whole account, at any time.
+        analysed by AI to build your Style DNA, and we do not keep them on
+        our analysis server or let the AI provider train on them. You decide
+        what gets shared. Brands only ever see anonymous, aggregated trends.
+        We do not sell your data. You can delete any photo, or your whole
+        account, at any time.
       </p>
       {SECTIONS.map((s) => (
         <section key={s.h} className="mt-12">
